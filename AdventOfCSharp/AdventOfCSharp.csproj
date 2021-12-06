@@ -5,7 +5,19 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
-    <IsPackable>true</IsPackable>  
+    <IsPackable>true</IsPackable>
+
+    <Version>1.0.0</Version>
+    
+    <PackageTags>advent-of-code, aoc</PackageTags>
+    <Description>An aspiring AoC problem solving framework.</Description>
+    <Copyright>© 2021, Alex Kalfakakos</Copyright>
+    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <Authors>Alex Kalfakakos</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Product>AdventOfCSharp</Product>
+    <PackageId>AdventOfCSharp</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
