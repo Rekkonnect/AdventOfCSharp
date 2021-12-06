@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <IsPackable>true</IsPackable>  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Garyon" Version="0.2.6.1" />
+  </ItemGroup>
+
+</Project>
