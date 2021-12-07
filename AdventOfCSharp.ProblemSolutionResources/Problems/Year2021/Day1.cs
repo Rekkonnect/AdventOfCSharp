@@ -4,7 +4,7 @@
 
 using System.Linq;
 
-namespace AdventOfCSharp.ProblemSolutionTests.Problems.Year2021;
+namespace AdventOfCSharp.ProblemSolutionResources.Problems.Year2021;
 
 public class Day1 : Problem<int>
 {

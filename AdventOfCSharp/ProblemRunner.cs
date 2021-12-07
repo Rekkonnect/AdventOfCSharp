@@ -1,11 +1,10 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace AdventOfCSharp;
+﻿namespace AdventOfCSharp;
 
 public sealed class ProblemRunner
 {
     public static readonly string RunPartMethodPrefix = nameof(Problem<int>.RunPart1)[..^1];
     public static readonly string SolvePartMethodPrefix = nameof(Problem<int>.SolvePart1)[..^1];
+    public static readonly string NoReturnSolvePartMethodPrefix = nameof(Problem<int>.NoReturnSolvePart1)[..^1];
 
     public Problem Problem { get; }
 
@@ -26,9 +25,17 @@ public sealed class ProblemRunner
     public object SolvePart(int part, bool displayExecutionTimes = true) => SolvePart(part, 0, displayExecutionTimes);
     public object SolvePart(int part, int testCase, bool displayExecutionTimes = true)
     {
-        var methods = new[] { Problem.GetType().GetMethod(SolvePartMethodName(part)) };
+        var methods = new[] { SolverForPart(part) };
         return SolveParts(testCase, methods, displayExecutionTimes)[0];
     }
+
+    public Action? NoReturnSolverActionForPart(int part) => NoReturnSolverForPart(part)?.CreateDelegate<Action>(Problem);
+
+    public MethodInfo? NoReturnSolverForPart(int part) => ExecutionMethodForPart(part, NoReturnSolvePartMethodName);
+    public MethodInfo? SolverForPart(int part) => ExecutionMethodForPart(part, SolvePartMethodName);
+    public MethodInfo? RunnerForPart(int part) => ExecutionMethodForPart(part, RunPartMethodName);
+
+    private MethodInfo? ExecutionMethodForPart(int part, Func<int, string> nameRetriever) => Problem.GetType().GetMethod(nameRetriever(part));
 
     public bool FullyValidateAllTestCases()
     {
@@ -64,16 +71,21 @@ public sealed class ProblemRunner
         return expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase)), StringComparison.OrdinalIgnoreCase);
     }
 
+    private static string NoReturnSolvePartMethodName(int part) => ExecutePartMethodName(NoReturnSolvePartMethodPrefix, part);
     private static string SolvePartMethodName(int part) => ExecutePartMethodName(SolvePartMethodPrefix, part);
     private static string RunPartMethodName(int part) => ExecutePartMethodName(RunPartMethodPrefix, part);
     private static string ExecutePartMethodName(string prefix, int part) => $"{prefix}{part}";
 
+    private void EnsureLoadState(int testCase, bool displayExecutionTimes)
+    {
+        Problem.CurrentTestCase = testCase;
+        DisplayExecutionTimes(displayExecutionTimes, 0, PrintInputExecutionTime, Problem.EnsureLoadedState);
+    }
     private object[] SolveParts(int testCase, MethodInfo[] solutionMethods, bool displayExecutionTimes)
     {
         var result = new object[solutionMethods.Length];
 
-        Problem.CurrentTestCase = testCase;
-        DisplayExecutionTimes(displayExecutionTimes, 0, PrintInputExecutionTime, Problem.EnsureLoadedState);
+        EnsureLoadState(testCase, displayExecutionTimes);
 
         for (int i = 0; i < result.Length; i++)
         {

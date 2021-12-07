@@ -1,8 +1,4 @@
-﻿#nullable enable
-
-using System.IO;
-
-namespace AdventOfCSharp;
+﻿namespace AdventOfCSharp;
 
 public static class ProblemFiles
 {
@@ -23,8 +19,6 @@ public static class ProblemFiles
 
     private static string GetDefaultBaseDirectory()
     {
-        var entry = Assembly.GetEntryAssembly()!;
-        var executableDirectory = Path.GetDirectoryName(entry.Location)!;
-        return Directory.GetParent(executableDirectory)!.Parent!.Parent!.ToString();
+        return ResourceFileHelpers.GetBaseCodeDirectory();
     }
 }

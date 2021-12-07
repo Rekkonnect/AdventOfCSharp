@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace AdventOfCSharp;
 
@@ -46,6 +47,9 @@ public abstract class Problem
 
     protected virtual void LoadState() { }
     protected virtual void ResetState() { }
+
+    // This is only intended to be called during benchmarking
+    public void LoadCurrentState() => LoadState();
 
     public void EnsureLoadedState()
     {
@@ -200,6 +204,11 @@ public abstract class Problem<T1, T2> : Problem
 
     public abstract T1 SolvePart1();
     public abstract T2 SolvePart2();
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void NoReturnSolvePart1() => SolvePart1();
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void NoReturnSolvePart2() => SolvePart2();
 }
 
 public abstract class Problem<T> : Problem<T, T> { }

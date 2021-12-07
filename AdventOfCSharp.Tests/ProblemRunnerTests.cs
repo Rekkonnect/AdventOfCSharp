@@ -1,9 +1,16 @@
+using AdventOfCSharp.ProblemSolutionResources;
 using NUnit.Framework;
 
-namespace AdventOfCSharp.ProblemSolutionTests;
+namespace AdventOfCSharp.Tests;
 
 public class ProblemRunnerTests
 {
+    [SetUp]
+    public void Setup()
+    {
+        ResourceFileManagement.SetResourceProjectAsBaseProblemFileDirectory();
+    }
+
     /*
      * So far, this test alone proves that the following work right:
      * - Input loading
