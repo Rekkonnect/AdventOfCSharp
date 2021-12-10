@@ -24,4 +24,19 @@
     <PackageReference Include="Garyon" Version="0.2.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\GlyphResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GlyphResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\GlyphResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GlyphResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
