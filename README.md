@@ -26,11 +26,11 @@ Found [here](https://github.com/AlFasGD/AdventOfCSharp.Template)
   - Validating problem solutions
   - Execution time per part
   - Summary of all available solutions, and per individual parts
+- Answer conversion system, producing answer strings ready to be copied onto the website
 
 Upcoming features:
 - Benchmarking
 - Source analyzers
-- Glyph grid parsing
 - and [more](https://github.com/AlFasGD/AdventOfCSharp/issues)
 
 ## Documentation
