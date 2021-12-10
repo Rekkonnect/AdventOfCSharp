@@ -7,7 +7,7 @@
 
     <IsPackable>true</IsPackable>
 
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>An aspiring AoC problem solving framework.</Description>
@@ -18,6 +18,12 @@
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp</Product>
     <PackageId>AdventOfCSharp</PackageId>
+    <PackageReleaseNotes>
+- Improved answer string converter behavior and API
+- Implemented a glyph grid answer conversion system
+- Improved hashing for NextValueCounterDictionary
+- Added numerous utility components in the process of implementing these changes
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
