@@ -57,8 +57,18 @@ public class NextValueCounterDictionary<T> : ValueCounterDictionary<T>, IEquatab
             return false;
 
         foreach (var kvp in Dictionary)
-            if (!other.Dictionary.TryGetValue(kvp.Key, out int value) || !kvp.Value.Equals(value))
+        {
+            if (!other.Dictionary.TryGetValue(kvp.Key, out int value))
+            {
+                if (kvp.Value is not 0)
+                    return false;
+
+                continue;
+            }
+
+            if (kvp.Value != value)
                 return false;
+        }
 
         return true;
     }
@@ -69,9 +79,8 @@ public class NextValueCounterDictionary<T> : ValueCounterDictionary<T>, IEquatab
     }
     public override int GetHashCode()
     {
-        // Clearly a "hack", but what for?
-        var result = new HashCode();
-        result.AddRange(Dictionary.Values.ToArray().Sort());
-        return result.ToHashCode();
+        var entries = Dictionary.ToArray();
+        Array.Sort(entries, EntryValueComparer<T, int>.Default);
+        return HashCodeFactory.Combine(entries);
     }
 }
