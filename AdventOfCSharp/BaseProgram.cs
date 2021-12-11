@@ -199,25 +199,31 @@ public abstract class BaseProgram
         WriteLine("Legend:");
 
         // Valid solutions
-        WriteWithColor($"*", GetStarColor(PartSolutionStatus.Valid));
+        WriteWithColor($"*", GetStatusColor(PartSolutionStatus.Valid));
         Write(" = valid solution (includes ");
-        WriteWithColor("unoptimized", GetStarColor(PartSolutionStatus.Unoptimized));
+        WriteWithColor("unoptimized", GetStatusColor(PartSolutionStatus.Unoptimized));
         WriteLine(" solutions)");
 
         // Unoptimized solutions
-        WriteWithColor("*", GetStarColor(PartSolutionStatus.Unoptimized));
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Unoptimized));
         WriteLine(" = unoptimized solution");
 
+        // Refactoring solutions
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Refactoring));
+        WriteLine(" = refactoring solution");
+
         // WIP solutions
-        WriteWithColor("*", GetStarColor(PartSolutionStatus.WIP));
-        WriteLine(" = WIP solution");
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.WIP));
+        Write(" = WIP solution (includes ");
+        WriteWithColor("refactoring", GetStatusColor(PartSolutionStatus.Refactoring));
+        WriteLine(" solutions)");
 
         // Uninitialized solutions
-        WriteWithColor("*", GetStarColor(PartSolutionStatus.Uninitialized));
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Uninitialized));
         WriteLine(" = uninitialized solution (empty solution)");
 
         // Unavailable free stars
-        WriteWithColor("*", GetStarColor(PartSolutionStatus.UnavailableFreeStar));
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.UnavailableFreeStar));
         WriteLine(" = unavailable free star");
     }
 
@@ -232,14 +238,14 @@ public abstract class BaseProgram
     protected static void WriteSummary(YearSummary summary)
     {
         WriteWithColor($"{summary.Year}  ", ItemColorForAvailability(summary.HasAvailableSolutions));
-        WriteSummaryStars(summary.StatusCounters.TotalValidSolutions, GetStarColor(PartSolutionStatus.Valid));
+        WriteSummaryStars(summary.StatusCounters.TotalValidSolutions, GetStatusColor(PartSolutionStatus.Valid));
         WriteSummaryStars(summary, PartSolutionStatus.Unoptimized);
-        WriteSummaryStars(summary, PartSolutionStatus.WIP);
+        WriteSummaryStars(summary.StatusCounters.TotalWIPSolutions, GetStatusColor(PartSolutionStatus.WIP));
         WriteLine();
     }
     protected static void WriteSummaryStars(YearSummary summary, PartSolutionStatus status)
     {
-        WriteSummaryStars(summary.StatusCounters[status], GetStarColor(status));
+        WriteSummaryStars(summary.StatusCounters[status], GetStatusColor(status));
     }
     protected static void WriteSummaryStars(int starCount, ConsoleColor starColor)
     {
@@ -250,19 +256,20 @@ public abstract class BaseProgram
 
     protected static void WriteStar(PartSolutionStatus status)
     {
-        WriteStar(GetStarColor(status));
+        WriteStar(GetStatusColor(status));
     }
     protected static void WriteStar(ConsoleColor starColor)
     {
         WriteWithColor("*", starColor);
     }
-    protected static ConsoleColor GetStarColor(PartSolutionStatus status) => status switch
+    protected static ConsoleColor GetStatusColor(PartSolutionStatus status) => status switch
     {
         PartSolutionStatus.Valid => ConsoleColor.DarkYellow,
         PartSolutionStatus.Unoptimized => ConsoleColor.Magenta,
         PartSolutionStatus.WIP => ConsoleColor.Blue,
         PartSolutionStatus.Uninitialized => ConsoleColor.DarkGray,
         PartSolutionStatus.UnavailableFreeStar => ConsoleColor.DarkRed,
+        PartSolutionStatus.Refactoring => ConsoleColor.Cyan,
     };
 
     protected static void RunTodaysProblem(bool testCases = true)
