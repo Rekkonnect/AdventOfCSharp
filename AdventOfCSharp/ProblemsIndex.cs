@@ -169,7 +169,7 @@ public sealed record ProblemType(Type ProblemClass, int Year, int Day)
     // TODO: Research regex group name matching system
     public readonly static Regex ProblemClassNameRegex = new(@"Year(?'year'\d*)\.Day(?'day'\d*)$", RegexOptions.Compiled);
 
-    public Problem InitializeInstance() => ProblemClass.InitializeInstance<Problem>();
+    public Problem? InitializeInstance() => ProblemClass?.InitializeInstance<Problem>();
 
     public static ProblemType Mock(int year, int day) => new(null!, year, day);
 
@@ -196,10 +196,11 @@ public sealed record ProblemInfo(ProblemType ProblemType, PartSolutionStatus Par
 
     // Usually it's P2 that isn't solved, a tiny tiny tiny optimization for the fuck of it
     public bool HasBothValidSolutions => Part2Status.IsValidSolution() && Part1Status.IsValidSolution();
+    public bool HasNoValidSolutions => !Part2Status.IsValidSolution() && !Part1Status.IsValidSolution();
 
     public ProblemInfo WithUnavailablePart2Star => this with { Part2Status = PartSolutionStatus.UnavailableFreeStar };
 
-    public Problem InitializeInstance() => ProblemType.InitializeInstance();
+    public Problem? InitializeInstance() => ProblemType.InitializeInstance();
 
     public PartSolutionStatus StatusForPart(int part) => part switch
     {
