@@ -45,6 +45,9 @@ public abstract class BaseProgram
     }
     protected static void ValidateSolution(ProblemInfo problem)
     {
+        if (problem.HasNoValidSolutions)
+            return;
+
         var instance = problem.InitializeInstance();
         if (instance is null)
             return;
@@ -58,7 +61,7 @@ public abstract class BaseProgram
 
         void ValidatePart(int part)
         {
-            if (problem.StatusForPart(part) is not PartSolutionStatus.Valid)
+            if (!problem.StatusForPart(part).IsValidSolution())
                 return;
             if (!runner.ValidatePart(part))
                 WriteLineWithColor($"Part {part} yielded an invalid answer", ConsoleColor.Red);
