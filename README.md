@@ -37,8 +37,13 @@ Upcoming features:
 
 A documentation guide outside the project template will be created soon.
 
-<!--
 ## Demo
 
-TODO: Add demo screenshots and GIFs
--->
+### Main Menu
+
+https://user-images.githubusercontent.com/8298332/145657103-3462eee6-4598-4699-826a-507056efa5cc.mp4
+
+### All Problem Solution Validation
+
+https://user-images.githubusercontent.com/8298332/145657111-45f16479-f238-4ba1-adb2-7ad12890afc4.mp4
+
