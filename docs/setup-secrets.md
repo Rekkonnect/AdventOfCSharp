@@ -23,6 +23,6 @@ Then, you need to find your actual cookie. The most obvious and painless way is 
 
 ### Example screenshot
 
-![Chrome cookie discovery instructions](images/cookie_retrieval.png)
+![Chrome cookie discovery instructions](cookie_retrieval.png)
 
 Note that secrets are (partially) hidden.
