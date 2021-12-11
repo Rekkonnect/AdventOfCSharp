@@ -8,28 +8,60 @@ public abstract class BaseProgram
 {
     protected static void ValidateAllSolutions()
     {
-        var allProblems = ProblemsIndex.Instance.AllProblems();
         WriteLine($"Validating All Problems\n");
-        foreach (var problem in allProblems)
+        var allProblems = ProblemsIndex.Instance.AllProblems();
+        ValidateSolutions(allProblems);
+    }
+
+    protected static void ValidateThisYearsSolutions()
+    {
+        ValidateAllYearSolutions(ServerClock.Now.Year);
+    }
+    protected static void ValidateTodaysSolution()
+    {
+        var now = ServerClock.Now;
+        ValidateSolution(now.Year, now.Day);
+    }
+
+    protected static void ValidateAllYearSolutions(int year)
+    {
+        Write($"Validating All ");
+        DisplayInlineProblemYear(year);
+        WriteLine(" Solutions\n");
+        ValidateSolutions(ProblemsIndex.Instance.GetYearProblemInfo(year));
+    }
+    protected static void ValidateSolution(int year, int day)
+    {
+        Write($"Validating ");
+        DisplayInlineProblemDate(year, day);
+        WriteLine(" Solution\n");
+        ValidateSolution(ProblemsIndex.Instance[year, day]);
+    }
+
+    protected static void ValidateSolutions(IEnumerable<ProblemInfo> problems)
+    {
+        foreach (var problem in problems)
+            ValidateSolution(problem);
+    }
+    protected static void ValidateSolution(ProblemInfo problem)
+    {
+        var instance = problem.InitializeInstance();
+        if (instance is null)
+            return;
+
+        var runner = new ProblemRunner(instance);
+
+        DisplayProblemDate(problem.Year, problem.Day);
+        ValidatePart(1);
+        ValidatePart(2);
+        WriteLine();
+
+        void ValidatePart(int part)
         {
-            var instance = problem.ProblemType.ProblemClass?.InitializeInstance<Problem>();
-            if (instance is null)
-                continue;
-
-            var runner = new ProblemRunner(instance);
-
-            DisplayProblemDate(problem.Year, problem.Day);
-            ValidatePart(1);
-            ValidatePart(2);
-            WriteLine();
-
-            void ValidatePart(int part)
-            {
-                if (problem.StatusForPart(part) is not PartSolutionStatus.Valid)
-                    return;
-                if (!runner.ValidatePart(part))
-                    WriteLineWithColor($"Part {part} yielded an invalid answer", ConsoleColor.Red);
-            }
+            if (problem.StatusForPart(part) is not PartSolutionStatus.Valid)
+                return;
+            if (!runner.ValidatePart(part))
+                WriteLineWithColor($"Part {part} yielded an invalid answer", ConsoleColor.Red);
         }
     }
 
@@ -311,6 +343,21 @@ Focus on development, you lazy fucking ass
         WriteLine();
     }
 
+    protected static void DisplayInlineProblemYear(int year)
+    {
+        Write("Year ");
+        WriteWithColor(year.ToString(), ConsoleColor.Cyan);
+    }
+    protected static void DisplayInlineProblemDay(int day)
+    {
+        Write(" Day ");
+        WriteWithColor(day.ToString(), ConsoleColor.Cyan);
+    }
+    protected static void DisplayInlineProblemDate(int year, int day)
+    {
+        DisplayInlineProblemYear(year);
+        DisplayInlineProblemDay(day);
+    }
     protected static void DisplayProblemDate(int year, int day)
     {
         WriteWithColor("Year ", ConsoleColor.DarkRed, false);
