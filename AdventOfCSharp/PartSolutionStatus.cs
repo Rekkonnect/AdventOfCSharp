@@ -16,10 +16,11 @@ public enum PartSolutionStatus
     [EditorBrowsable(EditorBrowsableState.Never)]
     UnavailableFreeStar,
 
-    Broken = WIP,
+    Refactoring,
 }
 
 public static class PartSolutionStatusExtensions
 {
     public static bool IsValidSolution(this PartSolutionStatus status) => status is PartSolutionStatus.Valid or PartSolutionStatus.Unoptimized;
+    public static bool HasBeenSolved(this PartSolutionStatus status) => IsValidSolution(status) || status is PartSolutionStatus.Refactoring;
 }

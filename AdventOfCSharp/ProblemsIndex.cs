@@ -215,6 +215,8 @@ public sealed record ProblemInfo(ProblemType ProblemType, PartSolutionStatus Par
 public sealed class PartSolutionStatusDictionary : ValueCounterDictionary<PartSolutionStatus>
 {
     public int TotalValidSolutions => this[PartSolutionStatus.Valid] + this[PartSolutionStatus.Unoptimized];
+    public int TotalSolvedParts => TotalValidSolutions + this[PartSolutionStatus.Refactoring];
+    public int TotalWIPSolutions => this[PartSolutionStatus.WIP] + this[PartSolutionStatus.Refactoring];
 
     public PartSolutionStatusDictionary(IEnumerable<PartSolutionStatus> statuses)
         : base(statuses) { }
