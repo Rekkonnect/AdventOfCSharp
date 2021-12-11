@@ -35,7 +35,8 @@ Upcoming features:
 
 ## Documentation
 
-A documentation guide outside the project template will be created soon.
+A full documentation guide outside the project template will be completed soon.
+For the time being, documentation is available on the [docs directory](/docs).
 
 ## Demo
 
