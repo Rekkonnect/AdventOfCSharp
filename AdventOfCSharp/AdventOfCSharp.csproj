@@ -7,7 +7,7 @@
 
     <IsPackable>true</IsPackable>
 
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>An aspiring AoC problem solving framework.</Description>
@@ -19,10 +19,12 @@
     <Product>AdventOfCSharp</Product>
     <PackageId>AdventOfCSharp</PackageId>
     <PackageReleaseNotes>
-- Improved answer string converter behavior and API
-- Implemented a glyph grid answer conversion system
-- Improved hashing for NextValueCounterDictionary
-- Added numerous utility components in the process of implementing these changes
+- Added ability to declare a part solution as currently in refactoring process 
+- Made solution validation far more flexible to interact with
+
+Bugfixes:
+- Fix running solution validation on unoptimized problems
+- Prevent printing the date of a problem with no valid solutions
     </PackageReleaseNotes>
   </PropertyGroup>
 
