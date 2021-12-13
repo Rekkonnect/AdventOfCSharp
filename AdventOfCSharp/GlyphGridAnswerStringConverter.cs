@@ -10,12 +10,15 @@ public class GlyphGridAnswerStringConverter : AnswerStringConverter<IGlyphGrid>
         var drawn = value.ToString()!.Trim();
         var drawnLines = drawn.GetLines();
         var normalized = Normalize(drawnLines);
-        return ParseGlyphString(normalized);
+        return ParseGlyphString(normalized) ?? drawn;
     }
 
-    private static string ParseGlyphString(string[] glyphStringLines)
+    private static string? ParseGlyphString(string[] glyphStringLines)
     {
         var matchingFont = GetMatchingFont(glyphStringLines);
+
+        if (matchingFont is null)
+            return null;
 
         int currentColumn = 0;
         var chars = new List<char>();
@@ -51,10 +54,10 @@ public class GlyphGridAnswerStringConverter : AnswerStringConverter<IGlyphGrid>
         return true;
     }
 
-    private static GridFont GetMatchingFont(string[] glyphStringLines)
+    private static GridFont? GetMatchingFont(string[] glyphStringLines)
     {
         // Return the first matching font, because there will most likely not be any other
-        return GridFontStore.Default.Fonts.First(f => f.CanMatch(glyphStringLines));
+        return GridFontStore.Default.Fonts.FirstOrDefault(f => f.CanMatch(glyphStringLines));
     }
 
     private static string[] Normalize(string[] drawn)
