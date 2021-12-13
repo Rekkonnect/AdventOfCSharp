@@ -7,10 +7,14 @@ public sealed class GridFont
 {
     private readonly GlyphStorage storage = new();
 
+    public string? Name { get; init; }
+
     public int Height { get; }
 
-    public GridFont(IEnumerable<GridGlyph> glyphs)
+    public GridFont(IEnumerable<GridGlyph> glyphs, string? name = null)
     {
+        Name = name;
+
         var glyphArray = glyphs.ToArray();
         AddGlyphs(glyphArray);
 
@@ -46,11 +50,12 @@ public sealed class GridFont
         return Height == grid.Length;
     }
 
-    public static GridFont ParseFileContents(string fileContents)
+    public static GridFont ParseFileContents(string fileContents) => ParseFileContents(fileContents, null);
+    public static GridFont ParseFileContents(string fileContents, string? name)
     {
         var glyphs = fileContents.NormalizeLineEndings().Split("\n\n");
         var parsed = glyphs.Select(GridGlyph.ParseRawEntry);
-        return new(parsed);
+        return new(parsed, name);
     }
 
     private sealed class GlyphStorage

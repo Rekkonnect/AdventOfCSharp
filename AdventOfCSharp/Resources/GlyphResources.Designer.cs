@@ -69,6 +69,14 @@ namespace AdventOfCSharp.Resources {
         ///#..#
         ///#..#
         ///
+        ///B
+        ///###.
+        ///#..#
+        ///###.
+        ///#..#
+        ///#..#
+        ///###.
+        ///
         ///C
         ///.##.
         ///#..#
@@ -153,20 +161,11 @@ namespace AdventOfCSharp.Resources {
         ///###.
         ///#..#
         ///#..#
-        ///###.
-        ///#...
-        ///#...
-        ///
-        ///R
-        ///###.
-        ///#..#
-        ///#..#
-        ///###.
-        /// [rest of string was truncated]&quot;;.
+        ///###.        /// [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Year2016_Day8 {
+        internal static string Infrauth {
             get {
-                return ResourceManager.GetString("Year2016.Day8", resourceCulture);
+                return ResourceManager.GetString("Infrauth", resourceCulture);
             }
         }
         
@@ -243,12 +242,11 @@ namespace AdventOfCSharp.Resources {
         ///#...##
         ///.###.#
         ///
-        ///H
-        /// [rest of string was truncated]&quot;;.
+        ///H        /// [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Year2018_Day10 {
+        internal static string Stargazer {
             get {
-                return ResourceManager.GetString("Year2018.Day10", resourceCulture);
+                return ResourceManager.GetString("Stargazer", resourceCulture);
             }
         }
     }
