@@ -32,7 +32,7 @@ public class ProblemsIndex
     {
         var part1Status = GetPartSolutionStatus(type, 1);
         var part2Status = GetPartSolutionStatus(type, 2);
-        return new(type, part1Status, part2Status);
+        return new ProblemInfo(type, part1Status, part2Status).WithPart2EligibilityFromPart1;
     }
     private static PartSolutionStatus GetPartSolutionStatus(ProblemType type, int index)
     {
@@ -198,7 +198,10 @@ public sealed record ProblemInfo(ProblemType ProblemType, PartSolutionStatus Par
     public bool HasBothValidSolutions => Part2Status.IsValidSolution() && Part1Status.IsValidSolution();
     public bool HasNoValidSolutions => !Part2Status.IsValidSolution() && !Part1Status.IsValidSolution();
 
+    public ProblemInfo WithPart2EligibilityFromPart1 => Part1Status.HasBeenSolved() ? this : WithUninitializedPart2;
+
     public ProblemInfo WithUnavailablePart2Star => this with { Part2Status = PartSolutionStatus.UnavailableFreeStar };
+    public ProblemInfo WithUninitializedPart2 => this with { Part2Status = PartSolutionStatus.Uninitialized };
 
     public Problem? InitializeInstance() => ProblemType.InitializeInstance();
 
