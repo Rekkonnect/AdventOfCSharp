@@ -30,14 +30,14 @@ public sealed class GridFont
 
     public char MatchCharacter(string[] glyphStringLines, int startingColumn, out int nextGlyphStartingColumn)
     {
-        nextGlyphStartingColumn = startingColumn;
-
         foreach (var glyph in storage.Glyphs)
         {
             if (glyph.Matches(glyphStringLines, startingColumn, out nextGlyphStartingColumn))
                 return glyph.GlyphChar;
         }
 
+        // Avoid deadlocks in the case of a missing glyph
+        nextGlyphStartingColumn = startingColumn + 1;
         return default;
     }
 
