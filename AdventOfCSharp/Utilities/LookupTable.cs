@@ -5,6 +5,9 @@ public class LookupTable<T> : IReadOnlyCollection<T>
     protected readonly int Offset;
     protected readonly T?[] Values;
 
+    public int Start => Offset;
+    public int End => Offset + Count;
+
     public int Count => Values.Length;
 
     public IEnumerable<T> NonNullValues => Values.Where(Predicates.NotNull);
@@ -13,6 +16,11 @@ public class LookupTable<T> : IReadOnlyCollection<T>
     {
         Offset = start;
         Values = new T[end - start + 1];
+    }
+    public LookupTable(LookupTable<T> other)
+        : this(other.Start, other.End)
+    {
+        other.Values.CopyTo(Values, 0);
     }
 
     public bool Contains(int index)
