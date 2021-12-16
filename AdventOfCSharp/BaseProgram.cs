@@ -329,9 +329,8 @@ Focus on development, you lazy fucking ass
     }
     protected static void RunProblemTestCases(Problem instance)
     {
-        int testCases = instance.TestCaseFiles;
-        for (int i = 1; i <= testCases; i++)
-            RunProblemCase(instance, i);
+        foreach (int testCase in instance.Input.TestCaseIDs)
+            RunProblemCase(instance, testCase);
     }
 
     protected static void RunProblemCase(Problem instance, int testCase)

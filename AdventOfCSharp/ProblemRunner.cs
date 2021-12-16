@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace AdventOfCSharp;
+﻿namespace AdventOfCSharp;
 
 public sealed class ProblemRunner
 {
@@ -32,11 +30,9 @@ public sealed class ProblemRunner
 
     public bool FullyValidateAllTestCases()
     {
-        for (int i = 0; i <= Problem.TestCaseFiles; i++)
-        {
-            if (!ValidateAllParts(i))
+        foreach (int testCase in Problem.Input.TestCaseIDs)
+            if (!ValidateAllParts(testCase))
                 return false;
-        }
 
         return true;
     }
@@ -52,7 +48,7 @@ public sealed class ProblemRunner
     public bool ValidatePart(int part) => ValidatePart(part, 0);
     public bool ValidatePart(int part, int testCase)
     {
-        var contents = Problem.GetOutputFileContents(testCase, true);
+        var contents = Problem.Input.GetOutputFileContents(testCase, true);
         var expectedPartOutput = contents.ForPart(part);
         if (expectedPartOutput is null)
             return true;
