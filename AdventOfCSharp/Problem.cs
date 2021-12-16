@@ -81,6 +81,7 @@ public abstract partial class Problem
                     return;
 
                 currentTestCase = value;
+                cachedContents = null;
                 ProblemInstance.ResetLoadedState();
             }
         }
