@@ -1,7 +1,12 @@
 # Advent of C#
 
-An aspiring AoC problem solving framework, offering a beginner-friendly ecosystem and large functionality.
+An aspiring [Advent of Code](https://adventofcode.com/) problem solving framework, offering a beginner-friendly ecosystem and large functionality.
 It aims to aid users into primarily focusing on the core of solving this marvelous event's problems, leaving the need for building their own infrastructure aside.
+
+## What *is* Advent of Code?
+
+[Advent of Code](https://adventofcode.com/) is an annual event running during December 1 through 25, presenting one two-part problem every day.
+Users are challenged to write a working solution for their personalized input, given the problem's description. More information on the [website](https://adventofcode.com/2021/about).
 
 ## Donating
 
