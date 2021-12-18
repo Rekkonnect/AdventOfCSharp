@@ -13,8 +13,8 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
     protected override ResourceManager ResourceManager => DiagnosticStringResources.ResourceManager;
 
     #region Category Constants
-    public const string APIRestrictionsCategory = "API Restrictions";
     public const string BrevityCategory = "Brevity";
+    public const string ConventionCategory = "Convention";
     public const string DesignCategory = "Design";
     public const string InformationCategory = "Information";
     public const string ValidityCategory = "Validity";
@@ -27,6 +27,27 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
 
         CreateDiagnosticDescriptor(0001, ValidityCategory, DiagnosticSeverity.Error);
         CreateDiagnosticDescriptor(0002, ValidityCategory, DiagnosticSeverity.Error);
+
+        //SetDefaultDiagnosticAnalyzer<ProblemInheritanceAnalyzer>();
+
+        CreateDiagnosticDescriptor(0003, BrevityCategory, DiagnosticSeverity.Warning);
+
+        //SetDefaultDiagnosticAnalyzer<ProblemClassNamingAnalyzer>();
+
+        CreateDiagnosticDescriptor(0004, ConventionCategory, DiagnosticSeverity.Error);
+        CreateDiagnosticDescriptor(0005, ConventionCategory, DiagnosticSeverity.Error);
+        CreateDiagnosticDescriptor(0006, ConventionCategory, DiagnosticSeverity.Error);
+        CreateDiagnosticDescriptor(0007, ConventionCategory, DiagnosticSeverity.Error);
+
+        //SetDefaultDiagnosticAnalyzer<SecretsContainerAnalyzer>();
+
+        CreateDiagnosticDescriptor(0008, ValidityCategory, DiagnosticSeverity.Error);
+        CreateDiagnosticDescriptor(0009, ValidityCategory, DiagnosticSeverity.Error);
+        CreateDiagnosticDescriptor(0010, ValidityCategory, DiagnosticSeverity.Error);
+
+        //SetDefaultDiagnosticAnalyzer<FinalDayAnalyzer>();
+
+        CreateDiagnosticDescriptor(0011, DesignCategory, DiagnosticSeverity.Warning);
     }
     #endregion
 }
