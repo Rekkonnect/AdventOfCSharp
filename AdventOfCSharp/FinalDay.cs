@@ -1,6 +1,7 @@
 ﻿namespace AdventOfCSharp;
 
 public abstract class FinalDay<T> : Problem<T, string>
+    where T : notnull
 {
     public sealed override string SolvePart2()
     {

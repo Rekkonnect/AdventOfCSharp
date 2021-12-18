@@ -271,6 +271,8 @@ public abstract partial class Problem
 }
 
 public abstract class Problem<T1, T2> : Problem
+    where T1 : notnull
+    where T2 : notnull
 {
     public T1 RunPart1()
     {
@@ -287,4 +289,7 @@ public abstract class Problem<T1, T2> : Problem
     public abstract T2 SolvePart2();
 }
 
-public abstract class Problem<T> : Problem<T, T> { }
+public abstract class Problem<T> : Problem<T, T>
+    where T : notnull
+{
+}
