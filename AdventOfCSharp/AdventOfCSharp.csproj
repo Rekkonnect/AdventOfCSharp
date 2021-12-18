@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
-    <IsPackable>true</IsPackable>
+    <IsPackable>false</IsPackable>
 
     <Version>1.0.2</Version>
     
@@ -17,7 +17,6 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp</Product>
-    <PackageId>AdventOfCSharp</PackageId>
     <PackageReleaseNotes>
 - Added ability to declare a part solution as currently in refactoring process 
 - Made solution validation far more flexible to interact with
