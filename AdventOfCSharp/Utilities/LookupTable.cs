@@ -10,7 +10,7 @@ public class LookupTable<T> : IReadOnlyCollection<T>
 
     public int Count => Values.Length;
 
-    public IEnumerable<T> NonNullValues => Values.Where(Predicates.NotNull);
+    public IEnumerable<T> NonNullValues => Values.Where(Predicates.NotNull) as IEnumerable<T>;
 
     public LookupTable(int start, int end)
     {
@@ -55,6 +55,6 @@ public class LookupTable<T> : IReadOnlyCollection<T>
         set => Values[index - Offset] = value;
     }
 
-    public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)Values).GetEnumerator();
+    public IEnumerator<T> GetEnumerator() => NonNullValues.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

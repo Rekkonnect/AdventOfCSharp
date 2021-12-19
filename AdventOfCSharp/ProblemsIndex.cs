@@ -78,7 +78,7 @@ public sealed class GlobalYearSummary : IEnumerable<YearSummary>
 {
     private readonly SummaryTable summaryTable = new();
 
-    public IEnumerable<int> AvailableYears => summaryTable.NonNullValues.Select(summary => summary!.Year);
+    public IEnumerable<int> AvailableYears => summaryTable.Select(summary => summary!.Year);
 
     public GlobalYearSummary(IEnumerable<YearSummary> summaries)
     {
@@ -90,7 +90,7 @@ public sealed class GlobalYearSummary : IEnumerable<YearSummary>
 
     public YearSummary this[int year] => summaryTable[year] ?? YearSummary.Empty(year);
 
-    public IEnumerator<YearSummary> GetEnumerator() => summaryTable.NonNullValues.GetEnumerator() as IEnumerator<YearSummary>;
+    public IEnumerator<YearSummary> GetEnumerator() => summaryTable.GetEnumerator() as IEnumerator<YearSummary>;
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     private sealed class SummaryTable : LookupTable<YearSummary?>
@@ -154,7 +154,7 @@ public sealed class YearProblemInfo : IEnumerable<ProblemInfo>
         set => summaryTable[day] = value;
     }
 
-    public IEnumerator<ProblemInfo> GetEnumerator() => summaryTable.NonNullValues.GetEnumerator() as IEnumerator<ProblemInfo>;
+    public IEnumerator<ProblemInfo> GetEnumerator() => summaryTable.GetEnumerator() as IEnumerator<ProblemInfo>;
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     private sealed class ProblemInfoTable : LookupTable<ProblemInfo?>

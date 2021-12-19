@@ -39,26 +39,26 @@ public static class IEnumerableExtensions
         return false;
     }
 
-    public static TSource MinSource<TSource, TSelector>(this IEnumerable<TSource> source, Func<TSource, TSelector> selector)
-        where TSelector : IComparable<TSelector>
+    public static TSource? MinSource<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector)
+        where TKey : IComparable<TKey>
     {
         return source.ExtremumSource(selector, ComparisonResult.Less);
     }
-    public static TSource MaxSource<TSource, TSelector>(this IEnumerable<TSource> source, Func<TSource, TSelector> selector)
-        where TSelector : IComparable<TSelector>
+    public static TSource? MaxSource<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector)
+        where TKey : IComparable<TKey>
     {
         return source.ExtremumSource(selector, ComparisonResult.Greater);
     }
 
-    public static TSource ExtremumSource<TSource, TSelector>(this IEnumerable<TSource> source, Func<TSource, TSelector> selector, ComparisonResult matchingResult)
-        where TSelector : IComparable<TSelector>
+    public static TSource? ExtremumSource<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector, ComparisonResult matchingResult)
+        where TKey : IComparable<TKey>
     {
         var first = source.FirstOrDefault();
 
         if (source.Count() <= 1)
             return first;
 
-        var extremumSelected = selector(first);
+        var extremumSelected = selector(first!);
         var extremumSource = first;
 
         foreach (var sourceValue in source.Skip(1))

@@ -15,7 +15,7 @@ public class ProblemRunnerTests
     [Test]
     public void ValidateProblem()
     {
-        var runner = ProblemRunner.ForProblem(2021, 1);
+        var runner = ProblemRunner.ForProblem(2021, 1)!;
         Assert.True(runner.FullyValidateAllTestCases());
     }
 }

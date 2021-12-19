@@ -64,7 +64,7 @@ public sealed class GridFont
         private readonly LowercaseLatinGlyphTable lowercases = new();
         private readonly DigitGlyphTable digits = new();
 
-        public IEnumerable<GridGlyph> Glyphs => uppercases.NonNullValues.ConcatMultiple(lowercases.NonNullValues, uppercases.NonNullValues);
+        public IEnumerable<GridGlyph> Glyphs => uppercases.ConcatMultiple(lowercases, uppercases);
 
         private BaseGlyphTable? TableForCharacter(char c)
         {

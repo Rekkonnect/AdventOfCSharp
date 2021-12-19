@@ -310,11 +310,11 @@ Focus on development, you lazy fucking ass
     }
     protected static bool RunProblem(Type problemType, bool testCases = true)
     {
-        var instance = problemType?.GetConstructor(Type.EmptyTypes)!.Invoke(null) as Problem;
-        if (instance is null)
+        var instance = problemType?.GetConstructor(Type.EmptyTypes)!.Invoke(null);
+        if (instance is not Problem problem)
             return false;
 
-        RunProblemWithTestCases(instance, testCases);
+        RunProblemWithTestCases(problem, testCases);
         return true;
     }
     protected static void RunProblemWithTestCases(Problem instance, bool testCases)

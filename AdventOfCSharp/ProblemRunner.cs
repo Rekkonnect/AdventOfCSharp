@@ -12,7 +12,15 @@ public sealed class ProblemRunner
         Problem = problem;
     }
 
-    public static ProblemRunner ForProblem(int year, int day) => new(ProblemsIndex.Instance[year, day].InitializeInstance());
+    private static ProblemRunner? ForInstance(Problem? instance)
+    {
+        if (instance is null)
+            return null;
+
+        return new(instance);
+    }
+
+    public static ProblemRunner? ForProblem(int year, int day) => ForInstance(ProblemsIndex.Instance[year, day].InitializeInstance());
 
     public object[] SolveAllParts(bool displayExecutionTimes = true) => SolveAllParts(0, displayExecutionTimes);
     public object[] SolveAllParts(int testCase, bool displayExecutionTimes = true)
@@ -24,7 +32,7 @@ public sealed class ProblemRunner
     public object SolvePart(int part, bool displayExecutionTimes = true) => SolvePart(part, 0, displayExecutionTimes);
     public object SolvePart(int part, int testCase, bool displayExecutionTimes = true)
     {
-        var methods = new[] { Problem.GetType().GetMethod(SolvePartMethodName(part)) };
+        var methods = new[] { Problem.GetType().GetMethod(SolvePartMethodName(part))! };
         return SolveParts(testCase, methods, displayExecutionTimes)[0];
     }
 

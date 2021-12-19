@@ -1,5 +1,7 @@
 ﻿namespace AdventOfCSharp.Extensions;
 
+#nullable disable
+
 public static class ArrayExtensions
 {
     /// <summary>Gets the element at the specified indices in the 2D array.</summary>
