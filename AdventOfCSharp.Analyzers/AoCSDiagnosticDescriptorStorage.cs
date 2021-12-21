@@ -23,7 +23,7 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
     #region Rules
     private AoCSDiagnosticDescriptorStorage()
     {
-        //SetDefaultDiagnosticAnalyzer<PartSolutionAnalyzer>();
+        SetDefaultDiagnosticAnalyzer<PartSolutionAnalyzer>();
 
         CreateDiagnosticDescriptor(0001, ValidityCategory, DiagnosticSeverity.Error);
         CreateDiagnosticDescriptor(0002, ValidityCategory, DiagnosticSeverity.Error);

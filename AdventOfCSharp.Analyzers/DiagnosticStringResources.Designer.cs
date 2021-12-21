@@ -61,7 +61,7 @@ namespace AdventOfCSharp.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The PartSolutionAttribute may only be applied on functions that solve a problem part.
+        ///   Looks up a localized string similar to The PartSolutionAttribute may only be applied on functions that solve a problem part, annotated with PartSolverAttribute.
         /// </summary>
         internal static string AoCS0001_Description {
             get {

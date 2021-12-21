@@ -283,7 +283,9 @@ public abstract class Problem<T1, T2> : Problem
         return SolvePart2();
     }
 
+    [PartSolver]
     public abstract T1 SolvePart1();
+    [PartSolver]
     public abstract T2 SolvePart2();
 }
 
