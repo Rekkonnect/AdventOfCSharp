@@ -28,24 +28,24 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
         CreateDiagnosticDescriptor(0001, ValidityCategory, DiagnosticSeverity.Error);
         CreateDiagnosticDescriptor(0002, ValidityCategory, DiagnosticSeverity.Error);
 
-        //SetDefaultDiagnosticAnalyzer<ProblemInheritanceAnalyzer>();
+        SetDefaultDiagnosticAnalyzer<ProblemInheritanceAnalyzer>();
 
         CreateDiagnosticDescriptor(0003, BrevityCategory, DiagnosticSeverity.Warning);
 
-        //SetDefaultDiagnosticAnalyzer<ProblemClassNamingAnalyzer>();
+        SetDefaultDiagnosticAnalyzer<ProblemClassNamingAnalyzer>();
 
         CreateDiagnosticDescriptor(0004, ConventionCategory, DiagnosticSeverity.Error);
         CreateDiagnosticDescriptor(0005, ConventionCategory, DiagnosticSeverity.Error);
         CreateDiagnosticDescriptor(0006, ConventionCategory, DiagnosticSeverity.Error);
         CreateDiagnosticDescriptor(0007, ConventionCategory, DiagnosticSeverity.Error);
 
-        //SetDefaultDiagnosticAnalyzer<SecretsContainerAnalyzer>();
+        SetDefaultDiagnosticAnalyzer<SecretsContainerAnalyzer>();
 
         CreateDiagnosticDescriptor(0008, ValidityCategory, DiagnosticSeverity.Error);
         CreateDiagnosticDescriptor(0009, ValidityCategory, DiagnosticSeverity.Error);
         CreateDiagnosticDescriptor(0010, ValidityCategory, DiagnosticSeverity.Error);
 
-        //SetDefaultDiagnosticAnalyzer<FinalDayAnalyzer>();
+        SetDefaultDiagnosticAnalyzer<FinalDayAnalyzer>();
 
         CreateDiagnosticDescriptor(0011, DesignCategory, DiagnosticSeverity.Warning);
     }

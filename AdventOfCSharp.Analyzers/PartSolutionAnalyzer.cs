@@ -1,25 +1,13 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using RoseLynn.Analyzers;
 using System.Linq;
 
 namespace AdventOfCSharp.Analyzers;
 
-[DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class PartSolutionAnalyzer : CSharpDiagnosticAnalyzer
+public sealed class PartSolutionAnalyzer : AoCSAnalyzer
 {
-    protected override DiagnosticDescriptorStorageBase DiagnosticDescriptorStorage => AoCSDiagnosticDescriptorStorage.Instance;
-
-    public override void Initialize(AnalysisContext context)
-    {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
-        context.EnableConcurrentExecution();
-
-        RegisterAnalyzers(context);
-    }
-
-    private void RegisterAnalyzers(AnalysisContext context)
+    protected override void RegisterAnalyzers(AnalysisContext context)
     {
         context.RegisterSymbolAction(AnalyzeSolutionMethodDeclaration, SymbolKind.Method);
         context.RegisterSymbolAction(AnalyzePartSolutionAttributeUsage, SymbolKind.Method);
