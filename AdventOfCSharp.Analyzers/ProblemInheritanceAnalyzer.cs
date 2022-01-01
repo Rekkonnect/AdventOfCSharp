@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using RoseLynn;
 using System.Linq;
 
 namespace AdventOfCSharp.Analyzers;
@@ -12,10 +11,10 @@ public sealed class ProblemInheritanceAnalyzer : AoCSAnalyzer
 {
     protected override void RegisterAnalyzers(AnalysisContext context)
     {
-        context.RegisterSyntaxNodeAction(AnalyzeProblemSolutionType, SyntaxKind.ClassDeclaration);
+        context.RegisterSyntaxNodeAction(AnalyzeProblemSolutionClassInheritance, SyntaxKind.ClassDeclaration);
     }
 
-    private void AnalyzeProblemSolutionType(SyntaxNodeAnalysisContext context)
+    private void AnalyzeProblemSolutionClassInheritance(SyntaxNodeAnalysisContext context)
     {
         var semanticModel = context.SemanticModel;
         var classDeclarationNode = context.Node as ClassDeclarationSyntax;

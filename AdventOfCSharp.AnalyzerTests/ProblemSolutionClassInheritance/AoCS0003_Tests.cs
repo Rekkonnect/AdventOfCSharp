@@ -5,6 +5,7 @@ namespace AdventOfCSharp.Analyzers.Tests.ProblemSolutionClassInheritance;
 [TestClass]
 public sealed class AoCS0003_Tests : ProblemInheritanceAnalyzerTests
 {
+    // TODO: Assert diagnostic span using enclosing notation
     [TestMethod]
     public void RedundantReturnTypeRepetition()
     {

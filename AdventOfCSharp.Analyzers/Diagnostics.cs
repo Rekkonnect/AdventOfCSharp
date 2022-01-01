@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using AdventOfCSharp.Analyzers.Utilities;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
@@ -30,4 +31,30 @@ internal static class Diagnostics
 
         return Diagnostic.Create(Instance[0003], location);
     }
+
+    public static Diagnostic CreateAoCS0004(ClassDeclarationSyntax declarationNode)
+    {
+        return CreateNamingConventionDiagnostic(declarationNode, 0004);
+    }
+    public static Diagnostic CreateAoCS0005(BaseNamespaceDeclarationSyntax declarationNode)
+    {
+        return CreateNamingConventionDiagnostic(declarationNode, 0005);
+    }
+    public static Diagnostic CreateAoCS0006(ClassDeclarationSyntax declarationNode)
+    {
+        return CreateNamingConventionDiagnostic(declarationNode, 0006);
+    }
+    public static Diagnostic CreateAoCS0007(ClassDeclarationSyntax declarationNode)
+    {
+        return CreateNamingConventionDiagnostic(declarationNode, 0007);
+    }
+
+    private static Diagnostic CreateNamingConventionDiagnostic(MemberDeclarationSyntax declarationNode, int code)
+    {
+        return Diagnostic.Create(Instance[code], declarationNode.GetIdentifierTokenOrNameSyntax().GetLocation());
+    }
+
+    public delegate Diagnostic UnmatchedNamingConventionDiagnosticCreator(ClassDeclarationSyntax declarationNode);
+    public delegate Diagnostic InvalidDenotedDateDiagnosticCreator<in T>(T declarationNode)
+        where T : MemberDeclarationSyntax;
 }
