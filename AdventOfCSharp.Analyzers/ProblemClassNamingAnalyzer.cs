@@ -47,6 +47,9 @@ public sealed class ProblemClassNamingAnalyzer : AoCSAnalyzer
     private void AnalyzeDenotedYear(SyntaxNodeAnalysisContext context)
     {
         var classDeclaration = (context.Node as ClassDeclarationSyntax)!;
+        if (!IsProblemSolutionClass(classDeclaration, context.SemanticModel))
+            return;
+
         var identifier = classDeclaration.GetNearestParentOfType<BaseNamespaceDeclarationSyntax>().Name.GetRightmostIdentifier();
         var match = yearPattern.Match(identifier.Text);
         if (!match.Success)
@@ -57,6 +60,9 @@ public sealed class ProblemClassNamingAnalyzer : AoCSAnalyzer
     private void AnalyzeDenotedDay(SyntaxNodeAnalysisContext context)
     {
         var classDeclaration = (context.Node as ClassDeclarationSyntax)!;
+        if (!IsProblemSolutionClass(classDeclaration, context.SemanticModel))
+            return;
+
         var identifier = classDeclaration.Identifier;
         var match = dayPattern.Match(identifier.Text);
         if (!match.Success)

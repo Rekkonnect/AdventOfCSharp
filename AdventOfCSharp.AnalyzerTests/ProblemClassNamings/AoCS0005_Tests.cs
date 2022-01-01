@@ -37,11 +37,28 @@ public sealed class AoCS0005_Tests : ProblemClassNamingAnalyzerTests
         AssertNamespace(DateTime.Now.Year + 1, true);
     }
 
+    [TestMethod]
+    public void NonProblemSolutionClass()
+    {
+        const string testCode =
+@"
+namespace AoC.Year↓2021645
+
+public class Day1 : NotProblem<int>
+{
+    public override int SolvePart1() => default;
+    public override int SolvePart2() => default;
+}
+";
+
+        AssertDiagnosticsWithUsings(testCode);
+    }
+
     private void AssertNamespace(int year, bool assert)
     {
         var testCode =
 $@"
-namespace ↓AoC.Year{year};
+namespace AoC.Year↓{year};
 
 public class Day1 : Problem<int>
 {{

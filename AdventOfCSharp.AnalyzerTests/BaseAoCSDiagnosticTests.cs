@@ -39,11 +39,11 @@ public abstract class BaseAoCSDiagnosticTests : BaseDiagnosticTests
     [TestMethod]
     public void EmptyCode()
     {
-        ValidateCode(@"");
+        ValidateCode("");
     }
     [TestMethod]
     public void EmptyCodeWithUsings()
     {
-        ValidateCode(AoCSUsingsProvider.DefaultUsings);
+        ValidateCodeWithUsings("");
     }
 }

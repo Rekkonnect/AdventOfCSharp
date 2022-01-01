@@ -38,7 +38,7 @@ internal static class Diagnostics
     }
     public static Diagnostic CreateAoCS0005(BaseNamespaceDeclarationSyntax declarationNode)
     {
-        return CreateNamingConventionDiagnostic(declarationNode, 0005);
+        return CreateInvalidNumberDiagnostic(declarationNode, 0005, "Year");
     }
     public static Diagnostic CreateAoCS0006(ClassDeclarationSyntax declarationNode)
     {
@@ -46,13 +46,41 @@ internal static class Diagnostics
     }
     public static Diagnostic CreateAoCS0007(ClassDeclarationSyntax declarationNode)
     {
-        return CreateNamingConventionDiagnostic(declarationNode, 0007);
+        return CreateInvalidNumberDiagnostic(declarationNode, 0007, "Day");
+    }
+
+    public static Diagnostic CreateAoCS0011(ClassDeclarationSyntax declarationNode)
+    {
+        return CreateBaseListFirstTypeDiagnostic(declarationNode, 0011);
+    }
+    public static Diagnostic CreateAoCS0012(ClassDeclarationSyntax declarationNode)
+    {
+        return CreateBaseListFirstTypeDiagnostic(declarationNode, 0012);
+    }
+
+    private static Diagnostic CreateBaseListFirstTypeDiagnostic(BaseTypeDeclarationSyntax declarationNode, int code)
+    {
+        return Diagnostic.Create(Instance[code], declarationNode.BaseList.Types.First().GetLocation());
     }
 
     private static Diagnostic CreateNamingConventionDiagnostic(MemberDeclarationSyntax declarationNode, int code)
     {
         return Diagnostic.Create(Instance[code], declarationNode.GetIdentifierTokenOrNameSyntax().GetLocation());
     }
+    private static Diagnostic CreateInvalidNumberDiagnostic(MemberDeclarationSyntax declarationNode, int code, string prefix)
+    {
+        var rightmost = declarationNode.GetIdentifierTokenOrNameSyntax();
+        if (rightmost.AsNode() is NameSyntax name)
+            rightmost = name.GetRightmostIdentifier();
+
+        var wholeLocation = rightmost.GetLocation();
+        var wholeSpan = wholeLocation.SourceSpan;
+        var numberSpan = TextSpan.FromBounds(wholeSpan.Start + prefix.Length, wholeSpan.End);
+        var numberLocation = Location.Create(declarationNode.SyntaxTree, numberSpan);
+        return Diagnostic.Create(Instance[code], numberLocation);
+    }
+
+    public delegate Diagnostic FinalDayInheritanceDiagnosticCreator(ClassDeclarationSyntax declarationNode);
 
     public delegate Diagnostic UnmatchedNamingConventionDiagnosticCreator(ClassDeclarationSyntax declarationNode);
     public delegate Diagnostic InvalidDenotedDateDiagnosticCreator<in T>(T declarationNode)

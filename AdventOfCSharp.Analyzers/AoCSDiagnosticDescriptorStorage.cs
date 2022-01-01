@@ -48,6 +48,11 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
         SetDefaultDiagnosticAnalyzer<FinalDayAnalyzer>();
 
         CreateDiagnosticDescriptor(0011, DesignCategory, DiagnosticSeverity.Warning);
+        CreateDiagnosticDescriptor(0012, ValidityCategory, DiagnosticSeverity.Error);
+
+        //SetDefaultDiagnosticAnalyzer<PartSolverAttributeAnalyzer>();
+
+        CreateDiagnosticDescriptor(0013, ValidityCategory, DiagnosticSeverity.Error);
     }
     #endregion
 }

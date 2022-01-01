@@ -30,4 +30,22 @@ public class Day1 : Problem<int>
 
         AssertDiagnosticsWithUsings(testCode);
     }
+    [TestMethod]
+    public void InvalidPartSolutionAttributeNotProblem()
+    {
+        const string testCode =
+@"
+namespace AoC.Year2021;
+
+public class Day1 : NotProblem<int>
+{
+    [↓PartSolution(PartSolutionStatus.WIP)]
+    public override int SolvePart1() => -1;
+    [↓PartSolution(PartSolutionStatus.WIP)]
+    public override int SolvePart2() => -2;
+}
+";
+
+        AssertDiagnosticsWithUsings(testCode);
+    }
 }
