@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using AdventOfCSharp.Analyzers.Utilities;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Linq;
@@ -21,12 +22,12 @@ public sealed class PartSolutionAnalyzer : AoCSAnalyzer
                 // If only I could use dependencies
                 if (!methodSymbol.IsStatic)
                 {
-                    bool isPartSolutionMethod = methodSymbol.HasInheritedAttributeNamed("PartSolverAttribute");
+                    bool isPartSolutionMethod = methodSymbol.HasInheritedAttributeNamed(KnownSymbolNames.PartSolverAttribute);
                     if (isPartSolutionMethod)
                         return;
                 }
 
-                var solutionAttribute = methodSymbol.GetAttributes().Where(attribute => attribute.AttributeClass.Name == "PartSolutionAttribute").FirstOrDefault();
+                var solutionAttribute = methodSymbol.FirstOrDefaultAttribute(KnownSymbolNames.PartSolutionAttribute);
                 if (solutionAttribute is null)
                     return;
 
@@ -41,20 +42,17 @@ public sealed class PartSolutionAnalyzer : AoCSAnalyzer
         switch (context.Symbol)
         {
             case IMethodSymbol methodSymbol:
-                var solutionAttributes = methodSymbol.GetAttributes().Where(attribute => attribute.AttributeClass.Name == "PartSolutionAttribute");
-                foreach (var solutionAttribute in solutionAttributes)
-                {
-                    if (solutionAttribute.ConstructorArguments.Length is 0)
-                        continue;
+                var solutionAttribute = methodSymbol.FirstOrDefaultAttribute(KnownSymbolNames.PartSolutionAttribute);
+                if (solutionAttribute.ConstructorArguments.Length is 0)
+                    return;
 
-                    var argument = solutionAttribute.ConstructorArguments[0];
-                    if (IsDefinedEnumValue(argument))
-                        continue;
+                var argument = solutionAttribute.ConstructorArguments[0];
+                if (IsDefinedEnumValue(argument))
+                    return;
 
-                    var attributeNode = solutionAttribute.ApplicationSyntaxReference.GetSyntax() as AttributeSyntax;
-                    var undefinedEnumValueNode = attributeNode.ArgumentList.Arguments[0];
-                    context.ReportDiagnostic(Diagnostics.CreateAoCS0002(undefinedEnumValueNode));
-                }
+                var attributeNode = solutionAttribute.ApplicationSyntaxReference.GetSyntax() as AttributeSyntax;
+                var undefinedEnumValueNode = attributeNode.ArgumentList.Arguments[0];
+                context.ReportDiagnostic(Diagnostics.CreateAoCS0002(undefinedEnumValueNode));
 
                 break;
         }

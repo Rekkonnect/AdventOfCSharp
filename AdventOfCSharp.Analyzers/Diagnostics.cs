@@ -58,6 +58,11 @@ internal static class Diagnostics
         return CreateBaseListFirstTypeDiagnostic(declarationNode, 0012);
     }
 
+    public static Diagnostic CreateAoCS0013(AttributeSyntax node)
+    {
+        return Diagnostic.Create(Instance[0013], node?.GetLocation());
+    }
+
     private static Diagnostic CreateBaseListFirstTypeDiagnostic(BaseTypeDeclarationSyntax declarationNode, int code)
     {
         return Diagnostic.Create(Instance[code], declarationNode.BaseList.Types.First().GetLocation());
