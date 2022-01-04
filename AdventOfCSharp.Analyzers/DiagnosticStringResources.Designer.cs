@@ -61,7 +61,7 @@ namespace AdventOfCSharp.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The PartSolutionAttribute may only be applied on functions that solve a problem part, annotated with PartSolverAttribute.
+        ///   Looks up a localized string similar to The PartSolutionAttribute may only be applied on methods that solve a problem part, annotated with PartSolverAttribute.
         /// </summary>
         internal static string AoCS0001_Description {
             get {
@@ -70,11 +70,182 @@ namespace AdventOfCSharp.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid PartSolutionAttribute on non-solution function.
+        ///   Looks up a localized string similar to Invalid PartSolutionAttribute on non-solution method.
         /// </summary>
         internal static string AoCS0001_Title {
             get {
                 return ResourceManager.GetString("AoCS0001_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The PartSolutionStatus value provided on the PartSolutionAttribute must be a declared enum value.
+        /// </summary>
+        internal static string AoCS0002_Description {
+            get {
+                return ResourceManager.GetString("AoCS0002_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid PartSolutionStatus value on PartSolutionAttribute.
+        /// </summary>
+        internal static string AoCS0002_Title {
+            get {
+                return ResourceManager.GetString("AoCS0002_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to As most problems return an integer value, this is a handy shortcut.
+        /// </summary>
+        internal static string AoCS0003_Description {
+            get {
+                return ResourceManager.GetString("AoCS0003_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prefer using Problem&lt;T&gt; for problems whose both parts have the same return type.
+        /// </summary>
+        internal static string AoCS0003_Title {
+            get {
+                return ResourceManager.GetString("AoCS0003_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Problem solution classes should be contained in namespaces denoting the year of the problem.
+        /// </summary>
+        internal static string AoCS0004_Description {
+            get {
+                return ResourceManager.GetString("AoCS0004_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Containing namespace of a problem solution class must end in &apos;Year20XX&apos;.
+        /// </summary>
+        internal static string AoCS0004_Title {
+            get {
+                return ResourceManager.GetString("AoCS0004_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The denoted year should be a valid year.
+        /// </summary>
+        internal static string AoCS0005_Description {
+            get {
+                return ResourceManager.GetString("AoCS0005_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Denoted problem year must be a valid year after 2015, up until the current one.
+        /// </summary>
+        internal static string AoCS0005_Title {
+            get {
+                return ResourceManager.GetString("AoCS0005_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Problem solution classes should be named appropriately to denote the day of the problem.
+        /// </summary>
+        internal static string AoCS0006_Description {
+            get {
+                return ResourceManager.GetString("AoCS0006_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Problem solution class must be named &apos;DayX&apos;.
+        /// </summary>
+        internal static string AoCS0006_Title {
+            get {
+                return ResourceManager.GetString("AoCS0006_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Denoted problem day must be between 1 and 25.
+        /// </summary>
+        internal static string AoCS0007_Title {
+            get {
+                return ResourceManager.GetString("AoCS0007_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The SecretsContainerAttribute can only be used on a sealed class that inherits ISecretsContainer and provides a public parameterless constructor.
+        /// </summary>
+        internal static string AoCS0008_Description {
+            get {
+                return ResourceManager.GetString("AoCS0008_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid SecretsContainerAttribute on non-secret container class.
+        /// </summary>
+        internal static string AoCS0008_Title {
+            get {
+                return ResourceManager.GetString("AoCS0008_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FinalDay&lt;T&gt; contains additional abstracted logic specialized for Day 25 problems.
+        /// </summary>
+        internal static string AoCS0011_Description {
+            get {
+                return ResourceManager.GetString("AoCS0011_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prefer inheriting FinalDay&lt;T&gt; for Day 25 solutions.
+        /// </summary>
+        internal static string AoCS0011_Title {
+            get {
+                return ResourceManager.GetString("AoCS0011_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FinalDay&lt;T&gt; is specialized for Day 25 problems.
+        /// </summary>
+        internal static string AoCS0012_Description {
+            get {
+                return ResourceManager.GetString("AoCS0012_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only use FinalDay&lt;T&gt; for Day 25 problems.
+        /// </summary>
+        internal static string AoCS0012_Title {
+            get {
+                return ResourceManager.GetString("AoCS0012_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PartSolverAttribute should only be placed on public instance methods with no parameters or generic parameters with a non-void return type in a problem solution class.
+        /// </summary>
+        internal static string AoCS0013_Description {
+            get {
+                return ResourceManager.GetString("AoCS0013_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid PartSolverAttribute on non-solver method.
+        /// </summary>
+        internal static string AoCS0013_Title {
+            get {
+                return ResourceManager.GetString("AoCS0013_Title", resourceCulture);
             }
         }
     }
