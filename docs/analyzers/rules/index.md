@@ -9,9 +9,12 @@ Rule ID                 | Category   | Severity
 [AoCS0006](AoCS0006.md) | Convention | Error
 [AoCS0007](AoCS0007.md) | Convention | Error
 [AoCS0008](AoCS0008.md) | Validity   | Error
-[AoCS0009](AoCS0009.md) | Validity   | Error
-[AoCS0010](AoCS0010.md) | Validity   | Error
 [AoCS0011](AoCS0011.md) | Design     | Warning
+[AoCS0012](AoCS0012.md) | Validity   | Error
+[AoCS0013](AoCS0013.md) | Validity   | Error
 
 ## Discontinued Rules
-No discontinued rules so far.
+Rule ID  | Embodied Rule ID(s)
+---------|------------------------
+AoCS0009 | [AoCS0008](AoCS0008.md)
+AoCS0010 | [AoCS0008](AoCS0008.md)

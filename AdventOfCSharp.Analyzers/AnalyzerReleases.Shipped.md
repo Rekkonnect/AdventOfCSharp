@@ -15,6 +15,6 @@ AoCS0005 | Convention | Error | ProblemClassNamingAnalyzer, [Documentation](../.
 AoCS0006 | Convention | Error | ProblemClassNamingAnalyzer, [Documentation](../../docs/analyzers/rules/GA0006.md)
 AoCS0007 | Convention | Error | ProblemClassNamingAnalyzer, [Documentation](../../docs/analyzers/rules/GA0007.md)
 AoCS0008 | Validity | Error | SecretsContainerAnalyzer, [Documentation](../../docs/analyzers/rules/GA0008.md)
-AoCS0009 | Validity | Error | SecretsContainerAnalyzer, [Documentation](../../docs/analyzers/rules/GA0009.md)
-AoCS0010 | Validity | Error | SecretsContainerAnalyzer, [Documentation](../../docs/analyzers/rules/GA0010.md)
 AoCS0011 | Design | Warning | FinalDayAnalyzer, [Documentation](../../docs/analyzers/rules/GA0011.md)
+AoCS0012 | Validity | Error | FinalDayAnalyzer, [Documentation](../../docs/analyzers/rules/GA0012.md)
+AoCS0013 | Validity | Error | PartSolverAttributeAnalyzer, [Documentation](../../docs/analyzers/rules/GA0013.md)
