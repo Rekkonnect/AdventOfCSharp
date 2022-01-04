@@ -30,7 +30,7 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
 
         SetDefaultDiagnosticAnalyzer<ProblemInheritanceAnalyzer>();
 
-        CreateDiagnosticDescriptor(0003, BrevityCategory, DiagnosticSeverity.Warning);
+        CreateDiagnosticDescriptor(0003, BrevityCategory, DiagnosticSeverity.Info);
 
         SetDefaultDiagnosticAnalyzer<ProblemClassNamingAnalyzer>();
 

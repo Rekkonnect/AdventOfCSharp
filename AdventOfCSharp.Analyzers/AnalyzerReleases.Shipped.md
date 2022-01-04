@@ -9,7 +9,7 @@ Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 AoCS0001 | Validity | Error | PartSolutionAnalyzer, [Documentation](../../docs/analyzers/rules/GA0001.md)
 AoCS0002 | Validity | Error | PartSolutionAnalyzer, [Documentation](../../docs/analyzers/rules/GA0002.md)
-AoCS0003 | Brevity | Warning | ProblemInheritanceAnalyzer, [Documentation](../../docs/analyzers/rules/GA0003.md)
+AoCS0003 | Brevity | Info | ProblemInheritanceAnalyzer, [Documentation](../../docs/analyzers/rules/GA0003.md)
 AoCS0004 | Convention | Error | ProblemClassNamingAnalyzer, [Documentation](../../docs/analyzers/rules/GA0004.md)
 AoCS0005 | Convention | Error | ProblemClassNamingAnalyzer, [Documentation](../../docs/analyzers/rules/GA0005.md)
 AoCS0006 | Convention | Error | ProblemClassNamingAnalyzer, [Documentation](../../docs/analyzers/rules/GA0006.md)
