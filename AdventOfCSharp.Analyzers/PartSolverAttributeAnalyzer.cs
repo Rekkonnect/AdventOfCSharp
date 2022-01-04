@@ -3,20 +3,17 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.FlowAnalysis;
-using RoseLynn;
 using RoseLynn.CSharp.Syntax;
-using System.Linq;
 
 namespace AdventOfCSharp.Analyzers;
 
 #nullable enable
 
-public sealed class PartSolverAttributeAnalyzer : AoCSAnalyzer
+public sealed class PartSolverAttributeAnalyzer : ProblemAoCSAnalyzer
 {
     protected override void RegisterAnalyzers(AnalysisContext context)
     {
-        context.RegisterSyntaxNodeAction(AnalyzePartSolverAttributeValidity, SyntaxKind.Attribute);
+        context.RegisterTargetAttributeSyntaxNodeAction(AnalyzePartSolverAttributeValidity, KnownSymbolNames.PartSolverAttribute);
     }
 
     // In an AoC project, attributes should not be too commonly used, meaning less nodes to iterate
@@ -24,20 +21,16 @@ public sealed class PartSolverAttributeAnalyzer : AoCSAnalyzer
     private void AnalyzePartSolverAttributeValidity(SyntaxNodeAnalysisContext context)
     {
         var attributeNode = context.Node as AttributeSyntax;
+
         if (attributeNode!.GetParentAttributeList().Parent is not MethodDeclarationSyntax methodDeclarationNode)
             return;
 
         var methodSymbol = context.SemanticModel.GetDeclaredSymbol(methodDeclarationNode)!;
 
-        if (!methodSymbol.HasAttributeNamed(KnownSymbolNames.PartSolverAttribute))
-            return;
-
         if (IsValidPartSolver(methodSymbol))
             return;
 
-        var solverAttribute = methodSymbol.FirstOrDefaultAttribute(KnownSymbolNames.PartSolverAttribute)!;
-        var solverAttributeNode = solverAttribute.ApplicationSyntaxReference!.GetSyntax() as AttributeSyntax;
-        context.ReportDiagnostic(Diagnostics.CreateAoCS0013(solverAttributeNode));
+        context.ReportDiagnostic(Diagnostics.CreateAoCS0013(attributeNode));
     }
 
     private static bool IsValidPartSolver(IMethodSymbol methodSymbol)
@@ -57,12 +50,14 @@ public sealed class PartSolverAttributeAnalyzer : AoCSAnalyzer
 
         static bool MeetsDeclarationCriteria(IMethodSymbol methodSymbol)
         {
+            // How could pattern matching be improved to support this kinda syntax?
+            // Or would the real fix be enabling extension properties?
             return methodSymbol is
                    {
                        DeclaredAccessibility: Accessibility.Public,
                        IsStatic: false,
+                       ReturnType.SpecialType: not SpecialType.System_Void
                    }
-                && methodSymbol.ReturnType.SpecialType is not SpecialType.System_Void
                 && methodSymbol.IsParameterlessNonGenericMethod();
         }
     }

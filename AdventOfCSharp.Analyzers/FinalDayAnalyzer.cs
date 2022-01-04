@@ -10,7 +10,7 @@ namespace AdventOfCSharp.Analyzers;
 
 #nullable enable
 
-public sealed class FinalDayAnalyzer : AoCSAnalyzer
+public sealed class FinalDayAnalyzer : ProblemAoCSAnalyzer
 {
     private const string day25Name = "Day25";
     private const string finalDayClassName = $"{nameof(AdventOfCSharp)}.FinalDay`1";

@@ -49,6 +49,11 @@ internal static class Diagnostics
         return CreateInvalidNumberDiagnostic(declarationNode, 0007, "Day");
     }
 
+    public static Diagnostic CreateAoCS0008(AttributeSyntax node)
+    {
+        return Diagnostic.Create(Instance[0008], node?.GetLocation());
+    }
+
     public static Diagnostic CreateAoCS0011(ClassDeclarationSyntax declarationNode)
     {
         return CreateBaseListFirstTypeDiagnostic(declarationNode, 0011);

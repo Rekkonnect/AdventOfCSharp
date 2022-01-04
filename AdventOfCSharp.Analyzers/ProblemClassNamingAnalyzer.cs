@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCSharp.Analyzers;
 
-public sealed class ProblemClassNamingAnalyzer : AoCSAnalyzer
+public sealed class ProblemClassNamingAnalyzer : ProblemAoCSAnalyzer
 {
     // The patterns do not care about specifics of the valid ranges; those must be handled by the diagnostics
     private static readonly Regex yearPattern = new(@"^Year(?'year'\d*)$", RegexOptions.Compiled);

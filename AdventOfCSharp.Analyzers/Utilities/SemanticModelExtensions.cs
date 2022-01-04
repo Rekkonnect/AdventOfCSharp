@@ -12,4 +12,9 @@ public static class SemanticModelExtensions
     {
         return semanticModel.GetSymbolInfo(type).Symbol as TSymbol;
     }
+
+    public static INamedTypeSymbol GetAttributeTypeSymbol(this SemanticModel semanticModel, AttributeSyntax attributeNode)
+    {
+        return (semanticModel.GetTypeInfo(attributeNode).Type as INamedTypeSymbol)!;
+    }
 }

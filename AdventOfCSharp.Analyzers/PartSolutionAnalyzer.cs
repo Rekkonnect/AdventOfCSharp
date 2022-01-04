@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace AdventOfCSharp.Analyzers;
 
-public sealed class PartSolutionAnalyzer : AoCSAnalyzer
+public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
 {
     protected override void RegisterAnalyzers(AnalysisContext context)
     {

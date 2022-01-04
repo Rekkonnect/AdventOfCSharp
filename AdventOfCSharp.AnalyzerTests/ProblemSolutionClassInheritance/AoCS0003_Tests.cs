@@ -63,4 +63,22 @@ public class Day2 : Problem<int>
 
         AssertDiagnosticsWithUsings(testCode);
     }
+
+    [TestMethod]
+    public void IrrelevantTypeParameterRepetition()
+    {
+        const string testCode =
+@"
+namespace AoC.Year2021;
+
+public class Day1 : Dictionary<int, int>
+{
+}
+public class IntDictionary : Dictionary<int, int>
+{
+}
+";
+
+        ValidateCodeWithUsings(testCode);
+    }
 }

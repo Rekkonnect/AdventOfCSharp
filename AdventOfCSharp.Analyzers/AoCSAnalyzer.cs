@@ -1,6 +1,5 @@
 ﻿using AdventOfCSharp.Analyzers.Utilities;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoseLynn;
 using RoseLynn.Analyzers;
@@ -24,23 +23,11 @@ public abstract class AoCSAnalyzer : CSharpDiagnosticAnalyzer
     }
     protected abstract void RegisterAnalyzers(AnalysisContext context);
 
-    protected static bool IsProblemSolutionClass(ClassDeclarationSyntax? classDeclaration, SemanticModel semanticModel)
+    protected static bool IsImportantAoCSClass(INamedTypeSymbol classSymbol, string name)
     {
-        return IsProblemSolutionClass(classDeclaration, semanticModel, out _);
-    }
-    protected static bool IsProblemSolutionClass(ClassDeclarationSyntax? classDeclaration, SemanticModel semanticModel, out INamedTypeSymbol? classSymbol)
-    {
-        classSymbol = null;
-        if (classDeclaration is null)
-            return false;
-        classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration) as INamedTypeSymbol;
-        return IsProblemSolutionClass(classSymbol!);
-    }
-    protected static bool IsProblemSolutionClass(INamedTypeSymbol classSymbol)
-    {
-        // Analyzing symbols using hard-coded names be like
         if (classSymbol.IsAbstract)
             return false;
-        return classSymbol.GetAllBaseTypes().Any(baseType => baseType.FullMetadataName() is $"{nameof(AdventOfCSharp)}.Problem");
+
+        return classSymbol.GetAllBaseTypesAndInterfaces().Any(baseType => baseType.FullMetadataName() == $"{nameof(AdventOfCSharp)}.{name}");
     }
 }

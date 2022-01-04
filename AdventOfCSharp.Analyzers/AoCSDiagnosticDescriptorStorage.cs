@@ -42,8 +42,6 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
         SetDefaultDiagnosticAnalyzer<SecretsContainerAnalyzer>();
 
         CreateDiagnosticDescriptor(0008, ValidityCategory, DiagnosticSeverity.Error);
-        CreateDiagnosticDescriptor(0009, ValidityCategory, DiagnosticSeverity.Error);
-        CreateDiagnosticDescriptor(0010, ValidityCategory, DiagnosticSeverity.Error);
 
         SetDefaultDiagnosticAnalyzer<FinalDayAnalyzer>();
 

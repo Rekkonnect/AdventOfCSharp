@@ -6,12 +6,20 @@ namespace AdventOfCSharp.Analyzers.Utilities;
 
 public static class IMethodSymbolExtensions
 {
+    public static bool IsPublicParameterlessMethod(this IMethodSymbol symbol)
+    {
+        return symbol is
+        {
+            DeclaredAccessibility: Accessibility.Public,
+            Parameters.IsEmpty: true,
+        };
+    }
     public static bool IsParameterlessNonGenericMethod(this IMethodSymbol symbol)
     {
         return symbol is
         {
             IsGenericMethod: false,
-            Parameters.Length: 0,
+            Parameters.IsEmpty: true,
         };
     }
 }
