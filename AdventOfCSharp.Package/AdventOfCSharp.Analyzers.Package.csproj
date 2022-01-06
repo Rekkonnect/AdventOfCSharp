@@ -2,36 +2,35 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
+    
+    <IncludeBuildOutput>true</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    
-    <IsPackable>true</IsPackable>
-    <Version>1.1.0</Version>
 
-    <PackageTags>advent-of-code, aoc</PackageTags>
-    <Description>An aspiring AoC problem solving framework.</Description>
-    <Copyright>© 2021, Alex Kalfakakos</Copyright>
-    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <IsPackable>true</IsPackable>
+    <Version>1.1.0-alpha9001</Version>
+
     <Authors>Alex Kalfakakos</Authors>
+    <Company />
+    <PackageTags>advent-of-code, aoc</PackageTags>
+    <Description>Analyzers for using Advent of C#.</Description>
+    <Copyright>© 2021-2022, Alex Kalfakakos</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Product>AdventOfCSharp</Product>
-    <PackageId>AdventOfCSharp</PackageId>
+    <Product>AdventOfCSharp.Analyzers</Product>
+    <PackageId>AdventOfCSharp.Analyzers</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCSharp.Analyzers\AdventOfCSharp.Analyzers.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.CodeFixes\AdventOfCSharp.CodeFixes.csproj" />
-<!--
-    <ProjectReference Include="..\AdventOfCSharp\AdventOfCSharp.csproj" />
--->
   </ItemGroup>
 
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
   </ItemGroup>
-
+  
   <!-- Add the required packages -->
   <ItemGroup>
     <PackageReference Include="RoseLynn" Version="0.3.5" PrivateAssets="all" GeneratePathProperty="true" />
@@ -44,9 +43,6 @@
 
     <TfmSpecificPackageFile Include="$(OutputPath)\AdventOfCSharp.Analyzers.dll" PackagePath="analyzers/dotnet/cs" />
     <TfmSpecificPackageFile Include="$(OutputPath)\AdventOfCSharp.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
-<!--
-    <TfmSpecificPackageFile Include="$(OutputPath)\AdventOfCSharp.dll" PackagePath="analyzers/dotnet/cs" />
--->
   </ItemGroup>
 
 </Project>
