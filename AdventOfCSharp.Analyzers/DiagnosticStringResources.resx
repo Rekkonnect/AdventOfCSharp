@@ -117,64 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AoCS0001_Description" xml:space="preserve">
+  <data name="AoCS0001_MessageFormat" xml:space="preserve">
     <value>The PartSolutionAttribute may only be applied on methods that solve a problem part, annotated with PartSolverAttribute</value>
   </data>
   <data name="AoCS0001_Title" xml:space="preserve">
     <value>Invalid PartSolutionAttribute on non-solution method</value>
   </data>
-  <data name="AoCS0002_Description" xml:space="preserve">
+  <data name="AoCS0002_MessageFormat" xml:space="preserve">
     <value>The PartSolutionStatus value provided on the PartSolutionAttribute must be a declared enum value</value>
   </data>
   <data name="AoCS0002_Title" xml:space="preserve">
     <value>Invalid PartSolutionStatus value on PartSolutionAttribute</value>
   </data>
-  <data name="AoCS0003_Description" xml:space="preserve">
-    <value>As most problems return an integer value, this is a handy shortcut</value>
+  <data name="AoCS0003_MessageFormat" xml:space="preserve">
+    <value>Prefer using Problem&lt;T&gt; for problems whose both parts have the same return type</value>
   </data>
   <data name="AoCS0003_Title" xml:space="preserve">
     <value>Prefer using Problem&lt;T&gt; for problems whose both parts have the same return type</value>
   </data>
-  <data name="AoCS0004_Description" xml:space="preserve">
+  <data name="AoCS0004_MessageFormat" xml:space="preserve">
     <value>Problem solution classes should be contained in namespaces denoting the year of the problem</value>
   </data>
   <data name="AoCS0004_Title" xml:space="preserve">
     <value>Containing namespace of a problem solution class must end in 'Year20XX'</value>
   </data>
-  <data name="AoCS0005_Description" xml:space="preserve">
-    <value>The denoted year should be a valid year</value>
-  </data>
-  <data name="AoCS0005_Title" xml:space="preserve">
+  <data name="AoCS0005_MessageFormat" xml:space="preserve">
     <value>Denoted problem year must be a valid year after 2015, up until the current one</value>
   </data>
-  <data name="AoCS0006_Description" xml:space="preserve">
+  <data name="AoCS0005_Title" xml:space="preserve">
+    <value>The denoted year should be a valid year</value>
+  </data>
+  <data name="AoCS0006_MessageFormat" xml:space="preserve">
     <value>Problem solution classes should be named appropriately to denote the day of the problem</value>
   </data>
   <data name="AoCS0006_Title" xml:space="preserve">
     <value>Problem solution class must be named 'DayX'</value>
   </data>
+  <data name="AoCS0007_MessageFormat" xml:space="preserve">
+    <value>Denoted problem day must be between 1 and 25</value>
+  </data>
   <data name="AoCS0007_Title" xml:space="preserve">
     <value>Denoted problem day must be between 1 and 25</value>
   </data>
-  <data name="AoCS0008_Description" xml:space="preserve">
+  <data name="AoCS0008_MessageFormat" xml:space="preserve">
     <value>The SecretsContainerAttribute can only be used on a sealed class that inherits ISecretsContainer and provides a public parameterless constructor</value>
   </data>
   <data name="AoCS0008_Title" xml:space="preserve">
     <value>Invalid SecretsContainerAttribute on non-secret container class</value>
   </data>
-  <data name="AoCS0011_Description" xml:space="preserve">
+  <data name="AoCS0011_MessageFormat" xml:space="preserve">
     <value>FinalDay&lt;T&gt; contains additional abstracted logic specialized for Day 25 problems</value>
   </data>
   <data name="AoCS0011_Title" xml:space="preserve">
     <value>Prefer inheriting FinalDay&lt;T&gt; for Day 25 solutions</value>
   </data>
-  <data name="AoCS0012_Description" xml:space="preserve">
+  <data name="AoCS0012_MessageFormat" xml:space="preserve">
     <value>FinalDay&lt;T&gt; is specialized for Day 25 problems</value>
   </data>
   <data name="AoCS0012_Title" xml:space="preserve">
     <value>Only use FinalDay&lt;T&gt; for Day 25 problems</value>
   </data>
-  <data name="AoCS0013_Description" xml:space="preserve">
+  <data name="AoCS0013_MessageFormat" xml:space="preserve">
     <value>PartSolverAttribute should only be placed on public instance methods with no parameters or generic parameters with a non-void return type in a problem solution class</value>
   </data>
   <data name="AoCS0013_Title" xml:space="preserve">

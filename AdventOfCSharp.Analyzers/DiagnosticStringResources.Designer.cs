@@ -63,9 +63,9 @@ namespace AdventOfCSharp.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to The PartSolutionAttribute may only be applied on methods that solve a problem part, annotated with PartSolverAttribute.
         /// </summary>
-        internal static string AoCS0001_Description {
+        internal static string AoCS0001_MessageFormat {
             get {
-                return ResourceManager.GetString("AoCS0001_Description", resourceCulture);
+                return ResourceManager.GetString("AoCS0001_MessageFormat", resourceCulture);
             }
         }
         
@@ -81,9 +81,9 @@ namespace AdventOfCSharp.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to The PartSolutionStatus value provided on the PartSolutionAttribute must be a declared enum value.
         /// </summary>
-        internal static string AoCS0002_Description {
+        internal static string AoCS0002_MessageFormat {
             get {
-                return ResourceManager.GetString("AoCS0002_Description", resourceCulture);
+                return ResourceManager.GetString("AoCS0002_MessageFormat", resourceCulture);
             }
         }
         
@@ -97,11 +97,11 @@ namespace AdventOfCSharp.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to As most problems return an integer value, this is a handy shortcut.
+        ///   Looks up a localized string similar to Prefer using Problem&lt;T&gt; for problems whose both parts have the same return type.
         /// </summary>
-        internal static string AoCS0003_Description {
+        internal static string AoCS0003_MessageFormat {
             get {
-                return ResourceManager.GetString("AoCS0003_Description", resourceCulture);
+                return ResourceManager.GetString("AoCS0003_MessageFormat", resourceCulture);
             }
         }
         
@@ -117,9 +117,9 @@ namespace AdventOfCSharp.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to Problem solution classes should be contained in namespaces denoting the year of the problem.
         /// </summary>
-        internal static string AoCS0004_Description {
+        internal static string AoCS0004_MessageFormat {
             get {
-                return ResourceManager.GetString("AoCS0004_Description", resourceCulture);
+                return ResourceManager.GetString("AoCS0004_MessageFormat", resourceCulture);
             }
         }
         
@@ -133,16 +133,16 @@ namespace AdventOfCSharp.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The denoted year should be a valid year.
+        ///   Looks up a localized string similar to Denoted problem year must be a valid year after 2015, up until the current one.
         /// </summary>
-        internal static string AoCS0005_Description {
+        internal static string AoCS0005_MessageFormat {
             get {
-                return ResourceManager.GetString("AoCS0005_Description", resourceCulture);
+                return ResourceManager.GetString("AoCS0005_MessageFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Denoted problem year must be a valid year after 2015, up until the current one.
+        ///   Looks up a localized string similar to The denoted year should be a valid year.
         /// </summary>
         internal static string AoCS0005_Title {
             get {
@@ -153,9 +153,9 @@ namespace AdventOfCSharp.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to Problem solution classes should be named appropriately to denote the day of the problem.
         /// </summary>
-        internal static string AoCS0006_Description {
+        internal static string AoCS0006_MessageFormat {
             get {
-                return ResourceManager.GetString("AoCS0006_Description", resourceCulture);
+                return ResourceManager.GetString("AoCS0006_MessageFormat", resourceCulture);
             }
         }
         
@@ -171,6 +171,15 @@ namespace AdventOfCSharp.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to Denoted problem day must be between 1 and 25.
         /// </summary>
+        internal static string AoCS0007_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0007_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Denoted problem day must be between 1 and 25.
+        /// </summary>
         internal static string AoCS0007_Title {
             get {
                 return ResourceManager.GetString("AoCS0007_Title", resourceCulture);
@@ -180,9 +189,9 @@ namespace AdventOfCSharp.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to The SecretsContainerAttribute can only be used on a sealed class that inherits ISecretsContainer and provides a public parameterless constructor.
         /// </summary>
-        internal static string AoCS0008_Description {
+        internal static string AoCS0008_MessageFormat {
             get {
-                return ResourceManager.GetString("AoCS0008_Description", resourceCulture);
+                return ResourceManager.GetString("AoCS0008_MessageFormat", resourceCulture);
             }
         }
         
@@ -198,9 +207,9 @@ namespace AdventOfCSharp.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to FinalDay&lt;T&gt; contains additional abstracted logic specialized for Day 25 problems.
         /// </summary>
-        internal static string AoCS0011_Description {
+        internal static string AoCS0011_MessageFormat {
             get {
-                return ResourceManager.GetString("AoCS0011_Description", resourceCulture);
+                return ResourceManager.GetString("AoCS0011_MessageFormat", resourceCulture);
             }
         }
         
@@ -216,9 +225,9 @@ namespace AdventOfCSharp.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to FinalDay&lt;T&gt; is specialized for Day 25 problems.
         /// </summary>
-        internal static string AoCS0012_Description {
+        internal static string AoCS0012_MessageFormat {
             get {
-                return ResourceManager.GetString("AoCS0012_Description", resourceCulture);
+                return ResourceManager.GetString("AoCS0012_MessageFormat", resourceCulture);
             }
         }
         
@@ -234,9 +243,9 @@ namespace AdventOfCSharp.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to PartSolverAttribute should only be placed on public instance methods with no parameters or generic parameters with a non-void return type in a problem solution class.
         /// </summary>
-        internal static string AoCS0013_Description {
+        internal static string AoCS0013_MessageFormat {
             get {
-                return ResourceManager.GetString("AoCS0013_Description", resourceCulture);
+                return ResourceManager.GetString("AoCS0013_MessageFormat", resourceCulture);
             }
         }
         
