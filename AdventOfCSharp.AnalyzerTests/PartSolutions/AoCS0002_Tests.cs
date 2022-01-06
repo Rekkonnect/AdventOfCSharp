@@ -17,6 +17,31 @@ public sealed class AoCS0002_Tests : PartSolutionAnalyzerTests
         InvalidPartSolutionStatusValues(IntegerAsEnumLiteralCodeString(534789), true);
     }
 
+    [TestMethod]
+    public void IrrelevantAttribute()
+    {
+        string testCode =
+@"
+namespace AoC.Year2021;
+
+public class Day1 : Problem<int>
+{
+    [Random((DayOfWeek)456)]
+    public override int SolvePart1() => -1;
+    [Random((DayOfWeek)789)]
+    public override int SolvePart2() => -2;
+}
+
+public sealed class RandomAttribute : Attribute
+{
+    public RandomAttribute(DayOfWeek day) { }
+}
+";
+
+        ValidateCodeWithUsings(testCode);
+
+    }
+
     private void InvalidPartSolutionStatusValues(string enumValueCode, bool assert)
     {
         string testCode =

@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System.Linq;
 
 namespace AdventOfCSharp.Analyzers;
 
@@ -44,7 +43,7 @@ public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
         {
             case IMethodSymbol methodSymbol:
                 var solutionAttribute = methodSymbol.FirstOrDefaultAttribute(KnownSymbolNames.PartSolutionAttribute);
-                if (solutionAttribute.ConstructorArguments.Length is 0)
+                if (solutionAttribute?.ConstructorArguments.Length is null or 0)
                     return;
 
                 var argument = solutionAttribute.ConstructorArguments[0];
