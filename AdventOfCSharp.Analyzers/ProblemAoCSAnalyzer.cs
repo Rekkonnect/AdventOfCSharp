@@ -6,7 +6,6 @@ namespace AdventOfCSharp.Analyzers;
 
 #nullable enable
 
-[DiagnosticAnalyzer(LanguageNames.CSharp)]
 public abstract class ProblemAoCSAnalyzer : AoCSAnalyzer
 {
     protected static bool IsProblemSolutionClass(ClassDeclarationSyntax? classDeclaration, SemanticModel semanticModel)

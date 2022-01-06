@@ -9,6 +9,7 @@ namespace AdventOfCSharp.Analyzers;
 
 #nullable enable
 
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class PartSolverAttributeAnalyzer : ProblemAoCSAnalyzer
 {
     protected override void RegisterAnalyzers(AnalysisContext context)

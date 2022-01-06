@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCSharp.Analyzers;
 
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProblemClassNamingAnalyzer : ProblemAoCSAnalyzer
 {
     // The patterns do not care about specifics of the valid ranges; those must be handled by the diagnostics
@@ -77,19 +78,6 @@ public sealed class ProblemClassNamingAnalyzer : ProblemAoCSAnalyzer
             context.ReportDiagnostic(Diagnostics.CreateAoCS0007(classDeclaration));
         }
     }
-
-    // TODO: Figure out the initial shape of the logic
-    private void AnalyzeProblemClassNamingConvention(SyntaxNodeAnalysisContext context)
-    {
-
-    }
-    private void AnalyzeDenotedDate<T>(SyntaxNodeAnalysisContext context, Diagnostics.InvalidDenotedDateDiagnosticCreator<T> diagnosticCreator)
-        where T : MemberDeclarationSyntax
-    {
-
-    }
-
-
 
     // This is quite a useful component for RoseLynn
     private class TypeDeclarationInfo

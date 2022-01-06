@@ -9,7 +9,6 @@ namespace AdventOfCSharp.Analyzers;
 
 #nullable enable
 
-[DiagnosticAnalyzer(LanguageNames.CSharp)]
 public abstract class AoCSAnalyzer : CSharpDiagnosticAnalyzer
 {
     protected sealed override DiagnosticDescriptorStorageBase DiagnosticDescriptorStorage => AoCSDiagnosticDescriptorStorage.Instance;

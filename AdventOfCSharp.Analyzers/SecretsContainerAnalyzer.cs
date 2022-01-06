@@ -3,12 +3,11 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using RoseLynn;
 using RoseLynn.CSharp.Syntax;
-using System.Linq;
 
 namespace AdventOfCSharp.Analyzers;
 
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class SecretsContainerAnalyzer : AoCSAnalyzer
 {
     protected override void RegisterAnalyzers(AnalysisContext context)

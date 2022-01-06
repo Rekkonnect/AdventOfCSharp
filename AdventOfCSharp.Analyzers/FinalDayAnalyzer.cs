@@ -10,6 +10,7 @@ namespace AdventOfCSharp.Analyzers;
 
 #nullable enable
 
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class FinalDayAnalyzer : ProblemAoCSAnalyzer
 {
     private const string day25Name = "Day25";

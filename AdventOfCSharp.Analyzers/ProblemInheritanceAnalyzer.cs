@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace AdventOfCSharp.Analyzers;
 
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProblemInheritanceAnalyzer : AoCSAnalyzer
 {
     protected override void RegisterAnalyzers(AnalysisContext context)
