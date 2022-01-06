@@ -9,17 +9,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Tests", "Adv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.ProblemSolutionTests", "AdventOfCSharp.ProblemSolutionTests\AdventOfCSharp.ProblemSolutionTests.csproj", "{4FB168E0-A516-4438-8484-B2B7003ADCA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.Package", "AdventOfCSharp.Package\AdventOfCSharp.Package.csproj", "{6FE24D8D-5634-40BB-B86B-F2BE794F1FA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Analyzers.Package", "AdventOfCSharp.Package\AdventOfCSharp.Analyzers.Package.csproj", "{6FE24D8D-5634-40BB-B86B-F2BE794F1FA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.Analyzers", "AdventOfCSharp.Analyzers\AdventOfCSharp.Analyzers.csproj", "{A625CA50-EDF9-4FDB-86AB-6FCF10AAFEA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Analyzers", "AdventOfCSharp.Analyzers\AdventOfCSharp.Analyzers.csproj", "{A625CA50-EDF9-4FDB-86AB-6FCF10AAFEA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.CodeFixes", "AdventOfCSharp.CodeFixes\AdventOfCSharp.CodeFixes.csproj", "{C69E1A48-3590-47D0-9918-32BB024BDD25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.CodeFixes", "AdventOfCSharp.CodeFixes\AdventOfCSharp.CodeFixes.csproj", "{C69E1A48-3590-47D0-9918-32BB024BDD25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.Analyzers.Tests", "AdventOfCSharp.AnalyzerTests\AdventOfCSharp.Analyzers.Tests.csproj", "{EF0CB2E5-38D4-49C5-9040-376503AA649E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Analyzers.Tests", "AdventOfCSharp.AnalyzerTests\AdventOfCSharp.Analyzers.Tests.csproj", "{EF0CB2E5-38D4-49C5-9040-376503AA649E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.CodeFixes.Tests", "AdventOfCSharp.CodeFixes.Tests\AdventOfCSharp.CodeFixes.Tests.csproj", "{C06FB8F5-19CB-4209-BFDE-0304ED017844}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.CodeFixes.Tests", "AdventOfCSharp.CodeFixes.Tests\AdventOfCSharp.CodeFixes.Tests.csproj", "{C06FB8F5-19CB-4209-BFDE-0304ED017844}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.AnalysisTestsBase", "AdventOfCSharp.AnalysisTestsBase\AdventOfCSharp.AnalysisTestsBase.csproj", "{AB4F9306-2596-49AF-8D92-BC619FA3F773}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.AnalysisTestsBase", "AdventOfCSharp.AnalysisTestsBase\AdventOfCSharp.AnalysisTestsBase.csproj", "{AB4F9306-2596-49AF-8D92-BC619FA3F773}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

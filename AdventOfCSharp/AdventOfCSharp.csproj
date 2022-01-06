@@ -7,9 +7,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
+    <Version>1.1.0-rc1</Version>
 
-    <Version>1.0.2</Version>
-    
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>An aspiring AoC problem solving framework.</Description>
     <Copyright>© 2021, Alex Kalfakakos</Copyright>
@@ -30,6 +29,7 @@ Bugfixes:
 
   <ItemGroup>
     <PackageReference Include="Garyon" Version="0.2.6.1" />
+    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.1.0-rc1" />
   </ItemGroup>
 
   <ItemGroup>

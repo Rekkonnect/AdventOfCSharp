@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    
-    <IncludeBuildOutput>true</IncludeBuildOutput>
+
+    <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <IsPackable>true</IsPackable>
-    <Version>1.1.0-alpha9001</Version>
+    <Version>1.1.0-rc1</Version>
 
     <Authors>Alex Kalfakakos</Authors>
     <Company />
