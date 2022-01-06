@@ -58,4 +58,21 @@ public class Day1 : Problem<int>
 
         AssertDiagnosticsWithUsings(testCode);
     }
+
+    [TestMethod]
+    public void Problem2Declarer()
+    {
+        var testCode =
+@"
+public abstract class Problem<T1, T2> : Problem
+{
+    [PartSolver]
+    public abstract T1 SolvePart1();
+    [PartSolver]
+    public abstract T2 SolvePart2();
+}
+";
+
+        ValidateCodeWithUsings(testCode);
+    }
 }

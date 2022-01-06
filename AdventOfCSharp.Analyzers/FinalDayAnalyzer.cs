@@ -24,7 +24,11 @@ public sealed class FinalDayAnalyzer : ProblemAoCSAnalyzer
     private void AnalyzeProblemSolutionType(SyntaxNodeAnalysisContext context)
     {
         var classDeclaration = context.Node as ClassDeclarationSyntax;
+
         if (!IsProblemSolutionClass(classDeclaration, context.SemanticModel, out var classSymbol))
+            return;
+
+        if (classSymbol!.IsAbstract)
             return;
 
         bool isDay25 = classDeclaration?.Identifier.ValueText == day25Name;

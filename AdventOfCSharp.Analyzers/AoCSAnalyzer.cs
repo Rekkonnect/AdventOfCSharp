@@ -24,9 +24,6 @@ public abstract class AoCSAnalyzer : CSharpDiagnosticAnalyzer
 
     protected static bool IsImportantAoCSClass(INamedTypeSymbol classSymbol, string name)
     {
-        if (classSymbol.IsAbstract)
-            return false;
-
         return classSymbol.GetAllBaseTypesAndInterfaces().Any(baseType => baseType.FullMetadataName() == $"{nameof(AdventOfCSharp)}.{name}");
     }
 }
