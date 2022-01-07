@@ -117,7 +117,7 @@ public abstract class BaseProgram
         var currentDate = ServerClock.Now;
 
         if (selectedYear == currentDate.Year && currentDate.Month == 12)
-            maxDay = currentDate.Day;
+            maxDay = Math.Min(maxDay, currentDate.Day);
 
         WriteLine("\nAvailable Days:");
         var (leftOffset, topOffset) = GetCursorPosition();
