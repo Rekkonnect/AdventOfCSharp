@@ -4,6 +4,8 @@ using static System.Console;
 
 namespace AdventOfCSharp;
 
+using static Utilities.ConsolePrinting;
+
 public abstract class BaseProgram
 {
     protected static void ValidateAllSolutions()
@@ -160,38 +162,6 @@ public abstract class BaseProgram
                 return value;
         }
     }
-
-    #region Pretty console writing
-    // This kind of functionality must be available somewhere
-    // I should browse some packages
-    protected static void ClearUntilCursorReposition(int startLeft, int startTop)
-    {
-        ClearUntilCursor(startLeft, startTop);
-        SetCursorPosition(startLeft, startTop);
-    }
-    protected static void ClearUntilCursor(int startLeft, int startTop)
-    {
-        int length = GetConsoleBufferDifference(startLeft, startTop);
-
-        CursorTop = startTop;
-        CursorLeft = startLeft;
-
-        var clearString = new string(' ', length);
-        Write(clearString);
-    }
-    protected static int GetConsoleBufferDifference(int startLeft, int startTop)
-    {
-        var (endLeft, endTop) = GetCursorPosition();
-        return GetConsoleBufferDifference(startLeft, startTop, endLeft, endTop);
-    }
-    protected static int GetConsoleBufferDifference(int startLeft, int startTop, int endLeft, int endTop)
-    {
-        int width = BufferWidth;
-        int differenceLeft = endLeft - startLeft;
-        int differenceTop = endTop - startTop;
-        return differenceTop * width - differenceLeft;
-    }
-    #endregion
 
     protected static void WriteLegend()
     {
