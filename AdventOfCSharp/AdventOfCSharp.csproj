@@ -7,29 +7,36 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
-    <Version>1.1.0-rc4</Version>
+    <Version>1.1.0</Version>
 
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>An aspiring AoC problem solving framework.</Description>
-    <Copyright>© 2021, Alex Kalfakakos</Copyright>
+    <Copyright>© 2021-2022, Alex Kalfakakos</Copyright>
     <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
     <Authors>Alex Kalfakakos</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp</Product>
     <PackageReleaseNotes>
-- Added ability to declare a part solution as currently in refactoring process 
-- Made solution validation far more flexible to interact with
+Changes:
+- Migrated console printing functions (BREAKING)
+- Removed SolutionTemplate (never intended to be live)
+- Added notnull constraints on problem classes' type arguments
+- Refactored input retrieval
+
+Analyzers:
+- Added analyzers for a handful of silent issues when using the framework
+- Code fixes are also available for AoCS0003 and AoCS0011
 
 Bugfixes:
-- Fix running solution validation on unoptimized problems
-- Prevent printing the date of a problem with no valid solutions
+- Fixed crashes on glyph grid parsing
+- Do not crash the menu on Dec 26-31
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Garyon" Version="0.2.6.1" />
-    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.1.0-rc4" />
+    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
