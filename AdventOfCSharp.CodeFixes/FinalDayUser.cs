@@ -1,4 +1,5 @@
 ﻿using AdventOfCSharp.Analyzers;
+using AdventOfCSharp.CodeFixes.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
@@ -46,8 +47,7 @@ public sealed class FinalDayUser : AoCSCodeFixProvider
         if (cancellationToken.IsCancellationRequested)
             return context.Document;
 
-        var newClassSymbols = newSemanticModel.Compilation.GetSymbolsWithName(declaredClassSymbol.Name, SymbolFilter.Type, cancellationToken);
-        declaredClassSymbol = newClassSymbols.First() as INamedTypeSymbol;
+        declaredClassSymbol = newSemanticModel.Compilation.GetMatchingSymbol(declaredClassSymbol, cancellationToken) as INamedTypeSymbol;
 
         return await RemovePart2SolverOverride(replaced);
 
