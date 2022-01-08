@@ -21,8 +21,8 @@ jobs:
     - name: Run Problem Solution Tests
       run: dotnet test AdventOfCSharp.ProblemSolutionTests/AdventOfCSharp.ProblemSolutionTests.csproj
       
+    - name: Run Analyzer Tests
+      run: dotnet test AdventOfCSharp.AnalyzerTests/AdventOfCSharp.Analyzers.Tests.csproj
+      
     - name: Run Code Fix Tests
       run: dotnet test AdventOfCSharp.CodeFixes.Tests/AdventOfCSharp.CodeFixes.Tests.csproj
-      
-    - name: Run Analyzer Tests
-      run: dotnet test AdventOfCSharp.AnalyzerTests/AdventOfCSharp.AnalyzerTests.csproj
