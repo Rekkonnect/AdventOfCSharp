@@ -1,4 +1,5 @@
-﻿using AdventOfCSharp.AnalysisTestsBase.Verifiers;
+﻿using AdventOfCSharp.AnalysisTestsBase;
+using AdventOfCSharp.AnalysisTestsBase.Verifiers;
 using AdventOfCSharp.Analyzers;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,5 +24,10 @@ public abstract class BaseCodeFixTests<TAnalyzer, TCodeFix> : BaseCodeFixDiagnos
     public void TestExistingCodeFixName()
     {
         Assert.IsNotNull(new TCodeFix().CodeFixTitle);
+    }
+
+    public void TestCodeFixWithUsings(string markupCode, string expected, int codeActionIndex = 0)
+    {
+        TestCodeFix(AoCSUsingsProvider.Instance.WithUsings(markupCode), AoCSUsingsProvider.Instance.WithUsings(expected), codeActionIndex);
     }
 }

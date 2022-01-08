@@ -61,7 +61,16 @@ namespace AdventOfCSharp.CodeFixes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Use FinalDay&lt;T&gt;.
+        /// </summary>
+        internal static string FinalDayUser_Title {
+            get {
+                return ResourceManager.GetString("FinalDayUser_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simplify to Problem&lt;T&gt;.
         /// </summary>
         internal static string ProblemClassSimplifier_Title {
             get {
