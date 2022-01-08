@@ -7,7 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
-    <Version>1.1.0</Version>
+    <Version>1.1.0.1</Version>
 
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>An aspiring AoC problem solving framework.</Description>
@@ -18,6 +18,12 @@
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp</Product>
     <PackageReleaseNotes>
+1.1.0.1 changes:
+
+Bugfixes:
+- Fixed Day25 FinalDay&lt;T&gt; code fix for multiple years
+
+1.1.0 changes:
 Changes:
 - Migrated console printing functions (BREAKING)
 - Removed SolutionTemplate (never intended to be live)
@@ -36,7 +42,7 @@ Bugfixes:
 
   <ItemGroup>
     <PackageReference Include="Garyon" Version="0.2.6.1" />
-    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.1.0" />
+    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
