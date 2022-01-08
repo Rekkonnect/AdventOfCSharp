@@ -9,7 +9,12 @@ public static class KnownSymbolNames
 
     public const string SecretsContainerAttribute = nameof(SecretsContainerAttribute);
 
+    public const string FinalDay = nameof(FinalDay);
+
     public const string Problem = nameof(Problem);
     public const string SecretsContainer = nameof(SecretsContainer);
     public const string ISecretsContainer = nameof(ISecretsContainer);
+
+    public const string SolvePart1 = nameof(SolvePart1);
+    public const string SolvePart2 = nameof(SolvePart2);
 }
