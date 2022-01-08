@@ -32,10 +32,10 @@ Found [here](https://github.com/AlFasGD/AdventOfCSharp.Template)
   - Execution time per part
   - Summary of all available solutions, and per individual parts
 - Answer conversion system, producing answer strings ready to be copied onto the website
+- Source analyzers that ensure correct usage of the framework
 
 Upcoming features:
 - Benchmarking
-- Source analyzers
 - and [more](https://github.com/AlFasGD/AdventOfCSharp/issues)
 
 ## Documentation
