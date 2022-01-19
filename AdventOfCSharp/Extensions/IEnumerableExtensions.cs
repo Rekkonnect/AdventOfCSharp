@@ -1,4 +1,6 @@
-﻿namespace AdventOfCSharp.Extensions;
+﻿using System.Globalization;
+
+namespace AdventOfCSharp.Extensions;
 
 public static class IEnumerableExtensions
 {
@@ -23,20 +25,6 @@ public static class IEnumerableExtensions
         where TKey : notnull
     {
         return values.WherePredicate(valuePredicate).ToDictionary(keySelector);
-    }
-
-    public static bool CountAtLeast<T>(this IEnumerable<T> source, Func<T, bool> filter, int occurrences)
-    {
-        var filtered = source.Where(filter);
-        int count = 0;
-
-        foreach (var e in filtered)
-        {
-            count++;
-            if (count >= occurrences)
-                return true;
-        }
-        return false;
     }
 
     public static TSource? MinSource<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector)

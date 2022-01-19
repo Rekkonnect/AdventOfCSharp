@@ -41,7 +41,7 @@ Bugfixes:
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Garyon" Version="0.2.6.1" />
+    <PackageReference Include="Garyon" Version="0.2.7" />
     <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.1.0.1" />
   </ItemGroup>
 

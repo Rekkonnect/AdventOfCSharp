@@ -1,5 +1,4 @@
-﻿using AdventOfCSharp.Analyzers.Utilities;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoseLynn;
 using RoseLynn.Analyzers;
@@ -24,6 +23,18 @@ public abstract class AoCSAnalyzer : CSharpDiagnosticAnalyzer
 
     protected static bool IsImportantAoCSClass(INamedTypeSymbol classSymbol, string name)
     {
-        return classSymbol.GetAllBaseTypesAndInterfaces().Any(baseType => baseType.FullMetadataName() == $"{nameof(AdventOfCSharp)}.{name}");
+        var parsed = IdentifierWithArity.Parse(name);
+        return IsImportantAoCSClass(classSymbol, parsed);
+    }
+    protected static bool IsImportantAoCSClass(INamedTypeSymbol classSymbol, IdentifierWithArity name)
+    {
+        return classSymbol.GetAllBaseTypesAndInterfaces().Any(Matches);
+
+        bool Matches(INamedTypeSymbol baseType)
+        {
+            var fullBaseName = baseType.GetFullSymbolName(SymbolNameKind.Normal)!;
+            return fullBaseName.Matches(ExpectedSymbolName(), SymbolNameMatchingLevel.Namespace);
+        }
+        FullSymbolName ExpectedSymbolName() => new(name, new[] { nameof(AdventOfCSharp) });
     }
 }

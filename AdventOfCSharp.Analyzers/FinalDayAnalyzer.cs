@@ -1,10 +1,7 @@
-﻿using AdventOfCSharp.Analyzers.Utilities;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using RoseLynn;
-using System.Linq;
 
 namespace AdventOfCSharp.Analyzers;
 
@@ -14,7 +11,8 @@ namespace AdventOfCSharp.Analyzers;
 public sealed class FinalDayAnalyzer : ProblemAoCSAnalyzer
 {
     private const string day25Name = "Day25";
-    private const string finalDayClassName = $"{nameof(AdventOfCSharp)}.FinalDay`1";
+    private const string finalDayClassName = "FinalDay`1";
+    private const string finalDayFullClassName = $"{nameof(AdventOfCSharp)}.FinalDay`1";
 
     protected override void RegisterAnalyzers(AnalysisContext context)
     {
@@ -31,7 +29,7 @@ public sealed class FinalDayAnalyzer : ProblemAoCSAnalyzer
         if (classSymbol!.IsAbstract)
             return;
 
-        bool isDay25 = classDeclaration?.Identifier.ValueText == day25Name;
+        bool isDay25 = classDeclaration?.Identifier.ValueText is day25Name;
 
         if (InheritsFinalDayClass(classSymbol!) == isDay25)
             return;
@@ -46,7 +44,6 @@ public sealed class FinalDayAnalyzer : ProblemAoCSAnalyzer
 
     private static bool InheritsFinalDayClass(INamedTypeSymbol classSymbol)
     {
-        var baseTypes = classSymbol.GetAllBaseTypes();
-        return baseTypes.Any(baseType => baseType.FullMetadataName() is finalDayClassName);
+        return IsImportantAoCSClass(classSymbol, finalDayClassName);
     }
 }

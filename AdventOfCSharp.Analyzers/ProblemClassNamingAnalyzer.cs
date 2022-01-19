@@ -1,8 +1,8 @@
-﻿using AdventOfCSharp.Analyzers.Utilities;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using RoseLynn;
 using RoseLynn.CSharp.Syntax;
 using System;
 using System.Text.RegularExpressions;
@@ -82,19 +82,6 @@ public sealed class ProblemClassNamingAnalyzer : ProblemAoCSAnalyzer
         if (day < 1 || day > 25)
         {
             context.ReportDiagnostic(Diagnostics.CreateAoCS0007(classDeclaration));
-        }
-    }
-
-    // This is quite a useful component for RoseLynn
-    private class TypeDeclarationInfo
-    {
-        public BaseTypeDeclarationSyntax DeclarationNode { get; }
-        public INamedTypeSymbol DeclaredType { get; }
-
-        public TypeDeclarationInfo(BaseTypeDeclarationSyntax declarationNode, SemanticModel semanticModel)
-        {
-            DeclarationNode = declarationNode;
-            DeclaredType = semanticModel.GetDeclaredSymbol(declarationNode)!;
         }
     }
 }
