@@ -1,5 +1,6 @@
 ﻿using AdventOfCSharp.Resources;
 using AdventOfCSharp.Utilities;
+using Garyon.Objects;
 
 namespace AdventOfCSharp;
 

@@ -1,12 +1,18 @@
 ﻿namespace AdventOfCSharp;
 
+/// <summary>Denotes a part's solution status.</summary>
 public enum PartSolutionStatus
 {
+    /// <summary>The solution has not begun yet.</summary>
     Uninitialized,
 
+    /// <summary>The solution is in progress.</summary>
     WIP,
+    /// <summary>The solution is valid, but unoptimized.</summary>
+    /// <remarks>This value should be used for solutions whose execution time is unexpectedly long, or above 10-15 seconds.</remarks>
     Unoptimized,
 
+    /// <summary>The solution is valid.</summary>
     Valid,
 
     /// <summary>
@@ -16,6 +22,11 @@ public enum PartSolutionStatus
     [EditorBrowsable(EditorBrowsableState.Never)]
     UnavailableFreeStar,
 
+    /// <summary>The solution is under a refactoring process.</summary>
+    /// <remarks>
+    /// This value implies that the part has been previously solved, but the implementation is being refactored.
+    /// Consider using <seealso cref="WIP"/> if the part has not been solved in a previous timeframe.
+    /// </remarks>
     Refactoring,
 }
 
