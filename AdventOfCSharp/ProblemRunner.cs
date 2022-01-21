@@ -22,6 +22,7 @@ public sealed class ProblemRunner
 
     public static ProblemRunner? ForProblem(int year, int day) => ForInstance(ProblemsIndex.Instance[year, day].InitializeInstance());
 
+    // Too many displayExecutionTimes parameters; could be handled from some property
     public object[] SolveAllParts(bool displayExecutionTimes = true) => SolveAllParts(0, displayExecutionTimes);
     public object[] SolveAllParts(int testCase, bool displayExecutionTimes = true)
     {
@@ -36,36 +37,36 @@ public sealed class ProblemRunner
         return SolveParts(testCase, methods, displayExecutionTimes)[0];
     }
 
-    public bool FullyValidateAllTestCases()
+    public bool FullyValidateAllTestCases(bool displayExecutionTimes = true)
     {
         foreach (int testCase in Problem.Input.TestCaseIDs)
-            if (!ValidateAllParts(testCase))
+            if (!ValidateAllParts(testCase, displayExecutionTimes))
                 return false;
 
         return true;
     }
-    public bool ValidateAllParts()
+    public bool ValidateAllParts(bool displayExecutionTimes = true)
     {
-        return ValidateAllParts(0);
+        return ValidateAllParts(0, displayExecutionTimes);
     }
-    public bool ValidateAllParts(int testCase)
+    public bool ValidateAllParts(int testCase, bool displayExecutionTimes = true)
     {
-        return ValidatePart(1, testCase) && ValidatePart(2, testCase);
+        return ValidatePart(1, testCase, displayExecutionTimes) && ValidatePart(2, testCase, displayExecutionTimes);
     }
 
-    public bool ValidatePart(int part) => ValidatePart(part, 0);
-    public bool ValidatePart(int part, int testCase)
+    public bool ValidatePart(int part, bool displayExecutionTimes = true) => ValidatePart(part, 0, displayExecutionTimes);
+    public bool ValidatePart(int part, int testCase, bool displayExecutionTimes = true)
     {
         var contents = Problem.Input.GetOutputFileContents(testCase, true);
         var expectedPartOutput = contents.ForPart(part);
         if (expectedPartOutput is null)
             return true;
 
-        return ValidatePart(part, testCase, expectedPartOutput);
+        return ValidatePart(part, testCase, expectedPartOutput, displayExecutionTimes);
     }
-    private bool ValidatePart(int part, int testCase, string expected)
+    private bool ValidatePart(int part, int testCase, string expected, bool displayExecutionTimes)
     {
-        return expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase)), StringComparison.OrdinalIgnoreCase);
+        return expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase, displayExecutionTimes)), StringComparison.OrdinalIgnoreCase);
     }
 
     private static string SolvePartMethodName(int part) => ExecutePartMethodName(SolvePartMethodPrefix, part);
