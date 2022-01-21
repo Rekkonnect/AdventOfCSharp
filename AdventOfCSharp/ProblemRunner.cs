@@ -77,11 +77,16 @@ public sealed class ProblemRunner
         var result = new object[solutionMethods.Length];
 
         Problem.CurrentTestCase = testCase;
-        DisplayExecutionTimes(displayExecutionTimes, 0, PrintInputExecutionTime, Problem.EnsureLoadedState);
+
+        var stateLoader = Problem.GetType().GetMethod("LoadState", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        bool inputPrints = MethodPrints(stateLoader);
+        RunDisplayExecutionTimes(displayExecutionTimes, inputPrints, 0, PrintInputExecutionTime, Problem.EnsureLoadedState);
 
         for (int i = 0; i < result.Length; i++)
         {
-            DisplayExecutionTimes(displayExecutionTimes, solutionMethods[i].Name.Last().GetNumericValueInteger(), PrintPartExecutionTime, SolveAssignResult);
+            var method = solutionMethods[i];
+            bool prints = MethodPrints(method);
+            RunDisplayExecutionTimes(displayExecutionTimes, prints, method.Name.Last().GetNumericValueInteger(), PrintPartExecutionTime, SolveAssignResult);
 
             void SolveAssignResult()
             {
@@ -91,49 +96,50 @@ public sealed class ProblemRunner
         return result;
     }
 
-    private static void DisplayExecutionTimes(bool displayExecutionTimes, int part, ExecutionTimePrinter printer, Action action)
+    private static bool MethodPrints(MethodInfo method)
     {
-        var executionTime = BasicBenchmarking.MeasureExecutionTime(action);
+        return method.HasCustomAttribute<PrintsToConsoleAttribute>();
+    }
+
+    private static void RunDisplayExecutionTimes(bool displayExecutionTimes, bool prints, int part, ExecutionTimeLabelPrinter printer, Action runner)
+    {
+        bool defaultLivePrintingSetting = ExecutionTimePrinting.EnableLivePrinting;
+        if (prints)
+            ExecutionTimePrinting.EnableLivePrinting = false;
 
         if (displayExecutionTimes)
-            printer(part, executionTime);
+        {
+            printer(part);
+            ExecutionTimePrinting.BeginExecutionMeasuring();
+        }
+
+        runner();
+
+        if (displayExecutionTimes)
+        {
+            ExecutionTimePrinting.StopExecutionMeasuring().Wait();
+        }
+
+        ExecutionTimePrinting.EnableLivePrinting = defaultLivePrintingSetting;
     }
 
-    private delegate void ExecutionTimePrinter(int part, TimeSpan executionTime);
+    private delegate void ExecutionTimeLabelPrinter(int part);
 
-    private static void PrintInputExecutionTime(int part, TimeSpan executionTime)
+    private static void PrintInputExecutionTime(int part)
     {
         ConsoleUtilities.WriteWithColor($"Input".PadLeft(8), ConsoleColor.Cyan);
-        PrintExecutionTime(executionTime);
+        Console.Write(':');
     }
-    private static void PrintPartExecutionTime(int part, TimeSpan executionTime)
+    private static void PrintPartExecutionTime(int part)
     {
         ConsoleUtilities.WriteWithColor($"Part ".PadLeft(7), ConsoleColor.Cyan);
         ConsoleUtilities.WriteWithColor(part.ToString(), GetPartColor(part));
-        PrintExecutionTime(executionTime);
+        Console.Write(':');
     }
 
     private static ConsoleColor GetPartColor(int part) => part switch
     {
         1 => ConsoleColor.DarkGray,
         2 => ConsoleColor.DarkYellow,
-    };
-
-    private static void PrintExecutionTime(TimeSpan executionTime)
-    {
-        Console.Write(':');
-        ConsoleUtilities.WriteLineWithColor($"{executionTime.TotalMilliseconds,13:N2} ms", GetExecutionTimeColor(executionTime));
-    }
-    private static ConsoleColor GetExecutionTimeColor(TimeSpan executionTime) => executionTime.TotalMilliseconds switch
-    {
-        < 1 => ConsoleColor.Blue,
-        < 5 => ConsoleColor.Cyan,
-        < 20 => ConsoleColor.Green,
-        < 100 => ConsoleColor.DarkGreen,
-        < 400 => ConsoleColor.Yellow,
-        < 1000 => ConsoleColor.DarkYellow,
-        < 3000 => ConsoleColor.Magenta,
-        < 15000 => ConsoleColor.Red,
-        _ => ConsoleColor.DarkRed,
     };
 }
