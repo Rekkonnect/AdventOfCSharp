@@ -1,7 +1,7 @@
-﻿using AdventOfCSharp.Analyzers.Utilities;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using RoseLynn.CSharp.Syntax;
 
 namespace AdventOfCSharp.Analyzers;
 
@@ -24,9 +24,9 @@ internal static class Diagnostics
         var typeArgumentList = baseType.TypeArgumentList;
         var arguments = typeArgumentList.Arguments;
         var firstSeparator = arguments.GetSeparator(0);
-        var start = firstSeparator.Span;
+        var start = firstSeparator.SpanStart;
         var end = arguments.Last().Span;
-        var fullSpan = TextSpan.FromBounds(start.Start, end.End);
+        var fullSpan = TextSpan.FromBounds(start, end.End);
         var location = Location.Create(typeArgumentList.SyntaxTree, fullSpan);
 
         return Diagnostic.Create(Instance[0003], location);
@@ -91,8 +91,4 @@ internal static class Diagnostics
     }
 
     public delegate Diagnostic FinalDayInheritanceDiagnosticCreator(ClassDeclarationSyntax declarationNode);
-
-    public delegate Diagnostic UnmatchedNamingConventionDiagnosticCreator(ClassDeclarationSyntax declarationNode);
-    public delegate Diagnostic InvalidDenotedDateDiagnosticCreator<in T>(T declarationNode)
-        where T : MemberDeclarationSyntax;
 }

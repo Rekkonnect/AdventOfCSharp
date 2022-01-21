@@ -25,32 +25,43 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
     {
         SetDefaultDiagnosticAnalyzer<PartSolutionAnalyzer>();
 
-        CreateDiagnosticDescriptor(0001, ValidityCategory, DiagnosticSeverity.Error);
-        CreateDiagnosticDescriptor(0002, ValidityCategory, DiagnosticSeverity.Error);
+        CreateDiagnosticDescriptor(0001, ValidityCategory);
+        CreateDiagnosticDescriptor(0002, ValidityCategory);
 
         SetDefaultDiagnosticAnalyzer<ProblemInheritanceAnalyzer>();
 
-        CreateDiagnosticDescriptor(0003, BrevityCategory, DiagnosticSeverity.Info);
+        CreateDiagnosticDescriptor(0003, BrevityCategory);
 
         SetDefaultDiagnosticAnalyzer<ProblemClassNamingAnalyzer>();
 
-        CreateDiagnosticDescriptor(0004, ConventionCategory, DiagnosticSeverity.Error);
-        CreateDiagnosticDescriptor(0005, ConventionCategory, DiagnosticSeverity.Error);
-        CreateDiagnosticDescriptor(0006, ConventionCategory, DiagnosticSeverity.Error);
-        CreateDiagnosticDescriptor(0007, ConventionCategory, DiagnosticSeverity.Error);
+        CreateDiagnosticDescriptor(0004, ConventionCategory);
+        CreateDiagnosticDescriptor(0005, ConventionCategory);
+        CreateDiagnosticDescriptor(0006, ConventionCategory);
+        CreateDiagnosticDescriptor(0007, ConventionCategory);
 
         SetDefaultDiagnosticAnalyzer<SecretsContainerAnalyzer>();
 
-        CreateDiagnosticDescriptor(0008, ValidityCategory, DiagnosticSeverity.Error);
+        CreateDiagnosticDescriptor(0008, ValidityCategory);
 
         SetDefaultDiagnosticAnalyzer<FinalDayAnalyzer>();
 
-        CreateDiagnosticDescriptor(0011, DesignCategory, DiagnosticSeverity.Warning);
-        CreateDiagnosticDescriptor(0012, ValidityCategory, DiagnosticSeverity.Error);
+        CreateDiagnosticDescriptor(0011, DesignCategory);
+        CreateDiagnosticDescriptor(0012, ValidityCategory);
 
         SetDefaultDiagnosticAnalyzer<PartSolverAttributeAnalyzer>();
 
-        CreateDiagnosticDescriptor(0013, ValidityCategory, DiagnosticSeverity.Error);
+        CreateDiagnosticDescriptor(0013, ValidityCategory);
+    }
+
+    protected override DiagnosticSeverity? GetDefaultSeverity(string category)
+    {
+        return category switch
+        {
+            ValidityCategory => DiagnosticSeverity.Error,
+            ConventionCategory => DiagnosticSeverity.Error,
+            DesignCategory => DiagnosticSeverity.Warning,
+            BrevityCategory => DiagnosticSeverity.Info,
+        };
     }
     #endregion
 }

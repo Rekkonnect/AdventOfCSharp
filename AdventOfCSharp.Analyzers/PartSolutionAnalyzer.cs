@@ -1,7 +1,7 @@
-﻿using AdventOfCSharp.Analyzers.Utilities;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using RoseLynn;
 
 namespace AdventOfCSharp.Analyzers;
 
@@ -27,7 +27,7 @@ public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
                         return;
                 }
 
-                var solutionAttribute = methodSymbol.FirstOrDefaultAttribute(KnownSymbolNames.PartSolutionAttribute);
+                var solutionAttribute = GetPartSolutionAttributeData(methodSymbol);
                 if (solutionAttribute is null)
                     return;
 
@@ -42,7 +42,7 @@ public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
         switch (context.Symbol)
         {
             case IMethodSymbol methodSymbol:
-                var solutionAttribute = methodSymbol.FirstOrDefaultAttribute(KnownSymbolNames.PartSolutionAttribute);
+                var solutionAttribute = GetPartSolutionAttributeData(methodSymbol);
                 if (solutionAttribute?.ConstructorArguments.Length is null or 0)
                     return;
 
@@ -56,6 +56,11 @@ public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
 
                 break;
         }
+    }
+
+    private static AttributeData? GetPartSolutionAttributeData(IMethodSymbol method)
+    {
+        return method.FirstOrDefaultAttributeNamed(KnownSymbolNames.PartSolutionAttribute);
     }
 
     private static bool IsDefinedEnumValue(TypedConstant constant)

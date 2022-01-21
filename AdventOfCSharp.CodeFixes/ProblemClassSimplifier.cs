@@ -1,6 +1,6 @@
-﻿using AdventOfCSharp.CodeFixes.Extensions;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
+using RoseLynn;
 using System.Collections.Generic;
 using System.Composition;
 using System.Threading;
