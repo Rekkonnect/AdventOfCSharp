@@ -1,10 +1,12 @@
 ﻿namespace AdventOfCSharp;
 
+/// <summary>Provides mechanisms for running problem solutions.</summary>
 public sealed class ProblemRunner
 {
     public static readonly string RunPartMethodPrefix = nameof(Problem<int>.RunPart1)[..^1];
     public static readonly string SolvePartMethodPrefix = nameof(Problem<int>.SolvePart1)[..^1];
 
+    /// <summary>The problem instance that is being run.</summary>
     public Problem Problem { get; }
 
     public ProblemRunner(Problem problem)
@@ -20,6 +22,10 @@ public sealed class ProblemRunner
         return new(instance);
     }
 
+    /// <summary>Creates a new <seealso cref="ProblemRunner"/> instance for the problem of the specified day.</summary>
+    /// <param name="year">The year of the problem.</param>
+    /// <param name="day">The day of the problem.</param>
+    /// <returns>A <seealso cref="ProblemRunner"/> instance for the specified problem, if a solution class is available for it, otherwise <see langword="null"/>.</returns>
     public static ProblemRunner? ForProblem(int year, int day) => ForInstance(ProblemsIndex.Instance[year, day].InitializeInstance());
 
     // Too many displayExecutionTimes parameters; could be handled from some property

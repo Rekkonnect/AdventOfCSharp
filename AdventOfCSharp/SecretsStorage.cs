@@ -5,22 +5,12 @@ using MemberInfoEx = Garyon.Reflection.MemberInfoExtensions;
 
 namespace AdventOfCSharp;
 
+/// <summary>Provides the default instances for important <seealso cref="ISecretsContainer"/> types.</summary>
 public static class SecretsStorage
 {
-    private static bool searchedCookies = false;
-    private static Cookies? cookies;
+    private static readonly Lazy<Cookies?> lazyCookies = new(GetCookies);
 
-    public static Cookies? Cookies
-    {
-        get
-        {
-            if (searchedCookies)
-                return cookies;
-
-            searchedCookies = true;
-            return cookies = GetCookies();
-        }
-    }
+    public static Cookies? Cookies => lazyCookies.Value;
 
     private static Cookies? GetCookies()
     {

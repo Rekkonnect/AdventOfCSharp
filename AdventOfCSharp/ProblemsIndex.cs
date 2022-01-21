@@ -5,8 +5,10 @@ namespace AdventOfCSharp;
 
 #nullable enable
 
-public class ProblemsIndex
+/// <summary>Provides a handy container for all the available problem solutions.</summary>
+public sealed class ProblemsIndex
 {
+    /// <summary>Gets the singleton instance of the <seealso cref="ProblemsIndex"/>.</summary>
     public static ProblemsIndex Instance { get; } = new();
 
     private readonly ProblemDictionary problemDictionary = new();
@@ -73,27 +75,23 @@ public sealed class ProblemDictionary : FlexibleInitializableValueDictionary<int
     }
 }
 
-// This and YearProblemInfo can be abstracted away
-public sealed class GlobalYearSummary : IEnumerable<YearSummary>
+public sealed class GlobalYearSummary : ProblemInfoBucket<YearSummary, GlobalYearSummary.SummaryTable>
 {
-    private readonly SummaryTable summaryTable = new();
-
-    public IEnumerable<int> AvailableYears => summaryTable.Select(summary => summary!.Year);
+    public IEnumerable<int> AvailableYears => this.Select(summary => summary.Year);
 
     public GlobalYearSummary(IEnumerable<YearSummary> summaries)
+        : base(summaries) { }
+
+    protected override int GetBucketIndex(YearSummary info)
     {
-        foreach (var summary in summaries)
-            summaryTable[summary.Year] = summary;
+        return info.Year;
+    }
+    protected override YearSummary GetEmptyInfoInstance(int index)
+    {
+        return YearSummary.Empty(index);
     }
 
-    public bool Contains(int year) => summaryTable.Contains(year);
-
-    public YearSummary this[int year] => summaryTable[year] ?? YearSummary.Empty(year);
-
-    public IEnumerator<YearSummary> GetEnumerator() => summaryTable.GetEnumerator() as IEnumerator<YearSummary>;
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    private sealed class SummaryTable : LookupTable<YearSummary?>
+    public sealed class SummaryTable : LookupTable<YearSummary>
     {
         private static readonly int finalYear = DateTime.Now.Year;
 
@@ -118,10 +116,8 @@ public sealed class YearSummary
     public static YearSummary Empty(int year) => new(year, Enumerable.Empty<ProblemInfo>());
 }
 
-public sealed class YearProblemInfo : IEnumerable<ProblemInfo>
+public sealed class YearProblemInfo : ProblemInfoBucket<ProblemInfo, YearProblemInfo.ProblemInfoTable>
 {
-    private readonly ProblemInfoTable summaryTable = new();
-
     public ProblemInfo LastDay
     {
         get => this[25];
@@ -132,36 +128,61 @@ public sealed class YearProblemInfo : IEnumerable<ProblemInfo>
 
     public YearProblemInfo() { }
     public YearProblemInfo(IEnumerable<ProblemInfo> problemInfos)
-    {
-        foreach (var problemInfo in problemInfos)
-            summaryTable[problemInfo.Day] = problemInfo;
-    }
+        : base(problemInfos) { }
 
-    public bool Contains(int day) => summaryTable.Contains(day);
+    protected override int GetBucketIndex(ProblemInfo info)
+    {
+        return info.Day;
+    }
 
     public void DetermineD25P2Availability()
     {
-        bool anyInvalid = this.Reverse().Any(problem => !problem.HasBothValidSolutions);
+        bool anyInvalid = this.Any(problem => !problem.HasBothValidSolutions);
         if (anyInvalid)
             SetD25P2Unavailable();
     }
 
     private void SetD25P2Unavailable() => LastDay = LastDay.WithUnavailablePart2Star;
 
-    public ProblemInfo this[int day]
+    protected override ProblemInfo GetEmptyInfoInstance(int index)
     {
-        get => summaryTable[day] ?? ProblemInfo.Empty(0, day);
-        set => summaryTable[day] = value;
+        return ProblemInfo.Empty(0, index);
     }
 
-    public IEnumerator<ProblemInfo> GetEnumerator() => summaryTable.GetEnumerator() as IEnumerator<ProblemInfo>;
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    private sealed class ProblemInfoTable : LookupTable<ProblemInfo?>
+    public sealed class ProblemInfoTable : LookupTable<ProblemInfo>
     {
         public ProblemInfoTable()
             : base(1, 25) { }
     }
+}
+
+public abstract class ProblemInfoBucket<TInfo, TLookupTable> : IEnumerable<TInfo>
+    where TInfo : class
+    where TLookupTable : LookupTable<TInfo>, new()
+{
+    private readonly TLookupTable table = new();
+
+    public ProblemInfoBucket() { }
+    public ProblemInfoBucket(IEnumerable<TInfo> infos)
+    {
+        foreach (var info in infos)
+            table[GetBucketIndex(info)] = info;
+    }
+
+    protected abstract int GetBucketIndex(TInfo info);
+
+    public bool Contains(int index) => table.Contains(index);
+
+    public TInfo this[int index]
+    {
+        get => table[index] ?? GetEmptyInfoInstance(index);
+        set => table[index] = value;
+    }
+
+    protected abstract TInfo GetEmptyInfoInstance(int index);
+
+    public IEnumerator<TInfo> GetEnumerator() => table.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
 public sealed record ProblemType(Type ProblemClass, int Year, int Day)
@@ -217,8 +238,11 @@ public sealed record ProblemInfo(ProblemType ProblemType, PartSolutionStatus Par
 // Optimizable, but for no reason
 public sealed class PartSolutionStatusDictionary : ValueCounterDictionary<PartSolutionStatus>
 {
+    /// <summary>Gets the total count of currently valid solutions, which are marked as <seealso cref="PartSolutionStatus.Valid"/> or <seealso cref="PartSolutionStatus.Unoptimized"/>.</summary>
     public int TotalValidSolutions => this[PartSolutionStatus.Valid] + this[PartSolutionStatus.Unoptimized];
+    /// <summary>Gets the total count of solved parts, which are marked as <seealso cref="PartSolutionStatus.Valid"/>, <seealso cref="PartSolutionStatus.Unoptimized"/> or <seealso cref="PartSolutionStatus.Refactoring"/>.</summary>
     public int TotalSolvedParts => TotalValidSolutions + this[PartSolutionStatus.Refactoring];
+    /// <summary>Gets the total count of WIP solutions, which are marked as <seealso cref="PartSolutionStatus.WIP"/> or <seealso cref="PartSolutionStatus.Refactoring"/>.</summary>
     public int TotalWIPSolutions => this[PartSolutionStatus.WIP] + this[PartSolutionStatus.Refactoring];
 
     public PartSolutionStatusDictionary(IEnumerable<PartSolutionStatus> statuses)
