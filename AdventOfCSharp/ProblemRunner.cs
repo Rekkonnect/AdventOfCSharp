@@ -22,6 +22,7 @@ public sealed class ProblemRunner
 
     public static ProblemRunner? ForProblem(int year, int day) => ForInstance(ProblemsIndex.Instance[year, day].InitializeInstance());
 
+    // Too many displayExecutionTimes parameters; could be handled from some property
     public object[] SolveAllParts(bool displayExecutionTimes = true) => SolveAllParts(0, displayExecutionTimes);
     public object[] SolveAllParts(int testCase, bool displayExecutionTimes = true)
     {
@@ -36,36 +37,36 @@ public sealed class ProblemRunner
         return SolveParts(testCase, methods, displayExecutionTimes)[0];
     }
 
-    public bool FullyValidateAllTestCases()
+    public bool FullyValidateAllTestCases(bool displayExecutionTimes = true)
     {
         foreach (int testCase in Problem.Input.TestCaseIDs)
-            if (!ValidateAllParts(testCase))
+            if (!ValidateAllParts(testCase, displayExecutionTimes))
                 return false;
 
         return true;
     }
-    public bool ValidateAllParts()
+    public bool ValidateAllParts(bool displayExecutionTimes = true)
     {
-        return ValidateAllParts(0);
+        return ValidateAllParts(0, displayExecutionTimes);
     }
-    public bool ValidateAllParts(int testCase)
+    public bool ValidateAllParts(int testCase, bool displayExecutionTimes = true)
     {
-        return ValidatePart(1, testCase) && ValidatePart(2, testCase);
+        return ValidatePart(1, testCase, displayExecutionTimes) && ValidatePart(2, testCase, displayExecutionTimes);
     }
 
-    public bool ValidatePart(int part) => ValidatePart(part, 0);
-    public bool ValidatePart(int part, int testCase)
+    public bool ValidatePart(int part, bool displayExecutionTimes = true) => ValidatePart(part, 0, displayExecutionTimes);
+    public bool ValidatePart(int part, int testCase, bool displayExecutionTimes = true)
     {
         var contents = Problem.Input.GetOutputFileContents(testCase, true);
         var expectedPartOutput = contents.ForPart(part);
         if (expectedPartOutput is null)
             return true;
 
-        return ValidatePart(part, testCase, expectedPartOutput);
+        return ValidatePart(part, testCase, expectedPartOutput, displayExecutionTimes);
     }
-    private bool ValidatePart(int part, int testCase, string expected)
+    private bool ValidatePart(int part, int testCase, string expected, bool displayExecutionTimes)
     {
-        return expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase)), StringComparison.OrdinalIgnoreCase);
+        return expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase, displayExecutionTimes)), StringComparison.OrdinalIgnoreCase);
     }
 
     private static string SolvePartMethodName(int part) => ExecutePartMethodName(SolvePartMethodPrefix, part);
@@ -77,11 +78,16 @@ public sealed class ProblemRunner
         var result = new object[solutionMethods.Length];
 
         Problem.CurrentTestCase = testCase;
-        DisplayExecutionTimes(displayExecutionTimes, 0, PrintInputExecutionTime, Problem.EnsureLoadedState);
+
+        var stateLoader = Problem.GetType().GetMethod("LoadState", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        bool inputPrints = MethodPrints(stateLoader);
+        RunDisplayExecutionTimes(displayExecutionTimes, inputPrints, 0, PrintInputExecutionTime, Problem.EnsureLoadedState);
 
         for (int i = 0; i < result.Length; i++)
         {
-            DisplayExecutionTimes(displayExecutionTimes, solutionMethods[i].Name.Last().GetNumericValueInteger(), PrintPartExecutionTime, SolveAssignResult);
+            var method = solutionMethods[i];
+            bool prints = MethodPrints(method);
+            RunDisplayExecutionTimes(displayExecutionTimes, prints, method.Name.Last().GetNumericValueInteger(), PrintPartExecutionTime, SolveAssignResult);
 
             void SolveAssignResult()
             {
@@ -91,49 +97,50 @@ public sealed class ProblemRunner
         return result;
     }
 
-    private static void DisplayExecutionTimes(bool displayExecutionTimes, int part, ExecutionTimePrinter printer, Action action)
+    private static bool MethodPrints(MethodInfo method)
     {
-        var executionTime = BasicBenchmarking.MeasureExecutionTime(action);
+        return method.HasCustomAttribute<PrintsToConsoleAttribute>();
+    }
+
+    private static void RunDisplayExecutionTimes(bool displayExecutionTimes, bool prints, int part, ExecutionTimeLabelPrinter printer, Action runner)
+    {
+        bool defaultLivePrintingSetting = ExecutionTimePrinting.EnableLivePrinting;
+        if (prints)
+            ExecutionTimePrinting.EnableLivePrinting = false;
 
         if (displayExecutionTimes)
-            printer(part, executionTime);
+        {
+            printer(part);
+            ExecutionTimePrinting.BeginExecutionMeasuring();
+        }
+
+        runner();
+
+        if (displayExecutionTimes)
+        {
+            ExecutionTimePrinting.StopExecutionMeasuring().Wait();
+        }
+
+        ExecutionTimePrinting.EnableLivePrinting = defaultLivePrintingSetting;
     }
 
-    private delegate void ExecutionTimePrinter(int part, TimeSpan executionTime);
+    private delegate void ExecutionTimeLabelPrinter(int part);
 
-    private static void PrintInputExecutionTime(int part, TimeSpan executionTime)
+    private static void PrintInputExecutionTime(int part)
     {
         ConsoleUtilities.WriteWithColor($"Input".PadLeft(8), ConsoleColor.Cyan);
-        PrintExecutionTime(executionTime);
+        Console.Write(':');
     }
-    private static void PrintPartExecutionTime(int part, TimeSpan executionTime)
+    private static void PrintPartExecutionTime(int part)
     {
         ConsoleUtilities.WriteWithColor($"Part ".PadLeft(7), ConsoleColor.Cyan);
         ConsoleUtilities.WriteWithColor(part.ToString(), GetPartColor(part));
-        PrintExecutionTime(executionTime);
+        Console.Write(':');
     }
 
     private static ConsoleColor GetPartColor(int part) => part switch
     {
         1 => ConsoleColor.DarkGray,
         2 => ConsoleColor.DarkYellow,
-    };
-
-    private static void PrintExecutionTime(TimeSpan executionTime)
-    {
-        Console.Write(':');
-        ConsoleUtilities.WriteLineWithColor($"{executionTime.TotalMilliseconds,13:N2} ms", GetExecutionTimeColor(executionTime));
-    }
-    private static ConsoleColor GetExecutionTimeColor(TimeSpan executionTime) => executionTime.TotalMilliseconds switch
-    {
-        < 1 => ConsoleColor.Blue,
-        < 5 => ConsoleColor.Cyan,
-        < 20 => ConsoleColor.Green,
-        < 100 => ConsoleColor.DarkGreen,
-        < 400 => ConsoleColor.Yellow,
-        < 1000 => ConsoleColor.DarkYellow,
-        < 3000 => ConsoleColor.Magenta,
-        < 15000 => ConsoleColor.Red,
-        _ => ConsoleColor.DarkRed,
     };
 }
