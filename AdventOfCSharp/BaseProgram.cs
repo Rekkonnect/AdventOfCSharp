@@ -1,4 +1,5 @@
 ﻿using AdventOfCSharp.Extensions;
+using AdventOfCSharp.Generation;
 using static Garyon.Functions.ConsoleUtilities;
 using static System.Console;
 
@@ -255,6 +256,12 @@ It seems today's problem has no solution class
 Focus on development, you lazy fucking ass
               --A happy AoC solver, to himself
 ");
+
+            if (SolutionTemplateGeneration.EnabledGeneration)
+            {
+                SolutionTemplateGeneration.CreateSolutionFile(currentYear, currentDay);
+                WriteLine("The solution file for today's problem has been automatically created.");
+            }
         }
     }
 
