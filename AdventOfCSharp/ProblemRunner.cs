@@ -3,7 +3,6 @@
 /// <summary>Provides mechanisms for running problem solutions.</summary>
 public sealed class ProblemRunner
 {
-    public static readonly string RunPartMethodPrefix = nameof(Problem<int>.RunPart1)[..^1];
     public static readonly string SolvePartMethodPrefix = nameof(Problem<int>.SolvePart1)[..^1];
 
     /// <summary>The problem instance that is being run.</summary>
@@ -76,7 +75,6 @@ public sealed class ProblemRunner
     }
 
     private static string SolvePartMethodName(int part) => ExecutePartMethodName(SolvePartMethodPrefix, part);
-    private static string RunPartMethodName(int part) => ExecutePartMethodName(RunPartMethodPrefix, part);
     private static string ExecutePartMethodName(string prefix, int part) => $"{prefix}{part}";
 
     private object[] SolveParts(int testCase, MethodInfo[] solutionMethods, bool displayExecutionTimes)
@@ -87,13 +85,14 @@ public sealed class ProblemRunner
 
         var stateLoader = Problem.GetType().GetMethod("LoadState", BindingFlags.NonPublic | BindingFlags.Instance)!;
         bool inputPrints = MethodPrints(stateLoader);
-        RunDisplayExecutionTimes(displayExecutionTimes, inputPrints, 0, PrintInputExecutionTime, Problem.EnsureLoadedState);
+        RunDisplayExecutionTimes(displayExecutionTimes, inputPrints, 0, "Input", PrintCustomPartExecutionTime, Problem.EnsureLoadedState);
 
         for (int i = 0; i < result.Length; i++)
         {
             var method = solutionMethods[i];
             bool prints = MethodPrints(method);
-            RunDisplayExecutionTimes(displayExecutionTimes, prints, method.Name.Last().GetNumericValueInteger(), PrintPartExecutionTime, SolveAssignResult);
+            int part = method.Name.Last().GetNumericValueInteger();
+            RunDisplayExecutionTimes(displayExecutionTimes, prints, part, null!, PrintPartExecutionTime, SolveAssignResult);
 
             void SolveAssignResult()
             {
@@ -108,7 +107,7 @@ public sealed class ProblemRunner
         return method.HasCustomAttribute<PrintsToConsoleAttribute>();
     }
 
-    private static void RunDisplayExecutionTimes(bool displayExecutionTimes, bool prints, int part, ExecutionTimeLabelPrinter printer, Action runner)
+    private static void RunDisplayExecutionTimes(bool displayExecutionTimes, bool prints, int part, string partName, ExecutionTimeLabelPrinter printer, Action runner)
     {
         bool defaultLivePrintingSetting = ExecutionTimePrinting.EnableLivePrinting;
         if (prints)
@@ -116,7 +115,7 @@ public sealed class ProblemRunner
 
         if (displayExecutionTimes)
         {
-            printer(part);
+            printer(part, partName);
             ExecutionTimePrinting.BeginExecutionMeasuring();
         }
 
@@ -130,17 +129,18 @@ public sealed class ProblemRunner
         ExecutionTimePrinting.EnableLivePrinting = defaultLivePrintingSetting;
     }
 
-    private delegate void ExecutionTimeLabelPrinter(int part);
+    private delegate void ExecutionTimeLabelPrinter(int part, string partName);
 
-    private static void PrintInputExecutionTime(int part)
+    private static void PrintCustomPartExecutionTime(int part, string partName)
     {
-        ConsoleUtilities.WriteWithColor($"Input".PadLeft(8), ConsoleColor.Cyan);
+        ConsoleUtilities.WriteWithColor(partName.PadLeft(20), ConsoleColor.Cyan);
         Console.Write(':');
     }
-    private static void PrintPartExecutionTime(int part)
+    private static void PrintPartExecutionTime(int part, string partName)
     {
-        ConsoleUtilities.WriteWithColor($"Part ".PadLeft(7), ConsoleColor.Cyan);
-        ConsoleUtilities.WriteWithColor(part.ToString(), GetPartColor(part));
+        var partString = part.ToString();
+        ConsoleUtilities.WriteWithColor($"Part ".PadLeft(20 - partString.Length), ConsoleColor.Cyan);
+        ConsoleUtilities.WriteWithColor(partString, GetPartColor(part));
         Console.Write(':');
     }
 
@@ -148,5 +148,12 @@ public sealed class ProblemRunner
     {
         1 => ConsoleColor.DarkGray,
         2 => ConsoleColor.DarkYellow,
+
+        // This will catch some users off-guard
+        3 => ConsoleColor.DarkRed,
+        > 3 => ConsoleColor.Magenta,
+
+        // "Where did my 0 go?"
+        _ => Console.ForegroundColor,
     };
 }

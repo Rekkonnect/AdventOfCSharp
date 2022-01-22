@@ -14,7 +14,7 @@ namespace AoC.Random;
 
 public class Nothing : NotProblem<int>
 {
-    [↓PartSolver]
+    [↓PartSolver(""Solver"", SolverKind = PartSolverKind.Custom)]
     public int Solver() => -1;
 }
 ";
@@ -33,25 +33,25 @@ public class Day1 : Problem<int>
     public override int SolvePart1() => -1;
     public override int SolvePart2() => -2;
 
-    [↓PartSolver]
+    [↓PartSolver(""Parameter"", SolverKind = PartSolverKind.Custom)]
     public int Parameter(int x) => x;
-    [↓PartSolver]
+    [↓PartSolver(""Generic"", SolverKind = PartSolverKind.Custom)]
     public int Generic<T>() => -1;
-    [↓PartSolver]
+    [↓PartSolver(""Void"", SolverKind = PartSolverKind.Custom)]
     public void Void() { }
 
-    [↓PartSolver]
+    [↓PartSolver(""Static"", SolverKind = PartSolverKind.Custom)]
     public static int Static() => -1;
 
-    [↓PartSolver]
+    [↓PartSolver(""ProtectedInternal"", SolverKind = PartSolverKind.Custom)]
     protected internal int ProtectedInternal() => -1;
-    [↓PartSolver]
+    [↓PartSolver(""Internal"", SolverKind = PartSolverKind.Custom)]
     internal int Internal() => -1;
-    [↓PartSolver]
+    [↓PartSolver(""Protected"", SolverKind = PartSolverKind.Custom)]
     protected int Protected() => -1;
-    [↓PartSolver]
+    [↓PartSolver(""PrivateProtected"", SolverKind = PartSolverKind.Custom)]
     private protected int PrivateProtected() => -1;
-    [↓PartSolver]
+    [↓PartSolver(""Private"", SolverKind = PartSolverKind.Custom)]
     private int Private() => -1;
 }
 ";
@@ -66,9 +66,9 @@ public class Day1 : Problem<int>
 @"
 public abstract class Problem<T1, T2> : Problem
 {
-    [PartSolver]
+    [PartSolver(""Part 1"", SolverKind = PartSolverKind.Custom)]
     public abstract T1 SolvePart1();
-    [PartSolver]
+    [PartSolver(""Part 2"", SolverKind = PartSolverKind.Custom)]
     public abstract T2 SolvePart2();
 }
 ";
