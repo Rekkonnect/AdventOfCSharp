@@ -24,6 +24,9 @@ public static class FancyPrinting
 
     public static void PrintCustomPartLabel(string partName)
     {
+        if (partName.Length > 20)
+            partName = partName[..20];
+
         ConsoleUtilities.WriteWithColor(partName.PadLeft(20), ConsoleColor.Cyan);
         Console.Write(':');
     }
