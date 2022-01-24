@@ -1,10 +1,13 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using AdventOfCSharp.Analyzers.Utilities;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoseLynn;
 using RoseLynn.CSharp;
 using RoseLynn.CSharp.Syntax;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCSharp.Analyzers;
 
@@ -15,11 +18,59 @@ public sealed class PartSolverAttributeAnalyzer : ProblemAoCSAnalyzer
 {
     protected override void RegisterAnalyzers(AnalysisContext context)
     {
-        context.RegisterTargetAttributeSyntaxNodeAction(AnalyzePartSolverAttributeValidity, KnownSymbolNames.PartSolverAttribute);
+        context.RegisterTargetAttributeSyntaxNodeAction(AnalyzePartSolverAttribute, KnownSymbolNames.PartSolverAttribute);
     }
 
-    // In an AoC project, attributes should not be too commonly used, meaning less nodes to iterate
-    // An average solution project would contain loads of functions, causing far more invocations than necessary
+    private void AnalyzePartSolverAttribute(SyntaxNodeAnalysisContext context)
+    {
+        AnalyzePartSolverAttributeValidity(context);
+        AnalyzePartName(context);
+    }
+
+    private void AnalyzePartName(SyntaxNodeAnalysisContext context)
+    {
+        var partSolverAttributeNode = context.Node as AttributeSyntax;
+
+        var partSolverAttributeData = partSolverAttributeNode!.GetAttributeData(context.SemanticModel, out var attributedSymbol)!;
+        var arguments = partSolverAttributeData.ConstructorArguments;
+        if (arguments.Length < 1)
+            return;
+
+        if (arguments[0].Value is not string partName)
+            return;
+
+        var partNameArgumentNode = partSolverAttributeNode!.ArgumentList!.Arguments[0];
+        if (partName.Length > 20)
+        {
+            context.ReportDiagnostic(Diagnostics.CreateAoCS0015(partNameArgumentNode));
+        }
+
+        var otherPartSolverAttributes = GetAllPartSolverAttributesForClass(attributedSymbol!.ContainingType)
+                                       .Except(new[] { partSolverAttributeData });
+
+        var names = PartNames(otherPartSolverAttributes);
+        if (names.Contains(partName))
+        {
+            context.ReportDiagnostic(Diagnostics.CreateAoCS0014(partNameArgumentNode));
+        }
+
+        static IEnumerable<string> PartNames(IEnumerable<AttributeData> attributes) 
+        {
+            return attributes.Select(attribute => attribute.ConstructorArguments[0].Value as string) as IEnumerable<string>;
+        }
+    }
+
+    private static IEnumerable<AttributeData> GetAllPartSolverAttributesForClass(INamedTypeSymbol problemSolutionClassSymbol)
+    {
+        var methods = problemSolutionClassSymbol.GetAllMembersIncludingInherited().OfType<IMethodSymbol>();
+        return methods.Select(GetPartSolverAttribute).Where(data => data is not null) as IEnumerable<AttributeData>;
+
+        static AttributeData? GetPartSolverAttribute(IMethodSymbol method)
+        {
+            return method.GetAttributes().FirstOrDefault(attribute => attribute.AttributeClass!.Name is KnownSymbolNames.PartSolverAttribute);
+        }
+    }
+
     private void AnalyzePartSolverAttributeValidity(SyntaxNodeAnalysisContext context)
     {
         var attributeNode = context.Node as AttributeSyntax;
