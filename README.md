@@ -32,6 +32,8 @@ Found [here](https://github.com/AlFasGD/AdventOfCSharp.Template)
   - Execution time per part
   - Summary of all available solutions, and per individual parts
 - Answer conversion system, producing answer strings ready to be copied onto the website
+- Detailed part solution status declaration and tracking
+- Custom part solvers (fanmade "Part 3" problems, easter eggs, and more)
 - Source analyzers that ensure correct usage of the framework
 
 Upcoming features:
