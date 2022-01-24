@@ -28,10 +28,10 @@ public sealed class ProblemRunner
     public static ProblemRunner? ForProblem(int year, int day) => ForInstance(ProblemsIndex.Instance[year, day].InitializeInstance());
 
     // Too many displayExecutionTimes parameters; could be handled from some property
-    public object[] SolveAllParts(bool displayExecutionTimes = true) => SolveAllParts(0, displayExecutionTimes);
-    public object[] SolveAllParts(int testCase, bool displayExecutionTimes = true)
+    public PartSolutionOutputDictionary SolveAllParts(bool displayExecutionTimes = true) => SolveAllParts(0, displayExecutionTimes);
+    public PartSolutionOutputDictionary SolveAllParts(int testCase, bool displayExecutionTimes = true)
     {
-        var methods = Problem.GetType().GetMethods().Where(m => m.Name.StartsWith(SolvePartMethodPrefix)).ToArray();
+        var methods = Problem.GetType().GetMethods().Where(m => m.HasCustomAttribute<PartSolverAttribute>()).ToArray();
         return SolveParts(testCase, methods, displayExecutionTimes);
     }
 
@@ -39,7 +39,7 @@ public sealed class ProblemRunner
     public object SolvePart(int part, int testCase, bool displayExecutionTimes = true)
     {
         var methods = new[] { Problem.GetType().GetMethod(SolvePartMethodName(part))! };
-        return SolveParts(testCase, methods, displayExecutionTimes)[0];
+        return SolveParts(testCase, methods, displayExecutionTimes).GetPartOutput(part)!;
     }
 
     public bool FullyValidateAllTestCases(bool displayExecutionTimes = true)
@@ -77,26 +77,28 @@ public sealed class ProblemRunner
     private static string SolvePartMethodName(int part) => ExecutePartMethodName(SolvePartMethodPrefix, part);
     private static string ExecutePartMethodName(string prefix, int part) => $"{prefix}{part}";
 
-    private object[] SolveParts(int testCase, MethodInfo[] solutionMethods, bool displayExecutionTimes)
+    private PartSolutionOutputDictionary SolveParts(int testCase, MethodInfo[] solutionMethods, bool displayExecutionTimes)
     {
-        var result = new object[solutionMethods.Length];
+        var result = new PartSolutionOutputDictionary();
 
         Problem.CurrentTestCase = testCase;
 
         var stateLoader = Problem.GetType().GetMethod("LoadState", BindingFlags.NonPublic | BindingFlags.Instance)!;
         bool inputPrints = MethodPrints(stateLoader);
-        RunDisplayExecutionTimes(displayExecutionTimes, inputPrints, 0, "Input", PrintCustomPartExecutionTime, Problem.EnsureLoadedState);
+        RunDisplayExecutionTimes(displayExecutionTimes, inputPrints, "Input", FancyPrinting.PrintCustomPartLabel, Problem.EnsureLoadedState);
 
-        for (int i = 0; i < result.Length; i++)
+        for (int i = 0; i < solutionMethods.Length; i++)
         {
             var method = solutionMethods[i];
             bool prints = MethodPrints(method);
-            int part = method.Name.Last().GetNumericValueInteger();
-            RunDisplayExecutionTimes(displayExecutionTimes, prints, part, null!, PrintPartExecutionTime, SolveAssignResult);
+            var partName = method.GetCustomAttribute<PartSolverAttribute>()!.PartName;
+
+            RunDisplayExecutionTimes(displayExecutionTimes, prints, partName, FancyPrinting.GetPartLabelPrinter(partName), SolveAssignResult);
 
             void SolveAssignResult()
             {
-                result[i] = solutionMethods[i].Invoke(Problem, null)!;
+                var output = solutionMethods[i].Invoke(Problem, null)!;
+                result.Add(partName, output);
             }
         }
         return result;
@@ -104,10 +106,11 @@ public sealed class ProblemRunner
 
     private static bool MethodPrints(MethodInfo method)
     {
-        return method.HasCustomAttribute<PrintsToConsoleAttribute>();
+        return method.HasCustomAttribute<PrintsToConsoleAttribute>()
+            || method.GetCustomAttribute<PartSolutionAttribute>() is { Status: PartSolutionStatus.Interactive };
     }
 
-    private static void RunDisplayExecutionTimes(bool displayExecutionTimes, bool prints, int part, string partName, ExecutionTimeLabelPrinter printer, Action runner)
+    private static void RunDisplayExecutionTimes(bool displayExecutionTimes, bool prints, string partName, FancyPrinting.PartLabelPrinter printer, Action runner)
     {
         bool defaultLivePrintingSetting = ExecutionTimePrinting.EnableLivePrinting;
         if (prints)
@@ -115,7 +118,7 @@ public sealed class ProblemRunner
 
         if (displayExecutionTimes)
         {
-            printer(part, partName);
+            printer(partName);
             ExecutionTimePrinting.BeginExecutionMeasuring();
         }
 
@@ -128,32 +131,67 @@ public sealed class ProblemRunner
 
         ExecutionTimePrinting.EnableLivePrinting = defaultLivePrintingSetting;
     }
+}
 
-    private delegate void ExecutionTimeLabelPrinter(int part, string partName);
+public sealed class PartSolutionOutputDictionary : IEnumerable<PartSolutionOutputEntry>
+{
+    private readonly Dictionary<string, object> dictionary = new();
 
-    private static void PrintCustomPartExecutionTime(int part, string partName)
+    public object? Part1Output { get; private set; }
+    public object? Part2Output { get; private set; }
+
+    public PartSolutionOutputDictionary() { }
+    public PartSolutionOutputDictionary(IEnumerable<PartSolutionOutputEntry> entries)
     {
-        ConsoleUtilities.WriteWithColor(partName.PadLeft(20), ConsoleColor.Cyan);
-        Console.Write(':');
+        AddRange(entries);
     }
-    private static void PrintPartExecutionTime(int part, string partName)
+
+    public void AddRange(IEnumerable<PartSolutionOutputEntry> entries)
     {
-        var partString = part.ToString();
-        ConsoleUtilities.WriteWithColor($"Part ".PadLeft(20 - partString.Length), ConsoleColor.Cyan);
-        ConsoleUtilities.WriteWithColor(partString, GetPartColor(part));
-        Console.Write(':');
+        foreach (var entry in entries)
+            Add(entry);
+    }
+    public void Add(PartSolutionOutputEntry entry)
+    {
+        Add(entry.PartName, entry.Output);
+    }
+    public void Add(string partName, object output)
+    {
+        dictionary.Add(partName, output);
+        AssignOfficialPartResult(partName, output);
+    }
+    private void AssignOfficialPartResult(string partName, object output)
+    {
+        switch (partName)
+        {
+            case "Part 1":
+                Part1Output = output;
+                break;
+
+            case "Part 2":
+                Part2Output = output;
+                break;
+        }
     }
 
-    private static ConsoleColor GetPartColor(int part) => part switch
+    public object? GetPartOutput(int part)
     {
-        1 => ConsoleColor.DarkGray,
-        2 => ConsoleColor.DarkYellow,
+        return part switch
+        {
+            1 => Part1Output,
+            2 => Part2Output,
+            _ => null,
+        };
+    }
 
-        // This will catch some users off-guard
-        3 => ConsoleColor.DarkRed,
-        > 3 => ConsoleColor.Magenta,
+    public IEnumerator<PartSolutionOutputEntry> GetEnumerator()
+    {
+        return dictionary.Select(PartSolutionOutputEntry.FromKeyValuePair).GetEnumerator();
+    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
 
-        // "Where did my 0 go?"
-        _ => Console.ForegroundColor,
-    };
+public record struct PartSolutionOutputEntry(string PartName, object Output)
+{
+    public static PartSolutionOutputEntry FromKeyValuePair(KeyValuePair<string, object> kvp) => new(kvp.Key, kvp.Value);
 }

@@ -17,7 +17,7 @@ public enum PartSolutionStatus
 
     /// <summary>
     /// Represents a free star that is not currently available.
-    /// This is (so far) only the case for D25P2 if not all other 49 star have been claimed.
+    /// This is (so far) only the case for D25P2 if not all other 49 stars have been claimed.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     UnavailableFreeStar,
@@ -28,6 +28,17 @@ public enum PartSolutionStatus
     /// Consider using <seealso cref="WIP"/> if the part has not been solved in a previous timeframe.
     /// </remarks>
     Refactoring,
+
+    /// <summary>
+    /// The solution is interactive with the user. In other words, the solution does not solve the entire part on its own,
+    /// as it requires some form of interaction with the user, whose input is retrieved.
+    /// </summary>
+    /// <remarks>
+    /// Interactive solutions are considered complete, and the star is considered acclaimed.
+    /// When attempting to refactor the interactive solution into an automated one, consider using <seealso cref="Refactoring"/>.<br/>
+    /// Live execution time printing is automatically disabled for interactive solutions.
+    /// </remarks>
+    Interactive,
 }
 
 public static class PartSolutionStatusExtensions

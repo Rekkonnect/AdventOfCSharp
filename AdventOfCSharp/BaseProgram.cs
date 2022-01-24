@@ -325,8 +325,29 @@ Focus on development, you lazy fucking ass
         var parts = new ProblemRunner(instance).SolveAllParts(testCase);
         WriteLine();
         foreach (var part in parts)
-            WriteLine(AnswerStringConversion.Convert(part));
+        {
+            FancyPrinting.PrintLabel(part.PartName);
+            WriteLineWithColor($" {AnswerStringConversion.Convert(part.Output)}", GetAnswerColor(instance, part.PartName));
+        }
         WriteLine();
+    }
+
+    private static ConsoleColor GetAnswerColor(Problem instance, string partName)
+    {
+        if (IsFinalDayPart2(instance, partName))
+        {
+            return IFinalDay.IsAvailable(instance.Year) switch
+            {
+                true => ConsoleColor.Green,
+                false => ConsoleColor.Red,
+            };
+        }
+
+        return ConsoleColor.Yellow;
+    }
+    private static bool IsFinalDayPart2(Problem instance, string partName)
+    {
+        return partName is "Part 2" && instance is IFinalDay;
     }
 
     protected static void DisplayInlineProblemYear(int year)
