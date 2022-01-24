@@ -274,20 +274,9 @@ public abstract class Problem<T1, T2> : Problem
     where T1 : notnull
     where T2 : notnull
 {
-    public T1 RunPart1()
-    {
-        EnsureLoadedState();
-        return SolvePart1();
-    }
-    public T2 RunPart2()
-    {
-        EnsureLoadedState();
-        return SolvePart2();
-    }
-
-    [PartSolver]
+    [PartSolver("Part 1")]
     public abstract T1 SolvePart1();
-    [PartSolver]
+    [PartSolver("Part 2")]
     public abstract T2 SolvePart2();
 }
 
