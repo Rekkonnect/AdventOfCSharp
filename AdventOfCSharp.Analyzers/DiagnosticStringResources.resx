@@ -183,4 +183,16 @@
   <data name="AoCS0013_Title" xml:space="preserve">
     <value>Invalid PartSolverAttribute on non-solver method</value>
   </data>
+  <data name="AoCS0014_MessageFormat" xml:space="preserve">
+    <value>This name has already been used for a part solver in this solution class</value>
+  </data>
+  <data name="AoCS0014_Title" xml:space="preserve">
+    <value>Duplicate part name in the same solution class</value>
+  </data>
+  <data name="AoCS0015_MessageFormat" xml:space="preserve">
+    <value>The part name exceeds the 20-character limit, with the excessive characters being trimmed</value>
+  </data>
+  <data name="AoCS0015_Title" xml:space="preserve">
+    <value>Limit part names to 20 characters max</value>
+  </data>
 </root>

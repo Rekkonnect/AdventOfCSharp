@@ -51,6 +51,8 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
         SetDefaultDiagnosticAnalyzer<PartSolverAttributeAnalyzer>();
 
         CreateDiagnosticDescriptor(0013, ValidityCategory);
+        CreateDiagnosticDescriptor(0014, ValidityCategory);
+        CreateDiagnosticDescriptor(0015, InformationCategory);
     }
 
     protected override DiagnosticSeverity? GetDefaultSeverity(string category)
@@ -61,6 +63,7 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
             ConventionCategory => DiagnosticSeverity.Error,
             DesignCategory => DiagnosticSeverity.Warning,
             BrevityCategory => DiagnosticSeverity.Info,
+            InformationCategory => DiagnosticSeverity.Warning,
         };
     }
     #endregion
