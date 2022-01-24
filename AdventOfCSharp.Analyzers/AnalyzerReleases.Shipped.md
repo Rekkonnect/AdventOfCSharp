@@ -17,4 +17,11 @@ AoCS0007 | Convention | Error | ProblemClassNamingAnalyzer, [Documentation](../.
 AoCS0008 | Validity | Error | SecretsContainerAnalyzer, [Documentation](../../docs/analyzers/rules/GA0008.md)
 AoCS0011 | Design | Warning | FinalDayAnalyzer, [Documentation](../../docs/analyzers/rules/GA0011.md)
 AoCS0012 | Validity | Error | FinalDayAnalyzer, [Documentation](../../docs/analyzers/rules/GA0012.md)
-AoCS0013 | Validity | Error | PartSolverAttributeAnalyzer, [Documentation](../../docs/analyzers/rules/GA0013.md)
+AoCS0013 | Validity | Error | PartSolverAttributeAnalyzer, [Documentation](../../docs/analyzers/rules/GA0013.md
+
+## Release 1.2.0
+
+### New Rules
+
+AoCS0014 | Validity | Error | PartSolverAttributeAnalyzer, [Documentation](../../docs/analyzers/rules/GA0014.md)
+AoCS0015 | Information | Warning | PartSolverAttributeAnalyzer, [Documentation](../../docs/analyzers/rules/GA0015.md)

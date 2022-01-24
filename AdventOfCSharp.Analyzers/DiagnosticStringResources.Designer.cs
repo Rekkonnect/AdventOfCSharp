@@ -257,5 +257,41 @@ namespace AdventOfCSharp.Analyzers {
                 return ResourceManager.GetString("AoCS0013_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This name has already been used for a part solver in this solution class.
+        /// </summary>
+        internal static string AoCS0014_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0014_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate part name in the same solution class.
+        /// </summary>
+        internal static string AoCS0014_Title {
+            get {
+                return ResourceManager.GetString("AoCS0014_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The part name exceeds the 20-character limit, with the excessive characters being trimmed.
+        /// </summary>
+        internal static string AoCS0015_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0015_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Limit part names to 20 characters max.
+        /// </summary>
+        internal static string AoCS0015_Title {
+            get {
+                return ResourceManager.GetString("AoCS0015_Title", resourceCulture);
+            }
+        }
     }
 }
