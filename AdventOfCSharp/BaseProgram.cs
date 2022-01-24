@@ -179,6 +179,10 @@ public abstract class BaseProgram
         WriteWithColor("*", GetStatusColor(PartSolutionStatus.Unoptimized));
         WriteLine(" = unoptimized solution");
 
+        // Interactive solutions
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Interactive));
+        WriteLine(" = interactive solution");
+
         // Refactoring solutions
         WriteWithColor("*", GetStatusColor(PartSolutionStatus.Refactoring));
         WriteLine(" = refactoring solution");
@@ -241,6 +245,7 @@ public abstract class BaseProgram
         PartSolutionStatus.Uninitialized => ConsoleColor.DarkGray,
         PartSolutionStatus.UnavailableFreeStar => ConsoleColor.DarkRed,
         PartSolutionStatus.Refactoring => ConsoleColor.Cyan,
+        PartSolutionStatus.Interactive => ConsoleColor.DarkGreen,
     };
 
     protected static void RunTodaysProblem(bool testCases = true)

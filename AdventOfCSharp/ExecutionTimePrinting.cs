@@ -49,8 +49,12 @@ public static class ExecutionTimePrinting
     /// <summary>Stops execution measuring, while also printing the final execution time. <seealso cref="EnableLivePrinting"/> is ignored.</summary>
     public static async Task StopExecutionMeasuring()
     {
+        var (nextLeft, nextTop) = Console.GetCursorPosition();
+
         currentExecutionTime.Stop();
         PrintCurrentExecutionTime();
+
+        Console.SetCursorPosition(nextLeft, nextTop);
 
         if (livePrintingTask is not null)
         {
