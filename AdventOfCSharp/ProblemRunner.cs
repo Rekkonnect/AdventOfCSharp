@@ -9,11 +9,26 @@ public sealed class ProblemRunningOptions
     public bool DisplayExecutionTimes { get; set; } = true;
 }
 
+public static class ProblemSolverMethodProvider
+{
+    private const BindingFlags hiddenInstanceMember = BindingFlags.NonPublic | BindingFlags.Instance;
+
+    private static readonly string solvePartMethodPrefix = nameof(Problem<int>.SolvePart1)[..^1];
+
+    public static string SolvePartMethodName(int part) => $"{solvePartMethodPrefix}{part}";
+
+    public static MethodInfo MethodForPart(int part) => typeof(Problem).GetMethod(SolvePartMethodName(part))!;
+    public static MethodInfo[] MethodsForOfficialParts() => new[] { MethodForPart(1), MethodForPart(2) };
+
+    public static MethodInfo LoadStateMethod() => typeof(Problem).GetMethod("LoadState", hiddenInstanceMember)!;
+    public static MethodInfo ResetStateMethod() => typeof(Problem).GetMethod("ResetState", hiddenInstanceMember)!;
+
+    public static MethodInfo[] PartSolverMethods(Type type) => type.GetMethods().Where(m => m.HasCustomAttribute<PartSolverAttribute>()).ToArray();
+}
+
 /// <summary>Provides mechanisms for running problem solutions.</summary>
 public sealed class ProblemRunner
 {
-    public static readonly string SolvePartMethodPrefix = nameof(Problem<int>.SolvePart1)[..^1];
-
     /// <summary>The problem instance that is being run.</summary>
     public Problem Problem { get; }
 
@@ -45,21 +60,19 @@ public sealed class ProblemRunner
     public PartSolutionOutputDictionary SolveAllParts() => SolveAllParts(0);
     public PartSolutionOutputDictionary SolveAllParts(int testCase)
     {
-        var methods = Problem.GetType().GetMethods().Where(m => m.HasCustomAttribute<PartSolverAttribute>()).ToArray();
-        return SolveParts(testCase, methods);
+        return SolveParts(testCase, ProblemSolverMethodProvider.PartSolverMethods(Problem.GetType()));
     }
 
     public PartSolutionOutputDictionary SolveAllOfficialParts() => SolveAllOfficialParts(0);
     public PartSolutionOutputDictionary SolveAllOfficialParts(int testCase)
     {
-        var methods = new[] { MethodForPart(1), MethodForPart(2) };
-        return SolveParts(testCase, methods);
+        return SolveParts(testCase, ProblemSolverMethodProvider.MethodsForOfficialParts());
     }
 
     public object SolvePart(int part) => SolvePart(part, 0);
     public object SolvePart(int part, int testCase)
     {
-        var methods = new[] { MethodForPart(part) };
+        var methods = new[] { ProblemSolverMethodProvider.MethodForPart(part) };
         return SolveParts(testCase, methods).GetPartOutput(part)!;
     }
 
@@ -95,11 +108,6 @@ public sealed class ProblemRunner
         return expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase)), StringComparison.OrdinalIgnoreCase);
     }
 
-    private MethodInfo MethodForPart(int part) => Problem.GetType().GetMethod(SolvePartMethodName(part))!;
-
-    private static string SolvePartMethodName(int part) => ExecutePartMethodName(SolvePartMethodPrefix, part);
-    private static string ExecutePartMethodName(string prefix, int part) => $"{prefix}{part}";
-
     private PartSolutionOutputDictionary SolveParts(int testCase, MethodInfo[] solutionMethods)
     {
         var result = new PartSolutionOutputDictionary();
@@ -110,7 +118,7 @@ public sealed class ProblemRunner
         {
             RunDisplayExecutionTimes(false, "Download", FancyPrinting.PrintCustomPartLabel, Problem.EnsureDownloadedInput);
 
-            var stateLoader = Problem.GetType().GetMethod("LoadState", BindingFlags.NonPublic | BindingFlags.Instance)!;
+            var stateLoader = ProblemSolverMethodProvider.LoadStateMethod();
             bool inputPrints = MethodPrints(stateLoader);
             RunDisplayExecutionTimes(inputPrints, "Input", FancyPrinting.PrintCustomPartLabel, Problem.EnsureLoadedState);
         }
