@@ -7,7 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
-    <Version>1.1.0.1</Version>
+    <Version>1.2.0</Version>
 
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>An aspiring AoC problem solving framework.</Description>
@@ -17,26 +17,30 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp</Product>
-    <PackageReleaseNotes>
-1.1.0.1 changes:
+    <PackageReleaseNotes>Additions:
+- Automatic solution class generation upon failing to discover today's problem solution class (including publicly exposed API for custom dates)
+- Live execution time printing (can be manually disabled, or automatically disabled for solutions with PrintsToConsoleAttribute)
+- Run custom part solvers (with even more part number colors)
+- IFinalDay
+- PartSolutionStatus.Interactive
 
-Bugfixes:
-- Fixed Day25 FinalDay&lt;T&gt; code fix for multiple years
-
-1.1.0 changes:
 Changes:
-- Migrated console printing functions (BREAKING)
-- Removed SolutionTemplate (never intended to be live)
-- Added notnull constraints on problem classes' type arguments
-- Refactored input retrieval
+- More documentation was added
+- Part solver methods can be named and attributed with a kind (BREAKING)
+- Separate download from input execution time
+- Avoid printing input execution time if already loaded
+
+Removals:
+- BasicBenchmarking
 
 Analyzers:
-- Added analyzers for a handful of silent issues when using the framework
-- Code fixes are also available for AoCS0003 and AoCS0011
+- Added AoCS0014 and AoCS0015 diagnostics
 
 Bugfixes:
-- Fixed crashes on glyph grid parsing
-- Do not crash the menu on Dec 26-31
+- 
+
+Internals:
+- Upgraded Garyon and RoseLynn
     </PackageReleaseNotes>
   </PropertyGroup>
 
