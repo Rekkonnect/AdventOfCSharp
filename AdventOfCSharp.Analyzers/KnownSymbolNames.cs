@@ -1,6 +1,6 @@
-﻿namespace AdventOfCSharp.Analyzers;
+﻿using RoseLynn;
 
-#nullable enable
+namespace AdventOfCSharp.Analyzers;
 
 public static class KnownSymbolNames
 {
@@ -17,4 +17,19 @@ public static class KnownSymbolNames
 
     public const string SolvePart1 = nameof(SolvePart1);
     public const string SolvePart2 = nameof(SolvePart2);
+
+    public const string CommonAnswerStringConverter = nameof(CommonAnswerStringConverter);
+    public const string AnswerStringConverter = nameof(AnswerStringConverter);
+}
+
+public static class KnownFullSymbolNames
+{
+    public static readonly FullSymbolName CommonAnswerStringConverter =
+        new(KnownSymbolNames.CommonAnswerStringConverter, new[] { nameof(AdventOfCSharp) });
+
+    public static readonly FullSymbolName GenericAnswerStringConverter =
+        new(new IdentifierWithArity(KnownSymbolNames.AnswerStringConverter, 1), new[] { nameof(AdventOfCSharp) });
+
+    public static readonly FullSymbolName NonGenericAnswerStringConverter =
+        new(KnownSymbolNames.AnswerStringConverter, new[] { nameof(AdventOfCSharp) });
 }

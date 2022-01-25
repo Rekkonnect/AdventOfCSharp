@@ -77,6 +77,19 @@ internal static class Diagnostics
         return Diagnostic.Create(Instance[0015], node.Expression?.GetLocation());
     }
 
+    public static Diagnostic CreateAoCS0016(BaseTypeSyntax baseTypeSyntax)
+    {
+        return Diagnostic.Create(Instance[0016], baseTypeSyntax.GetLocation());
+    }
+    public static Diagnostic CreateAoCS0017(BaseTypeSyntax baseTypeSyntax)
+    {
+        return Diagnostic.Create(Instance[0017], baseTypeSyntax.GetLocation());
+    }
+    public static Diagnostic CreateAoCS0018(BaseTypeSyntax baseTypeSyntax)
+    {
+        return Diagnostic.Create(Instance[0018], baseTypeSyntax.GetLocation());
+    }
+
     private static Diagnostic CreateBaseListFirstTypeDiagnostic(BaseTypeDeclarationSyntax declarationNode, int code)
     {
         return Diagnostic.Create(Instance[code], declarationNode.BaseList.Types.First().GetLocation());
