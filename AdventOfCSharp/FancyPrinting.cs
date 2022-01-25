@@ -56,6 +56,6 @@ public static class FancyPrinting
         > 3 => ConsoleColor.Magenta,
 
         // "Where did my 0 go?"
-        _ => Console.ForegroundColor,
+        _ => Console.BackgroundColor,
     };
 }
