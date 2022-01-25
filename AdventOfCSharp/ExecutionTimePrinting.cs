@@ -8,10 +8,13 @@ public static class ExecutionTimePrinting
 {
     private static readonly object executionTimeLock = new();
 
-    /// <summary>Determines whether printing the current execution time is enabled.</summary>
+    /// <summary>Determines whether printing the current execution time is enabled. Defaults to <see langword="true"/>.</summary>
     public static bool EnableLivePrinting { get; set; } = true;
+    /// <summary>Determines whether the cursor will be hidden when printing the execution time. Defaults to <see langword="true"/>.</summary>
+    public static bool HideCursorDuringLivePrinting { get; set; } = true;
 
     private static int cursorTop, cursorLeft;
+    private static bool previousCursorVisible = true;
     private static Stopwatch currentExecutionTime = new();
     private static Task? livePrintingTask = null;
 
@@ -30,11 +33,24 @@ public static class ExecutionTimePrinting
 
     private static async Task LoopPrintAsync()
     {
+        SetCursorVisibilityForStart();
+
         while (currentExecutionTime.IsRunning)
         {
             PrintCurrentExecutionTime();
-            // Don't stress the lock too much
+            // Avoid starvation
             await Task.Delay(1);
+        }
+    }
+
+    private static void SetCursorVisibilityForStart()
+    {
+        if (HideCursorDuringLivePrinting)
+        {
+            if (OperatingSystem.IsWindows())
+                previousCursorVisible = Console.CursorVisible;
+
+            Console.CursorVisible = false;
         }
     }
     private static void PrintCurrentExecutionTime()
@@ -49,17 +65,26 @@ public static class ExecutionTimePrinting
     /// <summary>Stops execution measuring, while also printing the final execution time. <seealso cref="EnableLivePrinting"/> is ignored.</summary>
     public static async Task StopExecutionMeasuring()
     {
-        var (nextLeft, nextTop) = Console.GetCursorPosition();
-
         currentExecutionTime.Stop();
-        PrintCurrentExecutionTime();
-
-        Console.SetCursorPosition(nextLeft, nextTop);
 
         if (livePrintingTask is not null)
         {
             await livePrintingTask;
             livePrintingTask = null;
+        }
+
+        var (nextLeft, nextTop) = Console.GetCursorPosition();
+
+        PrintCurrentExecutionTime();
+
+        Console.SetCursorPosition(nextLeft, nextTop);
+        SetCursorVisibilityForEnd();
+    }
+    private static void SetCursorVisibilityForEnd()
+    {
+        if (HideCursorDuringLivePrinting)
+        {
+            Console.CursorVisible = previousCursorVisible;
         }
     }
 

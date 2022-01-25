@@ -83,9 +83,14 @@ public sealed class ProblemRunner
 
         Problem.CurrentTestCase = testCase;
 
-        var stateLoader = Problem.GetType().GetMethod("LoadState", BindingFlags.NonPublic | BindingFlags.Instance)!;
-        bool inputPrints = MethodPrints(stateLoader);
-        RunDisplayExecutionTimes(displayExecutionTimes, inputPrints, "Input", FancyPrinting.PrintCustomPartLabel, Problem.EnsureLoadedState);
+        if (!Problem.StateLoaded)
+        {
+            RunDisplayExecutionTimes(displayExecutionTimes, false, "Download", FancyPrinting.PrintCustomPartLabel, Problem.EnsureDownloadedInput);
+
+            var stateLoader = Problem.GetType().GetMethod("LoadState", BindingFlags.NonPublic | BindingFlags.Instance)!;
+            bool inputPrints = MethodPrints(stateLoader);
+            RunDisplayExecutionTimes(displayExecutionTimes, inputPrints, "Input", FancyPrinting.PrintCustomPartLabel, Problem.EnsureLoadedState);
+        }
 
         for (int i = 0; i < solutionMethods.Length; i++)
         {
