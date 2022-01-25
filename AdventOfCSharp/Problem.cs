@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using AdventOfCSharp.Extensions;
+using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace AdventOfCSharp;
 
@@ -30,6 +32,13 @@ public abstract partial class Problem
     public void ResetLoadedState()
     {
         HandleStateLoading(false, ResetState);
+    }
+
+    /// <summary>Ensures that the input is downloaded.</summary>
+    /// <remarks>Downloading refers to either loading the input from the device's storage, or downloading it from the server and storing it locally.</remarks>
+    public void EnsureDownloadedInput()
+    {
+        Input.TriggerFileContentCache();
     }
 
     private void HandleStateLoading(bool targetStateLoadedStatus, Action stateHandler)
@@ -116,6 +125,11 @@ public abstract partial class Problem
             ProblemInstance = instance;
         }
 
+        public void TriggerFileContentCache()
+        {
+            _ = FileContents;
+        }
+
         public T[] ParsedFileLines<T>(Parser<T> parser) => ParsedFileLinesEnumerable(parser).ToArray();
         public T[] ParsedFileLines<T>(Parser<T> parser, int skipFirst, int skipLast) => ParsedFileLinesEnumerable(parser, skipFirst, skipLast).ToArray();
         public IEnumerable<T> ParsedFileLinesEnumerable<T>(Parser<T> parser) => ParsedFileLinesEnumerable(parser, 0, 0);
@@ -135,7 +149,11 @@ public abstract partial class Problem
         }
         private string GetInputFileContents(int testCase, bool performDownload)
         {
-            return GetProblemFileContents<string>(ProblemContentKind.Input, testCase, performDownload);
+            var contents = GetProblemFileContents<string>(ProblemContentKind.Input, testCase, performDownload);
+            if (contents.IsNullOrEmpty())
+                throw new IOException("The requested input for the specified problem was not found locally, or could not be downloaded. Ensure that downloading is enabled and that the secrets are valid.");
+
+            return contents;
         }
 
         public ProblemOutput GetOutputFileContents(int testCase)

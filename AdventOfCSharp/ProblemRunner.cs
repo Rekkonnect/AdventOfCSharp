@@ -85,6 +85,8 @@ public sealed class ProblemRunner
 
         if (!Problem.StateLoaded)
         {
+            RunDisplayExecutionTimes(displayExecutionTimes, false, "Download", FancyPrinting.PrintCustomPartLabel, Problem.EnsureDownloadedInput);
+
             var stateLoader = Problem.GetType().GetMethod("LoadState", BindingFlags.NonPublic | BindingFlags.Instance)!;
             bool inputPrints = MethodPrints(stateLoader);
             RunDisplayExecutionTimes(displayExecutionTimes, inputPrints, "Input", FancyPrinting.PrintCustomPartLabel, Problem.EnsureLoadedState);
