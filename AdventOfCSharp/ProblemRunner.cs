@@ -17,11 +17,31 @@ public static class ProblemSolverMethodProvider
 
     public static string SolvePartMethodName(int part) => $"{solvePartMethodPrefix}{part}";
 
-    public static MethodInfo MethodForPart(int part) => typeof(Problem).GetMethod(SolvePartMethodName(part))!;
-    public static MethodInfo[] MethodsForOfficialParts() => new[] { MethodForPart(1), MethodForPart(2) };
+    public static MethodInfo MethodForPart(Type problemType, int part)
+    {
+        return problemType.GetMethod(SolvePartMethodName(part))!;
+    }
+    public static MethodInfo MethodForPart<T>(int part)
+        where T : Problem
+    {
+        return MethodForPart(typeof(T), part);
+    }
+    public static MethodInfo MethodForPart(int part) => MethodForPart<Problem>(part);
+    public static MethodInfo[] MethodsForOfficialParts(Type problemType) => new[] { MethodForPart(problemType, 1), MethodForPart(problemType, 2) };
+    public static MethodInfo[] MethodsForOfficialParts() => MethodsForOfficialParts(typeof(Problem));
 
-    public static MethodInfo LoadStateMethod() => typeof(Problem).GetMethod("LoadState", hiddenInstanceMember)!;
-    public static MethodInfo ResetStateMethod() => typeof(Problem).GetMethod("ResetState", hiddenInstanceMember)!;
+    public static MethodInfo LoadStateMethod(Type problemType) => PrivateMethod(problemType, "LoadState");
+    public static MethodInfo LoadStateMethod() => LoadStateMethod(typeof(Problem));
+    public static MethodInfo ResetStateMethod(Type problemType) => PrivateMethod(problemType, "ResetState");
+    public static MethodInfo ResetStateMethod() => ResetStateMethod(typeof(Problem));
+
+    private static MethodInfo PrivateMethod(Type problemType, string name) => problemType.GetMethod(name, hiddenInstanceMember)!;
+    private static MethodInfo PrivateMethod<T>(string name)
+        where T : Problem
+    {
+        return typeof(T).GetMethod(name, hiddenInstanceMember)!;
+    }
+    private static MethodInfo PrivateMethod(string name) => PrivateMethod<Problem>(name);
 
     public static MethodInfo[] PartSolverMethods(Type type) => type.GetMethods().Where(m => m.HasCustomAttribute<PartSolverAttribute>()).ToArray();
 }
@@ -31,6 +51,9 @@ public sealed class ProblemRunner
 {
     /// <summary>The problem instance that is being run.</summary>
     public Problem Problem { get; }
+
+    /// <summary>Gets the <seealso cref="Type"/> of the given <seealso cref="AdventOfCSharp.Problem"/> instance.</summary>
+    public Type ProblemType => Problem.GetType();
 
     /// <summary>Gets the options for running the current <seealso cref="AdventOfCSharp.Problem"/> instance.</summary>
     public ProblemRunningOptions Options { get; }
@@ -60,19 +83,19 @@ public sealed class ProblemRunner
     public PartSolutionOutputDictionary SolveAllParts() => SolveAllParts(0);
     public PartSolutionOutputDictionary SolveAllParts(int testCase)
     {
-        return SolveParts(testCase, ProblemSolverMethodProvider.PartSolverMethods(Problem.GetType()));
+        return SolveParts(testCase, ProblemSolverMethodProvider.PartSolverMethods(ProblemType));
     }
 
     public PartSolutionOutputDictionary SolveAllOfficialParts() => SolveAllOfficialParts(0);
     public PartSolutionOutputDictionary SolveAllOfficialParts(int testCase)
     {
-        return SolveParts(testCase, ProblemSolverMethodProvider.MethodsForOfficialParts());
+        return SolveParts(testCase, ProblemSolverMethodProvider.MethodsForOfficialParts(ProblemType));
     }
 
     public object SolvePart(int part) => SolvePart(part, 0);
     public object SolvePart(int part, int testCase)
     {
-        var methods = new[] { ProblemSolverMethodProvider.MethodForPart(part) };
+        var methods = new[] { ProblemSolverMethodProvider.MethodForPart(ProblemType, part) };
         return SolveParts(testCase, methods).GetPartOutput(part)!;
     }
 
@@ -118,7 +141,7 @@ public sealed class ProblemRunner
         {
             RunDisplayExecutionTimes(false, "Download", FancyPrinting.PrintCustomPartLabel, Problem.EnsureDownloadedInput);
 
-            var stateLoader = ProblemSolverMethodProvider.LoadStateMethod();
+            var stateLoader = ProblemSolverMethodProvider.LoadStateMethod(ProblemType);
             bool inputPrints = MethodPrints(stateLoader);
             RunDisplayExecutionTimes(inputPrints, "Input", FancyPrinting.PrintCustomPartLabel, Problem.EnsureLoadedState);
         }
