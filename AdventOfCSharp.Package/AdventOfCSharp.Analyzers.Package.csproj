@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <IsPackable>true</IsPackable>
-    <Version>1.1.0.1</Version>
+    <Version>1.2.0</Version>
 
     <Authors>Alex Kalfakakos</Authors>
     <Company />
@@ -20,10 +20,8 @@
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp.Analyzers</Product>
     <PackageId>AdventOfCSharp.Analyzers</PackageId>
-    <PackageReleaseNotes>
-Bugfixes:
-- Fixed Day25 FinalDay&lt;T&gt; code fix for multiple years
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>Additions:
+- AoCS0014 and AoCS0015 diagnostics</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
