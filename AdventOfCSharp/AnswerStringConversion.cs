@@ -30,44 +30,29 @@ public static class AnswerStringConversion
         if (specializedConverted is not null)
             return specializedConverted;
 
-        return ConvertUsingFirstValidObjectConverter(value);
+        return CommonAnswerStringConverter.Instance.Convert(value);
     }
     private static string? ConvertUsingSpecializedTypeConverter(object value)
     {
         var converter = typeConverterDictionary.GetInitializedConverterForType(value.GetType());
         return converter?.ConvertObject(value);
     }
-    private static string ConvertUsingFirstValidObjectConverter(object value)
-    {
-        foreach (var converter in typeConverterDictionary.ObjectConverters)
-        {
-            var converted = converter.InitializeInstance<AnswerStringConverter>().ConvertObject(value);
-            if (converted is not null)
-                return converted;
-        }
-        return CommonAnswerStringConverter.Instance.Convert(value);
-    }
 
     private class TypeConverterDictionary
     {
-        // TODO: Consider deprecating object converters
         private readonly FlexibleDictionary<Type, Type> dictionary = new();
-        private readonly List<Type> objectConverters = new();
 
         public IEnumerable<Type> ConvertableTypes => dictionary.Keys;
         public IEnumerable<Type> Converters => dictionary.Values;
 
-        public IReadOnlyCollection<Type> ObjectConverters => objectConverters;
-
         public void Add(Type convertedType, Type converter)
         {
             if (convertedType == typeof(object))
-                objectConverters.Add(converter);
-            else
-                dictionary.Add(convertedType, converter);
+                return;
+
+            dictionary.Add(convertedType, converter);
         }
 
-        // TODO: Support returning object converters in the future
         public Type? GetConverterForType(Type convertedType) => GetDeclaredOrDeterminedConverterForType(convertedType);
         public AnswerStringConverter? GetInitializedConverterForType(Type convertedType)
         {
