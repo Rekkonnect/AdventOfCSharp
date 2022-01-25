@@ -53,6 +53,12 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
         CreateDiagnosticDescriptor(0013, ValidityCategory);
         CreateDiagnosticDescriptor(0014, ValidityCategory);
         CreateDiagnosticDescriptor(0015, InformationCategory);
+
+        SetDefaultDiagnosticAnalyzer<AnswerStringConverterAnalyzer>();
+
+        CreateDiagnosticDescriptor(0016, ValidityCategory);
+        CreateDiagnosticDescriptor(0017, ValidityCategory);
+        CreateDiagnosticDescriptor(0018, ValidityCategory);
     }
 
     protected override DiagnosticSeverity? GetDefaultSeverity(string category)
