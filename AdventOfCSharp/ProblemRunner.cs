@@ -1,5 +1,14 @@
 ﻿namespace AdventOfCSharp;
 
+/// <summary>Provides a collection of options for running <seealso cref="Problem"/> instances through <seealso cref="ProblemRunner"/>.</summary>
+public sealed class ProblemRunningOptions
+{
+    public static ProblemRunningOptions Default => new();
+
+    /// <summary>Determines whether execution times will be displayed.</summary>
+    public bool DisplayExecutionTimes { get; set; } = true;
+}
+
 /// <summary>Provides mechanisms for running problem solutions.</summary>
 public sealed class ProblemRunner
 {
@@ -8,9 +17,15 @@ public sealed class ProblemRunner
     /// <summary>The problem instance that is being run.</summary>
     public Problem Problem { get; }
 
+    /// <summary>Gets the options for running the current <seealso cref="AdventOfCSharp.Problem"/> instance.</summary>
+    public ProblemRunningOptions Options { get; }
+
     public ProblemRunner(Problem problem)
+        : this(problem, null) { }
+    public ProblemRunner(Problem problem, ProblemRunningOptions? options)
     {
         Problem = problem;
+        Options = options ?? ProblemRunningOptions.Default;
     }
 
     private static ProblemRunner? ForInstance(Problem? instance)
@@ -27,57 +42,65 @@ public sealed class ProblemRunner
     /// <returns>A <seealso cref="ProblemRunner"/> instance for the specified problem, if a solution class is available for it, otherwise <see langword="null"/>.</returns>
     public static ProblemRunner? ForProblem(int year, int day) => ForInstance(ProblemsIndex.Instance[year, day].InitializeInstance());
 
-    // Too many displayExecutionTimes parameters; could be handled from some property
-    public PartSolutionOutputDictionary SolveAllParts(bool displayExecutionTimes = true) => SolveAllParts(0, displayExecutionTimes);
-    public PartSolutionOutputDictionary SolveAllParts(int testCase, bool displayExecutionTimes = true)
+    public PartSolutionOutputDictionary SolveAllParts() => SolveAllParts(0);
+    public PartSolutionOutputDictionary SolveAllParts(int testCase)
     {
         var methods = Problem.GetType().GetMethods().Where(m => m.HasCustomAttribute<PartSolverAttribute>()).ToArray();
-        return SolveParts(testCase, methods, displayExecutionTimes);
+        return SolveParts(testCase, methods);
     }
 
-    public object SolvePart(int part, bool displayExecutionTimes = true) => SolvePart(part, 0, displayExecutionTimes);
-    public object SolvePart(int part, int testCase, bool displayExecutionTimes = true)
+    public PartSolutionOutputDictionary SolveAllOfficialParts() => SolveAllOfficialParts(0);
+    public PartSolutionOutputDictionary SolveAllOfficialParts(int testCase)
     {
-        var methods = new[] { Problem.GetType().GetMethod(SolvePartMethodName(part))! };
-        return SolveParts(testCase, methods, displayExecutionTimes).GetPartOutput(part)!;
+        var methods = new[] { MethodForPart(1), MethodForPart(2) };
+        return SolveParts(testCase, methods);
     }
 
-    public bool FullyValidateAllTestCases(bool displayExecutionTimes = true)
+    public object SolvePart(int part) => SolvePart(part, 0);
+    public object SolvePart(int part, int testCase)
+    {
+        var methods = new[] { MethodForPart(part) };
+        return SolveParts(testCase, methods).GetPartOutput(part)!;
+    }
+
+    public bool FullyValidateAllTestCases()
     {
         foreach (int testCase in Problem.Input.TestCaseIDs)
-            if (!ValidateAllParts(testCase, displayExecutionTimes))
+            if (!ValidateAllParts(testCase))
                 return false;
 
         return true;
     }
-    public bool ValidateAllParts(bool displayExecutionTimes = true)
+    public bool ValidateAllParts()
     {
-        return ValidateAllParts(0, displayExecutionTimes);
+        return ValidateAllParts(0);
     }
-    public bool ValidateAllParts(int testCase, bool displayExecutionTimes = true)
+    public bool ValidateAllParts(int testCase)
     {
-        return ValidatePart(1, testCase, displayExecutionTimes) && ValidatePart(2, testCase, displayExecutionTimes);
+        return ValidatePart(1, testCase) && ValidatePart(2, testCase);
     }
 
-    public bool ValidatePart(int part, bool displayExecutionTimes = true) => ValidatePart(part, 0, displayExecutionTimes);
-    public bool ValidatePart(int part, int testCase, bool displayExecutionTimes = true)
+    public bool ValidatePart(int part) => ValidatePart(part, 0);
+    public bool ValidatePart(int part, int testCase)
     {
         var contents = Problem.Input.GetOutputFileContents(testCase, true);
         var expectedPartOutput = contents.ForPart(part);
         if (expectedPartOutput is null)
             return true;
 
-        return ValidatePart(part, testCase, expectedPartOutput, displayExecutionTimes);
+        return ValidatePart(part, testCase, expectedPartOutput);
     }
-    private bool ValidatePart(int part, int testCase, string expected, bool displayExecutionTimes)
+    private bool ValidatePart(int part, int testCase, string expected)
     {
-        return expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase, displayExecutionTimes)), StringComparison.OrdinalIgnoreCase);
+        return expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase)), StringComparison.OrdinalIgnoreCase);
     }
+
+    private MethodInfo MethodForPart(int part) => Problem.GetType().GetMethod(SolvePartMethodName(part))!;
 
     private static string SolvePartMethodName(int part) => ExecutePartMethodName(SolvePartMethodPrefix, part);
     private static string ExecutePartMethodName(string prefix, int part) => $"{prefix}{part}";
 
-    private PartSolutionOutputDictionary SolveParts(int testCase, MethodInfo[] solutionMethods, bool displayExecutionTimes)
+    private PartSolutionOutputDictionary SolveParts(int testCase, MethodInfo[] solutionMethods)
     {
         var result = new PartSolutionOutputDictionary();
 
@@ -85,11 +108,11 @@ public sealed class ProblemRunner
 
         if (!Problem.StateLoaded)
         {
-            RunDisplayExecutionTimes(displayExecutionTimes, false, "Download", FancyPrinting.PrintCustomPartLabel, Problem.EnsureDownloadedInput);
+            RunDisplayExecutionTimes(false, "Download", FancyPrinting.PrintCustomPartLabel, Problem.EnsureDownloadedInput);
 
             var stateLoader = Problem.GetType().GetMethod("LoadState", BindingFlags.NonPublic | BindingFlags.Instance)!;
             bool inputPrints = MethodPrints(stateLoader);
-            RunDisplayExecutionTimes(displayExecutionTimes, inputPrints, "Input", FancyPrinting.PrintCustomPartLabel, Problem.EnsureLoadedState);
+            RunDisplayExecutionTimes(inputPrints, "Input", FancyPrinting.PrintCustomPartLabel, Problem.EnsureLoadedState);
         }
 
         for (int i = 0; i < solutionMethods.Length; i++)
@@ -98,7 +121,7 @@ public sealed class ProblemRunner
             bool prints = MethodPrints(method);
             var partName = method.GetCustomAttribute<PartSolverAttribute>()!.PartName;
 
-            RunDisplayExecutionTimes(displayExecutionTimes, prints, partName, FancyPrinting.GetPartLabelPrinter(partName), SolveAssignResult);
+            RunDisplayExecutionTimes(prints, partName, FancyPrinting.GetPartLabelPrinter(partName), SolveAssignResult);
 
             void SolveAssignResult()
             {
@@ -115,13 +138,13 @@ public sealed class ProblemRunner
             || method.GetCustomAttribute<PartSolutionAttribute>() is { Status: PartSolutionStatus.Interactive };
     }
 
-    private static void RunDisplayExecutionTimes(bool displayExecutionTimes, bool prints, string partName, FancyPrinting.PartLabelPrinter printer, Action runner)
+    private void RunDisplayExecutionTimes(bool prints, string partName, FancyPrinting.PartLabelPrinter printer, Action runner)
     {
         bool defaultLivePrintingSetting = ExecutionTimePrinting.EnableLivePrinting;
         if (prints)
             ExecutionTimePrinting.EnableLivePrinting = false;
 
-        if (displayExecutionTimes)
+        if (Options.DisplayExecutionTimes)
         {
             printer(partName);
             ExecutionTimePrinting.BeginExecutionMeasuring();
@@ -129,7 +152,7 @@ public sealed class ProblemRunner
 
         runner();
 
-        if (displayExecutionTimes)
+        if (Options.DisplayExecutionTimes)
         {
             ExecutionTimePrinting.StopExecutionMeasuring().Wait();
         }
