@@ -5,7 +5,8 @@ namespace AdventOfCSharp;
 
 public abstract partial class Problem
 {
-    private bool stateLoaded;
+    // TODO: InputProvider should contain this property
+    public bool StateLoaded { get; private set; }
 
     public readonly InputProvider Input;
 
@@ -33,10 +34,10 @@ public abstract partial class Problem
 
     private void HandleStateLoading(bool targetStateLoadedStatus, Action stateHandler)
     {
-        if (stateLoaded == targetStateLoadedStatus)
+        if (StateLoaded == targetStateLoadedStatus)
             return;
         stateHandler();
-        stateLoaded = targetStateLoadedStatus;
+        StateLoaded = targetStateLoadedStatus;
     }
 }
 
