@@ -87,7 +87,9 @@ internal static class Diagnostics
     }
     public static Diagnostic CreateAoCS0018(BaseTypeSyntax baseTypeSyntax)
     {
-        return Diagnostic.Create(Instance[0018], baseTypeSyntax.GetLocation());
+        var genericName = baseTypeSyntax.Type as GenericNameSyntax;
+        var typeArgument = genericName.TypeArgumentList.Arguments.First();
+        return Diagnostic.Create(Instance[0018], baseTypeSyntax.GetLocation(), typeArgument.ToString());
     }
 
     private static Diagnostic CreateBaseListFirstTypeDiagnostic(BaseTypeDeclarationSyntax declarationNode, int code)

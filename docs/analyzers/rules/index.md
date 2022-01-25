@@ -14,6 +14,9 @@ Rule ID                 | Category    | Severity
 [AoCS0013](AoCS0013.md) | Validity    | Error
 [AoCS0014](AoCS0014.md) | Validity    | Error
 [AoCS0015](AoCS0015.md) | Information | Warning
+[AoCS0016](AoCS0016.md) | Validity    | Error
+[AoCS0017](AoCS0017.md) | Validity    | Error
+[AoCS0018](AoCS0018.md) | Validity    | Error
 
 ## Discontinued Rules
 Rule ID  | Embodied Rule ID(s)

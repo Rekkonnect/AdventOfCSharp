@@ -293,5 +293,59 @@ namespace AdventOfCSharp.Analyzers {
                 return ResourceManager.GetString("AoCS0015_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Answer string converters should always declare the type of objects they&apos;re converting.
+        /// </summary>
+        internal static string AoCS0016_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0016_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not directly inherit AnswerStringConverter.
+        /// </summary>
+        internal static string AoCS0016_Title {
+            get {
+                return ResourceManager.GetString("AoCS0016_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Further restrict the objects that can be converted by an answer string converter.
+        /// </summary>
+        internal static string AoCS0017_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0017_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not declare object answer string converters.
+        /// </summary>
+        internal static string AoCS0017_Title {
+            get {
+                return ResourceManager.GetString("AoCS0017_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The primitive type &apos;{0}&apos; is by default handled by CommonAnswerStringConverter.
+        /// </summary>
+        internal static string AoCS0018_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0018_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some primitive types are handled by the framework.
+        /// </summary>
+        internal static string AoCS0018_Title {
+            get {
+                return ResourceManager.GetString("AoCS0018_Title", resourceCulture);
+            }
+        }
     }
 }
