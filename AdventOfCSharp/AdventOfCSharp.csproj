@@ -36,9 +36,6 @@ Removals:
 Analyzers:
 - Added AoCS0014 and AoCS0015 diagnostics
 
-Bugfixes:
-- 
-
 Internals:
 - Upgraded Garyon and RoseLynn
     </PackageReleaseNotes>
