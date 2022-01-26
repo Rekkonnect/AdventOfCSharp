@@ -7,7 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
 
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>An aspiring AoC problem solving framework.</Description>
@@ -17,7 +17,17 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp</Product>
-    <PackageReleaseNotes>Additions:
+    <PackageReleaseNotes>1.2.1 changes:
+Changes:
+- Object answer string converters are prohibited
+- Display execution times parameters moved to separate options in ProblemRunner (BREAKING)
+- Method resolution for problem types migrated to a dedicated class
+
+Analyzers:
+- Answer string converter analyzer, including 3 new diagnostics
+
+1.2.0 changes:
+Additions:
 - Automatic solution class generation upon failing to discover today's problem solution class (including publicly exposed API for custom dates)
 - Live execution time printing (can be manually disabled, or automatically disabled for solutions with PrintsToConsoleAttribute)
 - Run custom part solvers (with even more part number colors)
