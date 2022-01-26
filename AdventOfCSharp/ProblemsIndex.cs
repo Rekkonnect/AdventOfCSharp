@@ -38,7 +38,7 @@ public sealed class ProblemsIndex
     }
     private static PartSolutionStatus GetPartSolutionStatus(ProblemType type, int index)
     {
-        var runnerMethod = type.ProblemClass.GetMethod($"{ProblemRunner.SolvePartMethodPrefix}{index}")!;
+        var runnerMethod = ProblemSolverMethodProvider.MethodForPart(type.ProblemClass, index);
         var partSolutionAttribute = runnerMethod.GetCustomAttribute<PartSolutionAttribute>();
         if (partSolutionAttribute is null)
             return PartSolutionStatus.Valid;
