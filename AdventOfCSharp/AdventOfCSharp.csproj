@@ -25,6 +25,7 @@ Changes:
 
 Analyzers:
 - Answer string converter analyzer, including 3 new diagnostics
+- Properly upgrade dependency version
 
 1.2.0 changes:
 Additions:
@@ -53,7 +54,7 @@ Internals:
 
   <ItemGroup>
     <PackageReference Include="Garyon" Version="0.2.7" />
-    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.1.0.1" />
+    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.2.1" />
   </ItemGroup>
 
   <ItemGroup>
