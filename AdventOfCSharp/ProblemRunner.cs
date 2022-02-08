@@ -99,36 +99,55 @@ public sealed class ProblemRunner
         return SolveParts(testCase, methods).GetPartOutput(part)!;
     }
 
-    public bool FullyValidateAllTestCases()
+    public ValidationProblemResult FullyValidateAllTestCases()
     {
-        foreach (int testCase in Problem.Input.TestCaseIDs)
-            if (!ValidateAllParts(testCase))
-                return false;
+        var results = new List<ValidationPartResult>();
 
-        return true;
+        foreach (int testCase in Problem.Input.TestCaseIDs)
+        {
+            var caseResult = ValidateAllParts(testCase);
+            results.AddRange(caseResult.PartResults);
+        }
+
+        return new(results);
     }
-    public bool ValidateAllParts()
+
+    public ValidationProblemResult ValidateAllParts()
     {
         return ValidateAllParts(0);
     }
-    public bool ValidateAllParts(int testCase)
+    public ValidationProblemResult ValidateAllParts(int testCase)
     {
-        return ValidatePart(1, testCase) && ValidatePart(2, testCase);
+        var validations = new[] { ValidatePart(1, testCase), ValidatePart(2, testCase) };
+        return new(validations.Where(Predicates.NotNull) as IEnumerable<ValidationPartResult>);
     }
 
-    public bool ValidatePart(int part) => ValidatePart(part, 0);
-    public bool ValidatePart(int part, int testCase)
+    public ValidationPartResult? ValidatePart(int part) => ValidatePart(part, 0);
+    public ValidationPartResult? ValidatePart(int part, int testCase)
     {
         var contents = Problem.Input.GetOutputFileContents(testCase, true);
         var expectedPartOutput = contents.ForPart(part);
         if (expectedPartOutput is null)
-            return true;
+            return null;
 
         return ValidatePart(part, testCase, expectedPartOutput);
     }
-    private bool ValidatePart(int part, int testCase, string expected)
+    private ValidationPartResult ValidatePart(int part, int testCase, string expected)
     {
-        return expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase)), StringComparison.OrdinalIgnoreCase);
+        bool valid = false;
+        try
+        {
+            valid = expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase)), StringComparison.OrdinalIgnoreCase);
+        }
+        catch { }
+
+        var result = valid switch
+        {
+            true => ValidationResult.Valid,
+            false => ValidationResult.Invalid,
+        };
+
+        return new(ProblemsIndex.Instance.InfoForInstance(Problem).ProblemType, part, testCase, result);
     }
 
     private PartSolutionOutputDictionary SolveParts(int testCase, MethodInfo[] solutionMethods)
@@ -190,6 +209,55 @@ public sealed class ProblemRunner
 
         ExecutionTimePrinting.EnableLivePrinting = defaultLivePrintingSetting;
     }
+}
+
+public sealed class ValidationReport
+{
+    private readonly Dictionary<ProblemType, ValidationProblemResult> validationResults = new();
+
+    public IEnumerable<ValidationPartResult> AllPartValidationResults => validationResults.Values.SelectMany(problem => problem.PartResults);
+
+    public IEnumerable<ValidationPartResult> ValidPartResults => FilterWithResult(ValidationResult.Valid);
+    public IEnumerable<ValidationPartResult> InvalidPartResults => FilterWithResult(ValidationResult.Invalid);
+
+    public bool HasInvalidParts => InvalidPartResults.Any();
+
+    public void Add(Problem instance, ValidationProblemResult result)
+    {
+        validationResults.Add(ProblemsIndex.Instance.InfoForInstance(instance).ProblemType, result);
+    }
+
+    public IEnumerable<ValidationPartResult> FilterWithResult(ValidationResult result) => AllPartValidationResults.Where(problem => problem.Result == result);
+}
+public sealed class ValidationProblemResult
+{
+    public IReadOnlyCollection<ValidationPartResult> PartResults { get; }
+
+    public ProblemType Type { get; }
+
+    public bool HasInvalidResults => PartResults.Any(result => result.Result is ValidationResult.Invalid);
+
+    public ValidationProblemResult(IEnumerable<ValidationPartResult> results)
+    {
+        PartResults = results.ToArray();
+        Type = PartResults.First().Type;
+    }
+}
+public sealed record ValidationPartResult(ProblemType Type, int Part, int TestCase, ValidationResult Result);
+
+/// <summary>Represents a validation result.</summary>
+public enum ValidationResult
+{
+    /// <summary>Represents a valid result.</summary>
+    /// <remarks>This guarantees that the correct answer was yielded, and no errors occurred during the validation process.</remarks>
+    Valid,
+    /// <summary>Represents an invalid result.</summary>
+    /// <remarks>This value denotes that the correct answer was not returned. It does not indicate whether the solver threw or if it only yielded an incorrect answer.</remarks>
+    Invalid,
+
+    /// <summary>Represents an aborted validation process.</summary>
+    /// <remarks>Reserved for future usage.</remarks>
+    Aborted,
 }
 
 public sealed class PartSolutionOutputDictionary : IEnumerable<PartSolutionOutputEntry>

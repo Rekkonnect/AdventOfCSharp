@@ -46,6 +46,8 @@ public sealed class ProblemsIndex
         return partSolutionAttribute.Status;
     }
 
+    public ProblemInfo InfoForInstance(Problem instance) => this[instance.Year, instance.Day];
+
     public IEnumerable<ProblemInfo> AllProblems() => problemDictionary.SelectMany(Selectors.ValueReturner);
 
     public GlobalYearSummary GetGlobalYearSummary() => problemDictionary.GlobalYearSummary;
