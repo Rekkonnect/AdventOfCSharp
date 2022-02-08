@@ -41,34 +41,65 @@ public abstract class BaseProgram
         ValidateSolution(ProblemsIndex.Instance[year, day]);
     }
 
-    protected static void ValidateSolutions(IEnumerable<ProblemInfo> problems)
+    private static void ValidateSolutions(IEnumerable<ProblemInfo> problems)
     {
+        var validator = new ProblemValidator();
+
         foreach (var problem in problems)
-            ValidateSolution(problem);
+            ValidateSolution(problem, validator);
+
+        var report = validator.Report;
+        var invalidParts = report.InvalidPartResults.ToArray();
+        int validCount = report.ValidPartResults.Count();
+        int invalidCount = invalidParts.Length;
+        int totalCount = report.AllPartValidationResults.Count();
+
+        bool hasInvalids = validator.Report.HasInvalidParts;
+        var invalidPartsColor = hasInvalids ? ConsoleColor.Red : ConsoleColor.Yellow;
+        var totalPartsColor = hasInvalids ? ConsoleColor.Yellow : ConsoleColor.Green;
+
+        WriteLineWithColor("  Validation Report", ConsoleColor.Cyan);
+        Write("- ");
+        WriteLineWithColor($"{validCount  ,3}   valid parts", ConsoleColor.Green);
+        Write("- ");
+        WriteLineWithColor($"{invalidCount,3} invalid parts", invalidPartsColor);
+        Write("- ");
+        WriteLineWithColor($"{totalCount  ,3}   total parts", totalPartsColor);
+
+        if (hasInvalids)
+        {
+            WriteLineWithColor("\nInvalid parts", ConsoleColor.Red);
+
+            foreach (var invalidPart in invalidParts)
+            {
+                Write("- ");
+                DisplayInlineProblemDate(invalidPart.Type.Year, invalidPart.Type.Day, invalidPart.Part, true);
+                WriteLine();
+            }
+        }
+        else
+        {
+            WriteLineWithColor("\nValidation Successful", ConsoleColor.DarkGreen);
+        }
     }
-    protected static void ValidateSolution(ProblemInfo problem)
+    private static void ValidateSolution(ProblemInfo problem, ProblemValidator? validator = null)
     {
         if (problem.HasNoValidSolutions)
             return;
 
-        var instance = problem.InitializeInstance();
-        if (instance is null)
-            return;
-
-        var runner = new ProblemRunner(instance);
+        if (validator is null)
+            validator = new ProblemValidator();
 
         DisplayProblemDate(problem.Year, problem.Day);
-        ValidatePart(1);
-        ValidatePart(2);
-        WriteLine();
+        var parts = validator.Validate(problem)!;
 
-        void ValidatePart(int part)
+        foreach (var result in parts.PartResults)
         {
-            if (!problem.StatusForPart(part).IsValidSolution())
-                return;
-            if (!runner.ValidatePart(part))
-                WriteLineWithColor($"Part {part} yielded an invalid answer", ConsoleColor.Red);
+            if (result.Result is ValidationResult.Invalid)
+                WriteLineWithColor($"Part {result.Part} yielded an invalid answer", ConsoleColor.Red);
         }
+
+        WriteLine();
     }
 
     protected static void EnterMainMenu()
@@ -355,20 +386,33 @@ Focus on development, you lazy fucking ass
         return partName is "Part 2" && instance is IFinalDay;
     }
 
+    private static void DisplayInlineProblemStat(string label, int stat, int minWidth = 1)
+    {
+        Write(label);
+        WriteWithColor(stat.ToString().PadLeft(minWidth), ConsoleColor.Cyan);
+    }
     protected static void DisplayInlineProblemYear(int year)
     {
-        Write("Year ");
-        WriteWithColor(year.ToString(), ConsoleColor.Cyan);
+        DisplayInlineProblemStat("Year ", year);
     }
-    protected static void DisplayInlineProblemDay(int day)
+    protected static void DisplayInlineProblemDay(int day, bool pad = false)
     {
-        Write(" Day ");
-        WriteWithColor(day.ToString(), ConsoleColor.Cyan);
+        int minWidth = pad ? 2 : 1;
+        DisplayInlineProblemStat(" Day ", day, minWidth);
     }
-    protected static void DisplayInlineProblemDate(int year, int day)
+    protected static void DisplayInlineProblemPart(int part)
+    {
+        DisplayInlineProblemStat(" Part ", part);
+    }
+    protected static void DisplayInlineProblemDate(int year, int day, bool padDay = false)
     {
         DisplayInlineProblemYear(year);
-        DisplayInlineProblemDay(day);
+        DisplayInlineProblemDay(day, padDay);
+    }
+    protected static void DisplayInlineProblemDate(int year, int day, int part, bool padDay = false)
+    {
+        DisplayInlineProblemDate(year, day, padDay);
+        DisplayInlineProblemPart(part);
     }
     protected static void DisplayProblemDate(int year, int day)
     {
