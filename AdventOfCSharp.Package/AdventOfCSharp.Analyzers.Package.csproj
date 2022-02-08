@@ -40,7 +40,7 @@ Additions:
   
   <!-- Add the required packages -->
   <ItemGroup>
-    <PackageReference Include="RoseLynn" Version="0.4.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="RoseLynn" Version="0.4.1.2" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="RoseLynn.Analyzers" Version="0.4.1" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="RoseLynn.CodeFixes" Version="0.4.1" PrivateAssets="all" GeneratePathProperty="true" />
 
