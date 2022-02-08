@@ -47,7 +47,7 @@ public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
                     return;
 
                 var argument = solutionAttribute.ConstructorArguments[0];
-                if (IsDefinedEnumValue(argument))
+                if (argument.IsDefinedEnumValue())
                     return;
 
                 var attributeNode = solutionAttribute.ApplicationSyntaxReference.GetSyntax() as AttributeSyntax;
@@ -61,20 +61,5 @@ public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
     private static AttributeData? GetPartSolutionAttributeData(IMethodSymbol method)
     {
         return method.FirstOrDefaultAttributeNamed(KnownSymbolNames.PartSolutionAttribute);
-    }
-
-    private static bool IsDefinedEnumValue(TypedConstant constant)
-    {
-        var enumSymbol = constant.Type as INamedTypeSymbol;
-        if (enumSymbol?.TypeKind != TypeKind.Enum)
-            return false;
-
-        var definedEnumValues = enumSymbol.GetMembers().OfType<IFieldSymbol>();
-        foreach (var value in definedEnumValues)
-        {
-            if (value.ConstantValue!.Equals(constant.Value))
-                return true;
-        }
-        return false;
     }
 }
