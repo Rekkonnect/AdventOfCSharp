@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <IsPackable>true</IsPackable>
-    <Version>1.2.1</Version>
+    <Version>1.3.0</Version>
 
     <Authors>Alex Kalfakakos</Authors>
     <Company />
@@ -20,13 +20,7 @@
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp.Analyzers</Product>
     <PackageId>AdventOfCSharp.Analyzers</PackageId>
-    <PackageReleaseNotes>1.2.1 changes:
-Additions:
-- Answer string converter analyzer, including 3 new diagnostics
-
-1.2.0 changes:
-Additions:
-- AoCS0014 and AoCS0015 diagnostics</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

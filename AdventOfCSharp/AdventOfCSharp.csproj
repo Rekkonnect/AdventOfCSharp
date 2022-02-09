@@ -7,7 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
-    <Version>1.2.1</Version>
+    <Version>1.3.0</Version>
 
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>An aspiring AoC problem solving framework.</Description>
@@ -17,44 +17,22 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp</Product>
-    <PackageReleaseNotes>1.2.1 changes:
-Changes:
-- Object answer string converters are prohibited
-- Display execution times parameters moved to separate options in ProblemRunner (BREAKING)
-- Method resolution for problem types migrated to a dedicated class
-
-Analyzers:
-- Answer string converter analyzer, including 3 new diagnostics
-- Properly upgrade dependency version
-
-1.2.0 changes:
+    <PackageReleaseNotes>1.3.0 changes:
 Additions:
-- Automatic solution class generation upon failing to discover today's problem solution class (including publicly exposed API for custom dates)
-- Live execution time printing (can be manually disabled, or automatically disabled for solutions with PrintsToConsoleAttribute)
-- Run custom part solvers (with even more part number colors)
-- IFinalDay
-- PartSolutionStatus.Interactive
+- Input generation APIs, including documentation
 
 Changes:
-- More documentation was added
-- Part solver methods can be named and attributed with a kind (BREAKING)
-- Separate download from input execution time
-- Avoid printing input execution time if already loaded
-
-Removals:
-- BasicBenchmarking
-
-Analyzers:
-- Added AoCS0014 and AoCS0015 diagnostics
+- Solution validation will return a validation report (BREAKING)
+- Solution validation includes more information after running in the console
 
 Internals:
-- Upgraded Garyon and RoseLynn
+- Upgraded RoseLynn
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Garyon" Version="0.2.7" />
-    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.2.1" />
+    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.3.0" />
   </ItemGroup>
 
   <ItemGroup>
