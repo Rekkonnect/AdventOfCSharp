@@ -124,6 +124,12 @@ public abstract partial class Problem
             ProblemInstance = instance;
         }
 
+        public void SetCustomGeneratedContents(string fileContents)
+        {
+            cachedContents = fileContents;
+            currentTestCase = -1;
+        }
+
         public void TriggerFileContentCache()
         {
             _ = FileContents;
