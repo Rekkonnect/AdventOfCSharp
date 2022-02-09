@@ -1,4 +1,6 @@
-﻿using AdventOfCSharp.Utilities;
+﻿using AdventOfCSharp.Generation;
+using AdventOfCSharp.Utilities;
+using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCSharp;
@@ -16,9 +18,17 @@ public sealed class ProblemsIndex
     private ProblemsIndex()
     {
         var allClasses = AppDomainCache.Current.AllNonAbstractClasses;
+
         foreach (var c in allClasses)
             AnalyzeProblemClass(c);
+
         problemDictionary.DetermineD25P2Availability();
+
+        // Post-instance-initialization analysis
+        foreach (var c in allClasses)
+        {
+            AnalyzeGeneratorClass(c);
+        }
     }
 
     private void AnalyzeProblemClass(Type type)
@@ -28,6 +38,18 @@ public sealed class ProblemsIndex
             return;
 
         problemDictionary.SetProblemInfo(GetProblemInfo(problemType));
+    }
+
+    private void AnalyzeGeneratorClass(Type type)
+    {
+        bool isGenerator = type.Inherits(typeof(InputGenerator));
+        if (!isGenerator)
+            return;
+
+        if (type.InitializeInstance() is not InputGenerator generatorInstance)
+            throw new TypeLoadException($"The input generator class '{type.Name}' must provide a public parameterless constructor.");
+
+        this[generatorInstance.Year, generatorInstance.Day].ProblemType.AddGeneratorType(type);
     }
 
     private static ProblemInfo GetProblemInfo(ProblemType type)
@@ -191,6 +213,14 @@ public sealed record ProblemType(Type ProblemClass, int Year, int Day)
 {
     // TODO: Research regex group name matching system
     public readonly static Regex ProblemClassNameRegex = new(@"Year(?'year'\d*)\.Day(?'day'\d*)$", RegexOptions.Compiled);
+
+    /// <summary>Represents the <seealso cref="InputGenerator"/> type for this problem.</summary>
+    public ImmutableArray<Type> GeneratorTypes { get; private set; } = ImmutableArray<Type>.Empty;
+
+    internal void AddGeneratorType(Type generatorType)
+    {
+        GeneratorTypes = GeneratorTypes.Add(generatorType);
+    }
 
     public Problem? InitializeInstance() => ProblemClass?.InitializeInstance<Problem>();
 
