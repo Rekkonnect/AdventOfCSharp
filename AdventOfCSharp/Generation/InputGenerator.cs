@@ -263,35 +263,3 @@ public abstract partial class InputGenerator
         }
     }
 }
-
-// PoC
-public sealed class Year2021Day4InputGenerator : InputGenerator
-{
-    public override int Year => 2021;
-    public override int Day => 4;
-
-    public override string GenerateNext()
-    {
-        return Segmented
-               (
-                   Integers(60, 80).Ranging(0, 100).DelimitedBy(","),
-                   new BingoBoardGeneratorInfo(this, 100).PerLines(2)
-               ).PerLines(2).Build();
-    }
-
-    public sealed class BingoBoardGeneratorInfo : ElementSequenceInputGenerationInfo<BingoBoardGeneratorInfo.BingoBoard>
-    {
-        public BingoBoardGeneratorInfo(InputGenerator generator, int count)
-            : base(generator, count) { }
-
-        public override BingoBoard GenerateNextElement()
-        {
-            return null;
-        }
-
-        public class BingoBoard
-        {
-
-        }
-    }
-}
