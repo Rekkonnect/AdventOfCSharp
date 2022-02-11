@@ -125,7 +125,7 @@ public sealed class ProblemRunner
     public ValidationPartResult? ValidatePart(int part) => ValidatePart(part, 0);
     public ValidationPartResult? ValidatePart(int part, int testCase)
     {
-        var contents = Problem.Input.GetOutputFileContents(testCase, true);
+        var contents = Problem.Output.GetOutputFileContents(testCase, true);
         var expectedPartOutput = contents.ForPart(part);
         if (expectedPartOutput is null)
             return null;
