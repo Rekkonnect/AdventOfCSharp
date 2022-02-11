@@ -6,10 +6,10 @@ namespace AdventOfCSharp;
 
 public abstract partial class Problem
 {
-    // TODO: InputProvider should contain this property
-    public bool StateLoaded { get; private set; }
+    public bool StateLoaded => Input.StateLoaded;
 
     public readonly InputProvider Input;
+    public readonly OutputProvider Output;
 
     public int Year => GetType().Namespace![^4..].ParseInt32();
     public int Day => GetType().Name["Day".Length..].ParseInt32();
@@ -17,6 +17,7 @@ public abstract partial class Problem
     protected Problem()
     {
         Input = new(this);
+        Output = new(this);
     }
 
     public void ForceLoadState() => LoadState();
@@ -26,11 +27,11 @@ public abstract partial class Problem
 
     public void EnsureLoadedState()
     {
-        HandleStateLoading(true, LoadState);
+        Input.HandleStateLoading(true, LoadState);
     }
     public void ResetLoadedState()
     {
-        HandleStateLoading(false, ResetState);
+        Input.HandleStateLoading(false, ResetState);
     }
 
     /// <summary>Ensures that the input is downloaded.</summary>
@@ -38,14 +39,6 @@ public abstract partial class Problem
     public void EnsureDownloadedInput()
     {
         Input.TriggerFileContentCache();
-    }
-
-    private void HandleStateLoading(bool targetStateLoadedStatus, Action stateHandler)
-    {
-        if (StateLoaded == targetStateLoadedStatus)
-            return;
-        stateHandler();
-        StateLoaded = targetStateLoadedStatus;
     }
 }
 
@@ -69,136 +62,53 @@ public class ContentDownloadingOptions
 // Content section
 public abstract partial class Problem
 {
-    // Consider splitting into:
-    // - ContentProvider
-    //   - InputProvider
-    //   - OutputProvider
-    // At least that would semantically make more sense
-    public sealed class InputProvider
+    public abstract class ContentProvider
     {
-        private int currentTestCase;
-        private string? cachedContents;
+        protected static readonly Regex TestCaseFilePathPattern = new(@"(?'day'\d*)T(?'id'\d*)\.(?'extension'.*)$");
 
-        public Problem ProblemInstance { get; }
+        protected int CurrentTestCaseField;
 
-        public int CurrentTestCase
+        internal int CurrentTestCase
         {
-            get => currentTestCase;
+            get => CurrentTestCaseField;
             set
             {
-                if (currentTestCase == value)
+                if (CurrentTestCaseField == value)
                     return;
 
-                currentTestCase = value;
-                cachedContents = null;
+                CurrentTestCaseField = value;
+                ResetCachedContents();
                 ProblemInstance.ResetLoadedState();
             }
         }
 
-        public ContentDownloadingOptions ContentDownloadingOptions { get; } = new();
+        public Problem ProblemInstance { get; }
 
         public int Year => ProblemInstance.Year;
         public int Day => ProblemInstance.Day;
 
-        public string FileContents => cachedContents ??= GetInputFileContents(CurrentTestCase);
-        public string NormalizedFileContents => FileContents.NormalizeLineEndings();
-        public string[] UntrimmedFileLines => FileContents.GetLines();
-        public string[] FileLines => FileContents.Trim().GetLines();
-        public int[] FileNumbersInt32 => ParsedFileLines(int.Parse);
-        public long[] FileNumbersInt64 => ParsedFileLines(long.Parse);
+        public ContentDownloadingOptions ContentDownloadingOptions { get; } = new();
 
-        public string BaseInputDirectory => BaseProblemFileDirectory(ProblemContentKind.Input);
-        public int TestCaseFiles => TestCaseIDs.Count();
-        public IEnumerable<int> TestCaseIDs
-        {
-            get
-            {
-                var testCaseFilePathPattern = new Regex(@"(?'day'\d*)T(?'id'\d*)\.(?'extension'.*)$");
-                var validFiles = Directory.GetFiles(BaseInputDirectory).Select(f => Path.GetFileName(f)).Where(f => f.StartsWith($"{Day}T"));
-                return validFiles.Select(file => testCaseFilePathPattern.Match(file).Groups["id"].Value.ParseInt32());
-            }
-        }
-
-        public InputProvider(Problem instance)
+        protected ContentProvider(Problem instance)
         {
             ProblemInstance = instance;
         }
 
-        public void SetCustomGeneratedContents(string fileContents)
-        {
-            cachedContents = fileContents;
-            currentTestCase = -1;
-        }
+        protected abstract void ResetCachedContents();
 
-        public void TriggerFileContentCache()
-        {
-            _ = FileContents;
-        }
+        internal string BaseProblemFileDirectory(ProblemContentKind kind) => $@"{ProblemFiles.GetBaseDirectory()}\{kind}s\{Year}";
 
-        public T[] ParsedFileLines<T>(Parser<T> parser) => ParsedFileLinesEnumerable(parser).ToArray();
-        public T[] ParsedFileLines<T>(Parser<T> parser, int skipFirst, int skipLast) => ParsedFileLinesEnumerable(parser, skipFirst, skipLast).ToArray();
-        public IEnumerable<T> ParsedFileLinesEnumerable<T>(Parser<T> parser) => ParsedFileLinesEnumerable(parser, 0, 0);
-        public IEnumerable<T> ParsedFileLinesEnumerable<T>(Parser<T> parser, int skipFirst, int skipLast) => FileLines.Skip(skipFirst).SkipLast(skipLast).Select(new Func<string, T>(parser));
-
-        private string BaseProblemFileDirectory(ProblemContentKind kind) => $@"{ProblemFiles.GetBaseDirectory()}\{kind}s\{Year}";
-
-        private string GetInputFileLocation(int testCase) => GetFileLocation(ProblemContentKind.Input, testCase);
-        private string GetOutputFileLocation(int testCase) => GetFileLocation(ProblemContentKind.Output, testCase);
-        private string GetFileLocation(ProblemContentKind contentKind, int testCase) => $@"{BaseProblemFileDirectory(contentKind)}\{Day}{GetTestInputFileSuffix(testCase)}.txt";
+        internal string GetFileLocation(ProblemContentKind contentKind, int testCase) => $@"{BaseProblemFileDirectory(contentKind)}\{Day}{GetTestInputFileSuffix(testCase)}.txt";
 
         private static string? GetTestInputFileSuffix(int testCase) => testCase > 0 ? $"T{testCase}" : null;
 
-        private string GetInputFileContents(int testCase)
-        {
-            return GetInputFileContents(testCase, ContentDownloadingOptions.EnabledDownloadingInput);
-        }
-        private string GetInputFileContents(int testCase, bool performDownload)
-        {
-            var contents = GetProblemFileContents<string>(ProblemContentKind.Input, testCase, performDownload);
-            if (contents.IsNullOrEmpty())
-                throw new IOException("The requested input for the specified problem was not found locally, or could not be downloaded. Ensure that downloading is enabled and that the secrets are valid.");
-
-            return contents;
-        }
-
-        public ProblemOutput GetOutputFileContents(int testCase)
-        {
-            return GetOutputFileContents(testCase, ContentDownloadingOptions.EnabledDownloadingOutput);
-        }
-        public ProblemOutput GetOutputFileContents(int testCase, bool performDownload)
-        {
-            return GetProblemFileContents<ProblemOutput>(ProblemContentKind.Output, testCase, performDownload);
-        }
-
-        private TContent GetProblemFileContents<TContent>(ProblemContentKind contentKind, int testCase, bool performDownload)
+        internal TContent GetProblemFileContents<TContent>(ProblemContentKind contentKind, int testCase, bool performDownload)
         {
             var getter = BaseProblemContentGetter.GetInstance(contentKind) as BaseProblemContentGetter<TContent>;
             return getter!.GetProblemContents(this, testCase, performDownload);
         }
 
-        private string DownloadInputIfMainCase(int testCase, bool performDownload)
-        {
-            return DownloadContentIfMainCase(testCase, performDownload, DownloadSaveInput, "");
-        }
-        private string DownloadSaveInput()
-        {
-            var input = WebsiteScraping.DownloadInput(Year, Day);
-            FileHelpers.WriteAllTextEnsuringDirectory(GetInputFileLocation(0), input);
-            return input;
-        }
-
-        private ProblemOutput DownloadOutputIfMainCase(int testCase, bool performDownload)
-        {
-            return DownloadContentIfMainCase(testCase, performDownload, DownloadSaveCorrectOutput, ProblemOutput.Empty);
-        }
-        private ProblemOutput DownloadSaveCorrectOutput()
-        {
-            var output = WebsiteScraping.DownloadAnsweredCorrectOutputs(Year, Day);
-            FileHelpers.WriteAllTextEnsuringDirectory(GetOutputFileLocation(0), output.GetFileString());
-            return output;
-        }
-
-        private static TContent DownloadContentIfMainCase<TContent>(int testCase, bool performDownload, Func<TContent> contentDownloader, TContent empty)
+        protected static TContent DownloadContentIfMainCase<TContent>(int testCase, bool performDownload, Func<TContent> contentDownloader, TContent empty)
         {
             if (testCase is 0 && performDownload)
                 return contentDownloader();
@@ -206,7 +116,7 @@ public abstract partial class Problem
             return empty;
         }
 
-        private abstract class BaseProblemContentGetter
+        internal abstract class BaseProblemContentGetter
         {
             protected abstract ProblemContentKind ContentKind { get; }
 
@@ -214,17 +124,17 @@ public abstract partial class Problem
             {
                 return contentKind switch
                 {
-                    ProblemContentKind.Input => ProblemInputGetter.Instance,
-                    ProblemContentKind.Output => ProblemOutputGetter.Instance,
+                    ProblemContentKind.Input => InputProvider.ProblemInputGetter.Instance,
+                    ProblemContentKind.Output => OutputProvider.ProblemOutputGetter.Instance,
                 };
             }
         }
-        private abstract class BaseProblemContentGetter<TContent> : BaseProblemContentGetter
+        internal abstract class BaseProblemContentGetter<TContent> : BaseProblemContentGetter
         {
-            protected abstract ContentDownloader<TContent> GetContentDownloader(InputProvider provider);
+            protected abstract ContentDownloader<TContent> GetContentDownloader(ContentProvider provider);
             protected abstract Func<string, TContent> GetContentParser();
 
-            public TContent GetProblemContents(InputProvider provider, int testCase, bool performDownload)
+            public TContent GetProblemContents(ContentProvider provider, int testCase, bool performDownload)
             {
                 var fileLocation = provider.GetFileLocation(ContentKind, testCase);
                 if (!File.Exists(fileLocation))
@@ -244,41 +154,162 @@ public abstract partial class Problem
             }
         }
 
-        private sealed class ProblemInputGetter : BaseProblemContentGetter<string>
-        {
-            public static ProblemInputGetter Instance { get; } = new();
-
-            protected override ProblemContentKind ContentKind => ProblemContentKind.Input;
-
-            protected override ContentDownloader<string> GetContentDownloader(InputProvider provider) => provider.DownloadInputIfMainCase;
-            protected override Func<string, string> GetContentParser() => Selectors.SelfObjectReturner;
-        }
-        private sealed class ProblemOutputGetter : BaseProblemContentGetter<ProblemOutput>
-        {
-            public static ProblemOutputGetter Instance { get; } = new();
-
-            protected override ProblemContentKind ContentKind => ProblemContentKind.Output;
-
-            protected override ContentDownloader<ProblemOutput> GetContentDownloader(InputProvider provider) => provider.DownloadOutputIfMainCase;
-            protected override Func<string, ProblemOutput> GetContentParser() => ProblemOutput.Parse;
-        }
-
-        private enum ProblemContentKind
+        internal enum ProblemContentKind
         {
             Input,
             Output,
         }
 
-        private delegate TContent ContentDownloader<TContent>(int testCase, bool performDownload);
+        internal delegate TContent ContentDownloader<TContent>(int testCase, bool performDownload);
+    }
+
+    public sealed class OutputProvider : ContentProvider
+    {
+        public OutputProvider(Problem instance)
+            : base(instance) { }
+
+        protected override void ResetCachedContents() { }
+
+        private string GetOutputFileLocation(int testCase) => GetFileLocation(ProblemContentKind.Output, testCase);
+
+        public ProblemOutput GetOutputFileContents(int testCase)
+        {
+            return GetOutputFileContents(testCase, ContentDownloadingOptions.EnabledDownloadingOutput);
+        }
+        public ProblemOutput GetOutputFileContents(int testCase, bool performDownload)
+        {
+            return GetProblemFileContents<ProblemOutput>(ProblemContentKind.Output, testCase, performDownload);
+        }
+
+        private ProblemOutput DownloadOutputIfMainCase(int testCase, bool performDownload)
+        {
+            return DownloadContentIfMainCase(testCase, performDownload, DownloadSaveCorrectOutput, ProblemOutput.Empty);
+        }
+        private ProblemOutput DownloadSaveCorrectOutput()
+        {
+            var output = WebsiteScraping.DownloadAnsweredCorrectOutputs(Year, Day);
+            FileHelpers.WriteAllTextEnsuringDirectory(GetOutputFileLocation(0), output.GetFileString());
+            return output;
+        }
+
+        internal sealed class ProblemOutputGetter : BaseProblemContentGetter<ProblemOutput>
+        {
+            public static ProblemOutputGetter Instance { get; } = new();
+
+            protected override ProblemContentKind ContentKind => ProblemContentKind.Output;
+
+            protected override ContentDownloader<ProblemOutput> GetContentDownloader(ContentProvider provider) => (provider as OutputProvider)!.DownloadOutputIfMainCase;
+            protected override Func<string, ProblemOutput> GetContentParser() => ProblemOutput.Parse;
+        }
+    }
+
+    public sealed class InputProvider : ContentProvider
+    {
+        private string? cachedContents;
+
+        public bool StateLoaded { get; private set; }
+
+        public string FileContents => cachedContents ??= GetInputFileContents(CurrentTestCase);
+        public string NormalizedFileContents => FileContents.NormalizeLineEndings();
+        public string[] UntrimmedFileLines => FileContents.GetLines();
+        public string[] FileLines => FileContents.Trim().GetLines();
+        public int[] FileNumbersInt32 => ParsedFileLines(int.Parse);
+        public long[] FileNumbersInt64 => ParsedFileLines(long.Parse);
+
+        public string BaseInputDirectory => BaseProblemFileDirectory(ProblemContentKind.Input);
+        public int TestCaseFiles => TestCaseIDs.Count();
+        public IEnumerable<int> TestCaseIDs
+        {
+            get
+            {
+                var validFiles = Directory.GetFiles(BaseInputDirectory).Select(f => Path.GetFileName(f)).Where(f => f.StartsWith($"{Day}T"));
+                return validFiles.Select(file => TestCaseFilePathPattern.Match(file).Groups["id"].Value.ParseInt32());
+            }
+        }
+
+        public InputProvider(Problem instance)
+            : base(instance) { }
+
+        internal void HandleStateLoading(bool targetStateLoadedStatus, Action stateHandler)
+        {
+            if (StateLoaded == targetStateLoadedStatus)
+                return;
+
+            stateHandler();
+            StateLoaded = targetStateLoadedStatus;
+        }
+
+        protected override void ResetCachedContents()
+        {
+            cachedContents = null;
+        }
+
+        public void SetCustomGeneratedContents(string fileContents)
+        {
+            cachedContents = fileContents;
+            CurrentTestCaseField = -1;
+        }
+
+        public void TriggerFileContentCache()
+        {
+            _ = FileContents;
+        }
+
+        public T[] ParsedFileLines<T>(Parser<T> parser) => ParsedFileLinesEnumerable(parser).ToArray();
+        public T[] ParsedFileLines<T>(Parser<T> parser, int skipFirst, int skipLast) => ParsedFileLinesEnumerable(parser, skipFirst, skipLast).ToArray();
+        public IEnumerable<T> ParsedFileLinesEnumerable<T>(Parser<T> parser) => ParsedFileLinesEnumerable(parser, 0, 0);
+        public IEnumerable<T> ParsedFileLinesEnumerable<T>(Parser<T> parser, int skipFirst, int skipLast) => FileLines.Skip(skipFirst).SkipLast(skipLast).Select(new Func<string, T>(parser));
+
+        private string GetInputFileLocation(int testCase) => GetFileLocation(ProblemContentKind.Input, testCase);
+
+        private string GetInputFileContents(int testCase)
+        {
+            return GetInputFileContents(testCase, ContentDownloadingOptions.EnabledDownloadingInput);
+        }
+        private string GetInputFileContents(int testCase, bool performDownload)
+        {
+            var contents = GetProblemFileContents<string>(ProblemContentKind.Input, testCase, performDownload);
+            if (contents.IsNullOrEmpty())
+                throw new IOException("The requested input for the specified problem was not found locally, or could not be downloaded. Ensure that downloading is enabled and that the secrets are valid.");
+
+            return contents;
+        }
+
+        private string DownloadInputIfMainCase(int testCase, bool performDownload)
+        {
+            return DownloadContentIfMainCase(testCase, performDownload, DownloadSaveInput, "");
+        }
+        private string DownloadSaveInput()
+        {
+            var input = WebsiteScraping.DownloadInput(Year, Day);
+            FileHelpers.WriteAllTextEnsuringDirectory(GetInputFileLocation(0), input);
+            return input;
+        }
+
+        internal sealed class ProblemInputGetter : BaseProblemContentGetter<string>
+        {
+            public static ProblemInputGetter Instance { get; } = new();
+
+            protected override ProblemContentKind ContentKind => ProblemContentKind.Input;
+
+            protected override ContentDownloader<string> GetContentDownloader(ContentProvider provider) => (provider as InputProvider)!.DownloadInputIfMainCase;
+            protected override Func<string, string> GetContentParser() => Selectors.SelfObjectReturner;
+        }
     }
 
     public int CurrentTestCase
     {
         get => Input.CurrentTestCase;
-        set => Input.CurrentTestCase = value;
+        set
+        {
+            Input.CurrentTestCase = value;
+            Output.CurrentTestCase = value;
+        }
     }
 
-    // Will probably become legacy properties; consider exposing the provider and retrieve input from there
+    // These properties are here for
+    // - compatibility reasons
+    // - providing fluency when working with input
     protected string FileContents => Input.FileContents;
     protected string NormalizedFileContents => Input.NormalizedFileContents;
     protected string[] UntrimmedFileLines => Input.UntrimmedFileLines;
@@ -288,10 +319,22 @@ public abstract partial class Problem
 
     protected string BaseInputDirectory => Input.BaseInputDirectory;
 
-    protected T[] ParsedFileLines<T>(Parser<T> parser) => ParsedFileLinesEnumerable(parser).ToArray();
-    protected T[] ParsedFileLines<T>(Parser<T> parser, int skipFirst, int skipLast) => ParsedFileLinesEnumerable(parser, skipFirst, skipLast).ToArray();
-    protected IEnumerable<T> ParsedFileLinesEnumerable<T>(Parser<T> parser) => ParsedFileLinesEnumerable(parser, 0, 0);
-    protected IEnumerable<T> ParsedFileLinesEnumerable<T>(Parser<T> parser, int skipFirst, int skipLast) => FileLines.Skip(skipFirst).SkipLast(skipLast).Select(new Func<string, T>(parser));
+    protected T[] ParsedFileLines<T>(Parser<T> parser)
+    {
+        return ParsedFileLinesEnumerable(parser).ToArray();
+    }
+    protected T[] ParsedFileLines<T>(Parser<T> parser, int skipFirst, int skipLast)
+    {
+        return ParsedFileLinesEnumerable(parser, skipFirst, skipLast).ToArray();
+    }
+    protected IEnumerable<T> ParsedFileLinesEnumerable<T>(Parser<T> parser)
+    {
+        return ParsedFileLinesEnumerable(parser, 0, 0);
+    }
+    protected IEnumerable<T> ParsedFileLinesEnumerable<T>(Parser<T> parser, int skipFirst, int skipLast)
+    {
+        return FileLines.Skip(skipFirst).SkipLast(skipLast).Select(new Func<string, T>(parser));
+    }
 }
 
 public abstract class Problem<T1, T2> : Problem
