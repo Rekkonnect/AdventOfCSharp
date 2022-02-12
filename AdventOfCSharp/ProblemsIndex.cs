@@ -17,6 +17,8 @@ public sealed class ProblemsIndex
 
     private ProblemsIndex()
     {
+        // This acts like the static constructor since the type is a singleton
+        AppDomainHelpers.ForceLoadAllAssembliesCurrent();
         var allClasses = AppDomainCache.Current.AllNonAbstractClasses;
 
         foreach (var c in allClasses)
