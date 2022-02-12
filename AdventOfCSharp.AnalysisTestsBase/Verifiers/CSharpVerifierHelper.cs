@@ -1,7 +1,11 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using AdventOfCSharp.AnalysisTestsBase.Resources;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Testing;
+using RoseLynn;
 using System;
 using System.Collections.Immutable;
+using System.IO;
 
 namespace AdventOfCSharp.AnalysisTestsBase.Verifiers;
 
@@ -28,5 +32,38 @@ internal static class CSharpVerifierHelper
             .SetItem("CS8669", ReportDiagnostic.Error);
 
         return nullableWarnings;
+    }
+
+    public static void SetupNET6AndAoCSDependencies<TVerifier>(AnalyzerTest<TVerifier> test)
+        where TVerifier : IVerifier, new()
+    {
+        SetupSolutionTransforms(test);
+
+        // Absolute disgrace of a solution
+        test.ReferenceAssemblies = new ReferenceAssemblies(
+            "net6.0",
+            new PackageIdentity(
+                "Microsoft.NETCore.App.Ref", "6.0.0"),
+                Path.Combine("ref", "net6.0"));
+
+        test.TestState.AdditionalReferences.AddRange(new[]
+        {
+            MetadataReferenceFactory.CreateFromType<Problem>(),
+            MetadataReferenceFactory.CreateFromType<ExampleAttribute>(),
+        });
+    }
+    private static void SetupSolutionTransforms<TVerifier>(AnalyzerTest<TVerifier> test)
+        where TVerifier : IVerifier, new()
+    {
+        test.SolutionTransforms.Add((solution, projectId) =>
+        {
+            var compilationOptions = solution.GetProject(projectId).CompilationOptions;
+            compilationOptions = compilationOptions.WithSpecificDiagnosticOptions(
+                compilationOptions.SpecificDiagnosticOptions.SetItems(NullableWarnings));
+            solution = solution.WithProjectCompilationOptions(projectId, compilationOptions);
+
+            return solution;
+        });
+
     }
 }

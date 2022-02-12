@@ -1,4 +1,5 @@
 ﻿using AdventOfCSharp.AnalysisTestsBase;
+using AdventOfCSharp.AnalysisTestsBase.Verifiers;
 using Gu.Roslyn.Asserts;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -12,6 +13,23 @@ public abstract class BaseAoCSDiagnosticTests<TAnalyzer> : BaseAoCSDiagnosticTes
     where TAnalyzer : DiagnosticAnalyzer, new()
 {
     protected sealed override DiagnosticAnalyzer GetNewDiagnosticAnalyzerInstance() => new TAnalyzer();
+
+    // This API was stolen from RoseLynn; consider extending this multi-framework approach
+    private void ReplaceAsteriskMarkup(ref string markupCode)
+    {
+        markupCode = ReplaceAsteriskMarkup(markupCode);
+    }
+    private string ReplaceAsteriskMarkup(string markupCode)
+    {
+        return markupCode.Replace("{|*", $"{{|{TestedDiagnosticRule.Id}");
+    }
+
+    // Some extensibility can be extracted from this API too
+    protected void AssertDiagnosticsMicrosoftCodeAnalysis(string testCode)
+    {
+        ReplaceAsteriskMarkup(ref testCode);
+        CSharpAnalyzerVerifier<TAnalyzer>.VerifyAnalyzerAsync(testCode).Wait();
+    }
 }
 
 public abstract class BaseAoCSDiagnosticTests : BaseDiagnosticTests
@@ -31,7 +49,7 @@ public abstract class BaseAoCSDiagnosticTests : BaseDiagnosticTests
     {
         RoslynAssert.Valid(GetNewDiagnosticAnalyzerInstance(), testCode);
     }
-    protected sealed override void AssertDiagnostics(string testCode)
+    protected override void AssertDiagnostics(string testCode)
     {
         RoslynAssert.Diagnostics(GetNewDiagnosticAnalyzerInstance(), ExpectedDiagnostic, testCode);
     }
