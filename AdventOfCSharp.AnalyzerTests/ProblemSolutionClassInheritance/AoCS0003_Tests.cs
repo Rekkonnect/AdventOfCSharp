@@ -5,7 +5,11 @@ namespace AdventOfCSharp.Analyzers.Tests.ProblemSolutionClassInheritance;
 [TestClass]
 public sealed class AoCS0003_Tests : ProblemInheritanceAnalyzerTests
 {
-    // TODO: Assert diagnostic span using enclosing notation
+    protected override void AssertDiagnostics(string testCode)
+    {
+        AssertDiagnosticsMicrosoftCodeAnalysis(testCode);
+    }
+
     [TestMethod]
     public void RedundantReturnTypeRepetition()
     {
@@ -13,7 +17,7 @@ public sealed class AoCS0003_Tests : ProblemInheritanceAnalyzerTests
 @"
 namespace AoC.Year2021;
 
-public class Day1 : Problem<int↓, int>
+public class Day1 : Problem<int{|*:, int|}>
 {
     public override int SolvePart1() => -1;
     public override int SolvePart2() => -2;
@@ -21,10 +25,10 @@ public class Day1 : Problem<int↓, int>
 public abstract class ProblemIntString : Problem<int, string>
 {
 }
-public abstract class ProblemStringString : Problem<string↓, string>
+public abstract class ProblemStringString : Problem<string{|*:, string|}>
 {
 }
-public abstract class ProblemGlyphGrid : Problem<IGlyphGrid↓, IGlyphGrid>
+public abstract class ProblemGlyphGrid : Problem<IGlyphGrid{|*:, IGlyphGrid|}>
 {
 }
 public abstract class ProblemString : Problem<string>
@@ -41,15 +45,15 @@ public abstract class ProblemString : Problem<string>
 @"
 namespace AoC.Year2021;
 
-public partial class Day1 : Problem<int↓, int>
+public partial class Day1 : Problem<int{|*:, int|}>
 {
     public override int SolvePart1() => -1;
 }
-public partial class Day1 : Problem<int↓, int>
+public partial class Day1 : Problem<int{|*:, int|}>
 {
     public override int SolvePart2() => -2;
 }
-public partial class Day1 : Problem<int↓, int>
+public partial class Day1 : Problem<int{|*:, int|}>
 {
 }
 public partial class Day1
@@ -58,6 +62,8 @@ public partial class Day1
 
 public class Day2 : Problem<int>
 {
+    public override int SolvePart1() => -1;
+    public override int SolvePart2() => -2;
 }
 ";
 

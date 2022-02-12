@@ -6,6 +6,11 @@ namespace AdventOfCSharp.Analyzers.Tests.ProblemClassNamings;
 [TestClass]
 public sealed class AoCS0005_Tests : ProblemClassNamingAnalyzerTests
 {
+    protected override void AssertDiagnostics(string testCode)
+    {
+        AssertDiagnosticsMicrosoftCodeAnalysis(testCode);
+    }
+
     [TestMethod]
     public void TooEarly()
     {
@@ -42,7 +47,7 @@ public sealed class AoCS0005_Tests : ProblemClassNamingAnalyzerTests
     {
         const string testCode =
 @"
-namespace AoC.Year↓2021645
+namespace AoC.Year{|*:2021645|};
 
 public class Day1 : NotProblem<int>
 {
@@ -58,7 +63,7 @@ public class Day1 : NotProblem<int>
     {
         var testCode =
 $@"
-namespace AoC.Year↓{year};
+namespace AoC.Year{{|*:{year}|}};
 
 public class Day1 : Problem<int>
 {{
@@ -67,6 +72,6 @@ public class Day1 : Problem<int>
 }}
 ";
 
-        AssertOrValidateWithUsings(testCode, assert);
+        AssertOrValidateMicrosoftCodeAnalysis(testCode, assert);
     }
 }
