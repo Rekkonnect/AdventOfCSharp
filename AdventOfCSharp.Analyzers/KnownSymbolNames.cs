@@ -24,12 +24,14 @@ public static class KnownSymbolNames
 
 public static class KnownFullSymbolNames
 {
+    private static readonly string[] BaseAoCSNamespaces = new[] { nameof(AdventOfCSharp) };
+
     public static readonly FullSymbolName CommonAnswerStringConverter =
-        new(KnownSymbolNames.CommonAnswerStringConverter, new[] { nameof(AdventOfCSharp) });
+        new(KnownSymbolNames.CommonAnswerStringConverter, BaseAoCSNamespaces);
 
     public static readonly FullSymbolName GenericAnswerStringConverter =
-        new(new IdentifierWithArity(KnownSymbolNames.AnswerStringConverter, 1), new[] { nameof(AdventOfCSharp) });
+        new(new IdentifierWithArity(KnownSymbolNames.AnswerStringConverter, 1), BaseAoCSNamespaces);
 
     public static readonly FullSymbolName NonGenericAnswerStringConverter =
-        new(KnownSymbolNames.AnswerStringConverter, new[] { nameof(AdventOfCSharp) });
+        new(KnownSymbolNames.AnswerStringConverter, BaseAoCSNamespaces);
 }
