@@ -5,6 +5,11 @@ namespace AdventOfCSharp.Analyzers.Tests.ProblemClassNamings;
 [TestClass]
 public sealed class AoCS0007_Tests : ProblemClassNamingAnalyzerTests
 {
+    protected override void AssertDiagnostics(string testCode)
+    {
+        AssertDiagnosticsMicrosoftCodeAnalysis(testCode);
+    }
+
     [TestMethod]
     public void Day0()
     {
@@ -64,11 +69,7 @@ public class Day124678 : NotProblem<int>
 $@"
 namespace AoC.Year2021;
 
-// Workaround to not cause issues with markup in the middle of the name
-// https://github.com/GuOrg/Gu.Roslyn.Asserts/issues/238
-public class Nothing {{ }}
-
-public class Day↓{day} : Problem<int>
+public class Day{{|*:{day}|}} : Problem<int>
 {{
     public override int SolvePart1() => -1;
     public override int SolvePart2() => -2;

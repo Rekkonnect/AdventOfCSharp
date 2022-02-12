@@ -24,6 +24,20 @@ public abstract class BaseAoCSDiagnosticTests<TAnalyzer> : BaseAoCSDiagnosticTes
         return markupCode.Replace("{|*", $"{{|{TestedDiagnosticRule.Id}");
     }
 
+    protected void AssertOrValidateMicrosoftCodeAnalysis(string testCode, bool assert)
+    {
+        if (assert)
+        {
+            AssertDiagnosticsWithUsings(testCode);
+        }
+        else
+        {
+            ReplaceAsteriskMarkup(ref testCode);
+            testCode = DiagnosticMarkupCodeHandler.MicrosoftCodeAnalysis.RemoveMarkup(testCode);
+            ValidateCodeWithUsings(testCode);
+        }
+    }
+
     // Some extensibility can be extracted from this API too
     protected void AssertDiagnosticsMicrosoftCodeAnalysis(string testCode)
     {
