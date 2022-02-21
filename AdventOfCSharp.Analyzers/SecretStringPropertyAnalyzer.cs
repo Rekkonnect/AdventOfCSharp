@@ -118,8 +118,18 @@ public sealed class SecretStringPropertyAnalyzer : AoCSAnalyzer
     }
     private static bool IsSecretStringProperty(IPropertySymbol propertySymbol, out AttributeData secretStringAttribute)
     {
-        secretStringAttribute = propertySymbol.FirstOrDefaultAttributeNamed(KnownSymbolNames.SecretStringPropertyAttribute);
-        return secretStringAttribute is not null;
+        while (true)
+        {
+            secretStringAttribute = propertySymbol.FirstOrDefaultAttributeNamed(KnownSymbolNames.SecretStringPropertyAttribute);
+            if (secretStringAttribute is not null)
+                return true;
+
+            var overridden = propertySymbol.OverriddenProperty;
+            if (overridden is null)
+                return false;
+
+            propertySymbol = overridden;
+        }
     }
 
     private static bool MatchesExact(Regex pattern, string s)

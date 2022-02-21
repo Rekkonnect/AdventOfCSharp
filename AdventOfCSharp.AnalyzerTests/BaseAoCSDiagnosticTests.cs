@@ -1,7 +1,6 @@
 ﻿using AdventOfCSharp.AnalysisTestsBase;
 using AdventOfCSharp.AnalysisTestsBase.Verifiers;
 using Gu.Roslyn.Asserts;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RoseLynn.Analyzers;
@@ -50,9 +49,6 @@ public abstract class BaseAoCSDiagnosticTests : BaseDiagnosticTests
 {
     protected ExpectedDiagnostic ExpectedDiagnostic => ExpectedDiagnostic.Create(TestedDiagnosticRule);
     protected sealed override DiagnosticDescriptorStorageBase DiagnosticDescriptorStorage => AoCSDiagnosticDescriptorStorage.Instance;
-
-    // First time using this pattern to seal overriding, special syntax sugar would be appreciated
-    public sealed override DiagnosticDescriptor TestedDiagnosticRule => base.TestedDiagnosticRule;
 
     protected sealed override UsingsProviderBase GetNewUsingsProviderInstance()
     {
