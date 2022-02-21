@@ -213,4 +213,34 @@
   <data name="AoCS0018_Title" xml:space="preserve">
     <value>Some primitive types are handled by the framework</value>
   </data>
+  <data name="AoCS0080_MessageFormat" xml:space="preserve">
+    <value>'{0}' {1} does not match the target pattern, please ensure the entire string is used</value>
+  </data>
+  <data name="AoCS0080_Title" xml:space="preserve">
+    <value>Secret string does not match the pattern</value>
+  </data>
+  <data name="AoCS0081_MessageFormat" xml:space="preserve">
+    <value>A non-abstract type that inherits ISecretsContainer should contain properties with the SecretStringPropertyAttribute</value>
+  </data>
+  <data name="AoCS0081_Title" xml:space="preserve">
+    <value>Type inheriting ISecretsContainer does not contain any secret string properties</value>
+  </data>
+  <data name="AoCS0082_MessageFormat" xml:space="preserve">
+    <value>It is better practice to use a constant field for the type of the secret string</value>
+  </data>
+  <data name="AoCS0082_Title" xml:space="preserve">
+    <value>Prefer using a constant field for the type of the secret string</value>
+  </data>
+  <data name="AoCS0083_MessageFormat" xml:space="preserve">
+    <value>Numerical types are not valid for secret string properties</value>
+  </data>
+  <data name="AoCS0084_MessageFormat" xml:space="preserve">
+    <value>Only types inheriting ISecretsContainer should contain properties with the SecretStringPropertyAttribute</value>
+  </data>
+  <data name="AoCS0084_Title" xml:space="preserve">
+    <value>Proprties marked with SecretStringPropertyAttribute must be contained in a type inheriting ISecretsContainer</value>
+  </data>
+  <data name="Secret strings cannot be a numerical type" xml:space="preserve">
+    <value>Secret strings cannot be a numerical type</value>
+  </data>
 </root>
