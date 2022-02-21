@@ -8,6 +8,7 @@ public static class KnownSymbolNames
     public const string PartSolutionAttribute = nameof(PartSolutionAttribute);
 
     public const string SecretsContainerAttribute = nameof(SecretsContainerAttribute);
+    public const string SecretStringPropertyAttribute = nameof(SecretStringPropertyAttribute);
 
     public const string FinalDay = nameof(FinalDay);
 

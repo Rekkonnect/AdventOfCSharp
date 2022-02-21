@@ -33,3 +33,13 @@ AoCS0015 | Information | Warning | PartSolverAttributeAnalyzer, [Documentation](
 AoCS0016 | Validity | Error | AnswerStringConverterAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0016.md)
 AoCS0017 | Validity | Error | AnswerStringConverterAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0017.md)
 AoCS0018 | Validity | Error | AnswerStringConverterAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0018.md)
+
+## Release 1.3.1
+
+### New Rules
+
+AoCS0080 | Validity | Error | SecretStringPropertyAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0080.md)
+AoCS0081 | Design | Warning | SecretStringPropertyAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0081.md)
+AoCS0082 | Best Practice | Info | SecretStringPropertyAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0082.md)
+AoCS0083 | Validity | Error | SecretStringPropertyAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0083.md)
+AoCS0084 | Validity | Error | SecretStringPropertyAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0084.md)

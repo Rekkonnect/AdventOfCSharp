@@ -18,6 +18,7 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
     public const string DesignCategory = "Design";
     public const string InformationCategory = "Information";
     public const string ValidityCategory = "Validity";
+    public const string BestPracticeCategory = "Best Practice";
     #endregion
 
     #region Rules
@@ -59,6 +60,14 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
         CreateDiagnosticDescriptor(0016, ValidityCategory);
         CreateDiagnosticDescriptor(0017, ValidityCategory);
         CreateDiagnosticDescriptor(0018, ValidityCategory);
+
+        SetDefaultDiagnosticAnalyzer<SecretStringPropertyAnalyzer>();
+
+        CreateDiagnosticDescriptor(0080, ValidityCategory);
+        CreateDiagnosticDescriptor(0081, DesignCategory);
+        CreateDiagnosticDescriptor(0082, BestPracticeCategory);
+        CreateDiagnosticDescriptor(0083, ValidityCategory);
+        CreateDiagnosticDescriptor(0084, ValidityCategory);
     }
 
     protected override DiagnosticSeverity? GetDefaultSeverity(string category)
@@ -70,6 +79,7 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
             DesignCategory => DiagnosticSeverity.Warning,
             BrevityCategory => DiagnosticSeverity.Info,
             InformationCategory => DiagnosticSeverity.Warning,
+            BestPracticeCategory => DiagnosticSeverity.Info,
         };
     }
     #endregion
