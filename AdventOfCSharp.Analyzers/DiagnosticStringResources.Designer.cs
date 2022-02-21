@@ -428,14 +428,5 @@ namespace AdventOfCSharp.Analyzers {
                 return ResourceManager.GetString("AoCS0084_Title", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Secret strings cannot be a numerical type.
-        /// </summary>
-        internal static string Secret_strings_cannot_be_a_numerical_type {
-            get {
-                return ResourceManager.GetString("Secret strings cannot be a numerical type", resourceCulture);
-            }
-        }
     }
 }

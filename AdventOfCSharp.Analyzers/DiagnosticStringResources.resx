@@ -240,7 +240,4 @@
   <data name="AoCS0084_Title" xml:space="preserve">
     <value>Proprties marked with SecretStringPropertyAttribute must be contained in a type inheriting ISecretsContainer</value>
   </data>
-  <data name="Secret strings cannot be a numerical type" xml:space="preserve">
-    <value>Secret strings cannot be a numerical type</value>
-  </data>
 </root>
