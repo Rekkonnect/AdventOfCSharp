@@ -8,7 +8,14 @@ namespace AdventOfCSharp;
 /// <remarks>WARNING: Do not eat! Santa will be sad!</remarks>
 public abstract class Cookies : ISecretsContainer
 {
+    private const string gaPattern = @"GA\d\.\d\.\d{10}\.\d{10}";
+    private const string sessionPattern = @"[0-9a-f]{128}";
+
+    private const string cookieName = "cookie";
+
+    [SecretStringProperty(gaPattern, "_ga", cookieName)]
     public abstract string GA { get; }
+    [SecretStringProperty(sessionPattern, "session", cookieName)]
     public abstract string Session { get; }
 
     public void AddToDefaultRequestHeaders(HttpClient client)

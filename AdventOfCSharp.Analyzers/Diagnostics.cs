@@ -92,6 +92,33 @@ internal static class Diagnostics
         return Diagnostic.Create(Instance[0018], baseTypeSyntax.GetLocation(), typeArgument.ToString());
     }
 
+    public static Diagnostic CreateAoCS0080(LiteralExpressionSyntax secretStringLiteral, AttributeData secretStringPropertyAttributeData)
+    {
+        var attributeArguments = secretStringPropertyAttributeData.ConstructorArguments;
+        var secretStringName = attributeArguments[1].Value as string;
+        var secretStringType = attributeArguments[2].Value as string;
+
+        return Diagnostic.Create(Instance[0080], secretStringLiteral.GetLocation(), secretStringName, secretStringType);
+    }
+    public static Diagnostic CreateAoCS0081(TypeDeclarationSyntax secretsContainerDeclarationSyntax)
+    {
+        return Diagnostic.Create(Instance[0081], secretsContainerDeclarationSyntax.Identifier.GetLocation());
+    }
+    public static Diagnostic CreateAoCS0082(AttributeSyntax secretStringPropertyAttributeNode)
+    {
+        var typeArgument = secretStringPropertyAttributeNode.ArgumentList.Arguments[2];
+        return Diagnostic.Create(Instance[0082], typeArgument.GetLocation());
+    }
+    public static Diagnostic CreateAoCS0083(PropertyDeclarationSyntax secretStringPropertyDeclarationNode)
+    {
+        var typeNode = secretStringPropertyDeclarationNode.Type;
+        return Diagnostic.Create(Instance[0083], typeNode.GetLocation());
+    }
+    public static Diagnostic CreateAoCS0084(AttributeData secretStringPropertyAttribute)
+    {
+        return Diagnostic.Create(Instance[0084], secretStringPropertyAttribute.ApplicationSyntaxReference.GetSyntax().GetLocation());
+    }
+
     private static Diagnostic CreateBaseListFirstTypeDiagnostic(BaseTypeDeclarationSyntax declarationNode, int code)
     {
         return Diagnostic.Create(Instance[code], declarationNode.BaseList.Types.First().GetLocation());

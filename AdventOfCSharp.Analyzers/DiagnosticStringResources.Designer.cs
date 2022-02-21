@@ -347,5 +347,86 @@ namespace AdventOfCSharp.Analyzers {
                 return ResourceManager.GetString("AoCS0018_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; {1} does not match the target pattern, please ensure the entire string is used.
+        /// </summary>
+        internal static string AoCS0080_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0080_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret string does not match the pattern.
+        /// </summary>
+        internal static string AoCS0080_Title {
+            get {
+                return ResourceManager.GetString("AoCS0080_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A non-abstract type that inherits ISecretsContainer should contain properties with the SecretStringPropertyAttribute.
+        /// </summary>
+        internal static string AoCS0081_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0081_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type inheriting ISecretsContainer does not contain any secret string properties.
+        /// </summary>
+        internal static string AoCS0081_Title {
+            get {
+                return ResourceManager.GetString("AoCS0081_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It is better practice to use a constant field for the type of the secret string.
+        /// </summary>
+        internal static string AoCS0082_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0082_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prefer using a constant field for the type of the secret string.
+        /// </summary>
+        internal static string AoCS0082_Title {
+            get {
+                return ResourceManager.GetString("AoCS0082_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Numerical types are not valid for secret string properties.
+        /// </summary>
+        internal static string AoCS0083_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0083_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only types inheriting ISecretsContainer should contain properties with the SecretStringPropertyAttribute.
+        /// </summary>
+        internal static string AoCS0084_MessageFormat {
+            get {
+                return ResourceManager.GetString("AoCS0084_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proprties marked with SecretStringPropertyAttribute must be contained in a type inheriting ISecretsContainer.
+        /// </summary>
+        internal static string AoCS0084_Title {
+            get {
+                return ResourceManager.GetString("AoCS0084_Title", resourceCulture);
+            }
+        }
     }
 }
