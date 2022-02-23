@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AoCS0001_MessageFormat" xml:space="preserve">
+    <value>The PartSolutionAttribute may only be applied on methods that solve a problem part, annotated with PartSolverAttribute</value>
+  </data>
+  <data name="AoCS0001_Title" xml:space="preserve">
+    <value>Invalid PartSolutionAttribute on non-solution method</value>
+  </data>
+  <data name="AoCS0002_MessageFormat" xml:space="preserve">
+    <value>The PartSolutionStatus value provided on the PartSolutionAttribute must be a declared enum value</value>
+  </data>
+  <data name="AoCS0002_Title" xml:space="preserve">
+    <value>Invalid PartSolutionStatus value on PartSolutionAttribute</value>
+  </data>
+  <data name="AoCS0003_MessageFormat" xml:space="preserve">
+    <value>Prefer using Problem&lt;T&gt; for problems whose both parts have the same return type</value>
+  </data>
+  <data name="AoCS0003_Title" xml:space="preserve">
+    <value>Prefer using Problem&lt;T&gt; for problems whose both parts have the same return type</value>
+  </data>
+  <data name="AoCS0004_MessageFormat" xml:space="preserve">
+    <value>Problem solution classes should be contained in namespaces denoting the year of the problem</value>
+  </data>
+  <data name="AoCS0004_Title" xml:space="preserve">
+    <value>Containing namespace of a problem solution class must end in 'Year20XX'</value>
+  </data>
+  <data name="AoCS0005_MessageFormat" xml:space="preserve">
+    <value>Denoted problem year must be a valid year after 2015, up until the current one</value>
+  </data>
+  <data name="AoCS0005_Title" xml:space="preserve">
+    <value>The denoted year should be a valid year</value>
+  </data>
+  <data name="AoCS0006_MessageFormat" xml:space="preserve">
+    <value>Problem solution classes should be named appropriately to denote the day of the problem</value>
+  </data>
+  <data name="AoCS0006_Title" xml:space="preserve">
+    <value>Problem solution class must be named 'DayX'</value>
+  </data>
+  <data name="AoCS0007_MessageFormat" xml:space="preserve">
+    <value>Denoted problem day must be between 1 and 25</value>
+  </data>
+  <data name="AoCS0007_Title" xml:space="preserve">
+    <value>Denoted problem day must be between 1 and 25</value>
+  </data>
+  <data name="AoCS0008_MessageFormat" xml:space="preserve">
+    <value>The SecretsContainerAttribute can only be used on a sealed class that inherits ISecretsContainer and provides a public parameterless constructor</value>
+  </data>
+  <data name="AoCS0008_Title" xml:space="preserve">
+    <value>Invalid SecretsContainerAttribute on non-secret container class</value>
+  </data>
+  <data name="AoCS0011_MessageFormat" xml:space="preserve">
+    <value>FinalDay&lt;T&gt; contains additional abstracted logic specialized for Day 25 problems</value>
+  </data>
+  <data name="AoCS0011_Title" xml:space="preserve">
+    <value>Prefer inheriting FinalDay&lt;T&gt; for Day 25 solutions</value>
+  </data>
+  <data name="AoCS0012_MessageFormat" xml:space="preserve">
+    <value>FinalDay&lt;T&gt; is specialized for Day 25 problems</value>
+  </data>
+  <data name="AoCS0012_Title" xml:space="preserve">
+    <value>Only use FinalDay&lt;T&gt; for Day 25 problems</value>
+  </data>
+  <data name="AoCS0013_MessageFormat" xml:space="preserve">
+    <value>PartSolverAttribute should only be placed on public instance methods with no parameters or generic parameters with a non-void return type in a problem solution class</value>
+  </data>
+  <data name="AoCS0013_Title" xml:space="preserve">
+    <value>Invalid PartSolverAttribute on non-solver method</value>
+  </data>
+  <data name="AoCS0014_MessageFormat" xml:space="preserve">
+    <value>This name has already been used for a part solver in this solution class</value>
+  </data>
+  <data name="AoCS0014_Title" xml:space="preserve">
+    <value>Duplicate part name in the same solution class</value>
+  </data>
+  <data name="AoCS0015_MessageFormat" xml:space="preserve">
+    <value>The part name exceeds the 20-character limit, with the excessive characters being trimmed</value>
+  </data>
+  <data name="AoCS0015_Title" xml:space="preserve">
+    <value>Limit part names to 20 characters max</value>
+  </data>
+  <data name="AoCS0016_MessageFormat" xml:space="preserve">
+    <value>Answer string converters should always declare the type of objects they're converting</value>
+  </data>
+  <data name="AoCS0016_Title" xml:space="preserve">
+    <value>Do not directly inherit AnswerStringConverter</value>
+  </data>
+  <data name="AoCS0017_MessageFormat" xml:space="preserve">
+    <value>Further restrict the objects that can be converted by an answer string converter</value>
+  </data>
+  <data name="AoCS0017_Title" xml:space="preserve">
+    <value>Do not declare object answer string converters</value>
+  </data>
+  <data name="AoCS0018_MessageFormat" xml:space="preserve">
+    <value>The primitive type '{0}' is by default handled by CommonAnswerStringConverter</value>
+  </data>
+  <data name="AoCS0018_Title" xml:space="preserve">
+    <value>Some primitive types are handled by the framework</value>
+  </data>
+  <data name="AoCS0080_MessageFormat" xml:space="preserve">
+    <value>'{0}' {1} does not match the target pattern, please ensure the entire string is used</value>
+  </data>
+  <data name="AoCS0080_Title" xml:space="preserve">
+    <value>Secret string does not match the pattern</value>
+  </data>
+  <data name="AoCS0081_MessageFormat" xml:space="preserve">
+    <value>A non-abstract type that inherits ISecretsContainer should contain properties with the SecretStringPropertyAttribute</value>
+  </data>
+  <data name="AoCS0081_Title" xml:space="preserve">
+    <value>Type inheriting ISecretsContainer does not contain any secret string properties</value>
+  </data>
+  <data name="AoCS0082_MessageFormat" xml:space="preserve">
+    <value>It is better practice to use a constant field for the type of the secret string</value>
+  </data>
+  <data name="AoCS0082_Title" xml:space="preserve">
+    <value>Prefer using a constant field for the type of the secret string</value>
+  </data>
+  <data name="AoCS0083_MessageFormat" xml:space="preserve">
+    <value>Numerical types are not valid for secret string properties</value>
+  </data>
+  <data name="AoCS0084_MessageFormat" xml:space="preserve">
+    <value>Only types inheriting ISecretsContainer should contain properties with the SecretStringPropertyAttribute</value>
+  </data>
+  <data name="AoCS0084_Title" xml:space="preserve">
+    <value>Proprties marked with SecretStringPropertyAttribute must be contained in a type inheriting ISecretsContainer</value>
+  </data>
+</root>

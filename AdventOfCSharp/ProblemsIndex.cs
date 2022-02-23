@@ -1,21 +1,36 @@
-﻿using AdventOfCSharp.Utilities;
+﻿using AdventOfCSharp.Generation;
+using AdventOfCSharp.Utilities;
+using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCSharp;
 
-public class ProblemsIndex
+#nullable enable
+
+/// <summary>Provides a handy container for all the available problem solutions.</summary>
+public sealed class ProblemsIndex
 {
+    /// <summary>Gets the singleton instance of the <seealso cref="ProblemsIndex"/>.</summary>
     public static ProblemsIndex Instance { get; } = new();
 
     private readonly ProblemDictionary problemDictionary = new();
 
     private ProblemsIndex()
     {
+        // This acts like the static constructor since the type is a singleton
         AppDomainHelpers.ForceLoadAllAssembliesCurrent();
         var allClasses = AppDomainCache.Current.AllNonAbstractClasses;
+
         foreach (var c in allClasses)
             AnalyzeProblemClass(c);
+
         problemDictionary.DetermineD25P2Availability();
+
+        // Post-instance-initialization analysis
+        foreach (var c in allClasses)
+        {
+            AnalyzeGeneratorClass(c);
+        }
     }
 
     private void AnalyzeProblemClass(Type type)
@@ -27,21 +42,35 @@ public class ProblemsIndex
         problemDictionary.SetProblemInfo(GetProblemInfo(problemType));
     }
 
+    private void AnalyzeGeneratorClass(Type type)
+    {
+        bool isGenerator = type.Inherits(typeof(InputGenerator));
+        if (!isGenerator)
+            return;
+
+        if (type.InitializeInstance() is not InputGenerator generatorInstance)
+            throw new TypeLoadException($"The input generator class '{type.Name}' must provide a public parameterless constructor.");
+
+        this[generatorInstance.Year, generatorInstance.Day].ProblemType.AddGeneratorType(type);
+    }
+
     private static ProblemInfo GetProblemInfo(ProblemType type)
     {
         var part1Status = GetPartSolutionStatus(type, 1);
         var part2Status = GetPartSolutionStatus(type, 2);
-        return new(type, part1Status, part2Status);
+        return new ProblemInfo(type, part1Status, part2Status).WithPart2EligibilityFromPart1;
     }
     private static PartSolutionStatus GetPartSolutionStatus(ProblemType type, int index)
     {
-        var runnerMethod = type.ProblemClass.GetMethod($"{ProblemRunner.SolvePartMethodPrefix}{index}")!;
+        var runnerMethod = ProblemSolverMethodProvider.MethodForPart(type.ProblemClass, index);
         var partSolutionAttribute = runnerMethod.GetCustomAttribute<PartSolutionAttribute>();
         if (partSolutionAttribute is null)
             return PartSolutionStatus.Valid;
 
         return partSolutionAttribute.Status;
     }
+
+    public ProblemInfo InfoForInstance(Problem instance) => this[instance.Year, instance.Day];
 
     public IEnumerable<ProblemInfo> AllProblems() => problemDictionary.SelectMany(Selectors.ValueReturner);
 
@@ -79,27 +108,23 @@ public sealed class ProblemDictionary : FlexibleInitializableValueDictionary<int
     }
 }
 
-// This and YearProblemInfo can be abstracted away
-public sealed class GlobalYearSummary : IEnumerable<YearSummary>
+public sealed class GlobalYearSummary : ProblemInfoBucket<YearSummary, GlobalYearSummary.SummaryTable>
 {
-    private readonly SummaryTable summaryTable = new();
-
-    public IEnumerable<int> AvailableYears => summaryTable.NonNullValues.Select(summary => summary!.Year);
+    public IEnumerable<int> AvailableYears => this.Select(summary => summary.Year);
 
     public GlobalYearSummary(IEnumerable<YearSummary> summaries)
+        : base(summaries) { }
+
+    protected override int GetBucketIndex(YearSummary info)
     {
-        foreach (var summary in summaries)
-            summaryTable[summary.Year] = summary;
+        return info.Year;
+    }
+    protected override YearSummary GetEmptyInfoInstance(int index)
+    {
+        return YearSummary.Empty(index);
     }
 
-    public bool Contains(int year) => summaryTable.Contains(year);
-
-    public YearSummary this[int year] => summaryTable[year] ?? YearSummary.Empty(year);
-
-    public IEnumerator<YearSummary> GetEnumerator() => summaryTable.NonNullValues.GetEnumerator() as IEnumerator<YearSummary>;
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    private sealed class SummaryTable : LookupTable<YearSummary?>
+    public sealed class SummaryTable : LookupTable<YearSummary>
     {
         private static readonly int finalYear = DateTime.Now.Year;
 
@@ -124,10 +149,8 @@ public sealed class YearSummary
     public static YearSummary Empty(int year) => new(year, Enumerable.Empty<ProblemInfo>());
 }
 
-public sealed class YearProblemInfo : IEnumerable<ProblemInfo>
+public sealed class YearProblemInfo : ProblemInfoBucket<ProblemInfo, YearProblemInfo.ProblemInfoTable>
 {
-    private readonly ProblemInfoTable summaryTable = new();
-
     public ProblemInfo LastDay
     {
         get => this[25];
@@ -140,36 +163,61 @@ public sealed class YearProblemInfo : IEnumerable<ProblemInfo>
 
     public YearProblemInfo() { }
     public YearProblemInfo(IEnumerable<ProblemInfo> problemInfos)
-    {
-        foreach (var problemInfo in problemInfos)
-            summaryTable[problemInfo.Day] = problemInfo;
-    }
+        : base(problemInfos) { }
 
-    public bool Contains(int day) => summaryTable.Contains(day);
+    protected override int GetBucketIndex(ProblemInfo info)
+    {
+        return info.Day;
+    }
 
     public void DetermineD25P2Availability()
     {
-        bool anyInvalid = this.Reverse().Any(problem => !problem.HasBothValidSolutions);
+        bool anyInvalid = this.Any(problem => !problem.HasBothValidSolutions);
         if (anyInvalid)
             SetD25P2Unavailable();
     }
 
     private void SetD25P2Unavailable() => LastDay = LastDay.WithUnavailablePart2Star;
 
-    public ProblemInfo this[int day]
+    protected override ProblemInfo GetEmptyInfoInstance(int index)
     {
-        get => summaryTable[day] ?? ProblemInfo.Empty(0, day);
-        set => summaryTable[day] = value;
+        return ProblemInfo.Empty(0, index);
     }
 
-    public IEnumerator<ProblemInfo> GetEnumerator() => summaryTable.NonNullValues.GetEnumerator() as IEnumerator<ProblemInfo>;
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    private sealed class ProblemInfoTable : LookupTable<ProblemInfo?>
+    public sealed class ProblemInfoTable : LookupTable<ProblemInfo>
     {
         public ProblemInfoTable()
             : base(1, 25) { }
     }
+}
+
+public abstract class ProblemInfoBucket<TInfo, TLookupTable> : IEnumerable<TInfo>
+    where TInfo : class
+    where TLookupTable : LookupTable<TInfo>, new()
+{
+    private readonly TLookupTable table = new();
+
+    public ProblemInfoBucket() { }
+    public ProblemInfoBucket(IEnumerable<TInfo> infos)
+    {
+        foreach (var info in infos)
+            table[GetBucketIndex(info)] = info;
+    }
+
+    protected abstract int GetBucketIndex(TInfo info);
+
+    public bool Contains(int index) => table.Contains(index);
+
+    public TInfo this[int index]
+    {
+        get => table[index] ?? GetEmptyInfoInstance(index);
+        set => table[index] = value;
+    }
+
+    protected abstract TInfo GetEmptyInfoInstance(int index);
+
+    public IEnumerator<TInfo> GetEnumerator() => table.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
 public sealed record ProblemType(Type ProblemClass, int Year, int Day)
@@ -177,7 +225,15 @@ public sealed record ProblemType(Type ProblemClass, int Year, int Day)
     // TODO: Research regex group name matching system
     public readonly static Regex ProblemClassNameRegex = new(@"Year(?'year'\d*)\.Day(?'day'\d*)$", RegexOptions.Compiled);
 
-    public Problem InitializeInstance() => ProblemClass.InitializeInstance<Problem>();
+    /// <summary>Represents the <seealso cref="InputGenerator"/> type for this problem.</summary>
+    public ImmutableArray<Type> GeneratorTypes { get; private set; } = ImmutableArray<Type>.Empty;
+
+    internal void AddGeneratorType(Type generatorType)
+    {
+        GeneratorTypes = GeneratorTypes.Add(generatorType);
+    }
+
+    public Problem? InitializeInstance() => ProblemClass?.InitializeInstance<Problem>();
 
     public static ProblemType Mock(int year, int day) => new(null!, year, day);
 
@@ -204,10 +260,14 @@ public sealed record ProblemInfo(ProblemType ProblemType, PartSolutionStatus Par
 
     // Usually it's P2 that isn't solved, a tiny tiny tiny optimization for the fuck of it
     public bool HasBothValidSolutions => Part2Status.IsValidSolution() && Part1Status.IsValidSolution();
+    public bool HasNoValidSolutions => !Part2Status.IsValidSolution() && !Part1Status.IsValidSolution();
+
+    public ProblemInfo WithPart2EligibilityFromPart1 => Part1Status.HasBeenSolved() ? this : WithUninitializedPart2;
 
     public ProblemInfo WithUnavailablePart2Star => this with { Part2Status = PartSolutionStatus.UnavailableFreeStar };
+    public ProblemInfo WithUninitializedPart2 => this with { Part2Status = PartSolutionStatus.Uninitialized };
 
-    public Problem InitializeInstance() => ProblemType.InitializeInstance();
+    public Problem? InitializeInstance() => ProblemType.InitializeInstance();
 
     public PartSolutionStatus StatusForPart(int part) => part switch
     {
@@ -221,7 +281,12 @@ public sealed record ProblemInfo(ProblemType ProblemType, PartSolutionStatus Par
 // Optimizable, but for no reason
 public sealed class PartSolutionStatusDictionary : ValueCounterDictionary<PartSolutionStatus>
 {
+    /// <summary>Gets the total count of currently valid solutions, which are marked as <seealso cref="PartSolutionStatus.Valid"/> or <seealso cref="PartSolutionStatus.Unoptimized"/>.</summary>
     public int TotalValidSolutions => this[PartSolutionStatus.Valid] + this[PartSolutionStatus.Unoptimized];
+    /// <summary>Gets the total count of solved parts, which are marked as <seealso cref="PartSolutionStatus.Valid"/>, <seealso cref="PartSolutionStatus.Unoptimized"/>, <seealso cref="PartSolutionStatus.Refactoring"/> or <seealso cref="PartSolutionStatus.Interactive"/>.</summary>
+    public int TotalSolvedParts => TotalValidSolutions + this[PartSolutionStatus.Refactoring] + this[PartSolutionStatus.Interactive];
+    /// <summary>Gets the total count of WIP solutions, which are marked as <seealso cref="PartSolutionStatus.WIP"/> or <seealso cref="PartSolutionStatus.Refactoring"/>.</summary>
+    public int TotalWIPSolutions => this[PartSolutionStatus.WIP] + this[PartSolutionStatus.Refactoring];
 
     public PartSolutionStatusDictionary(IEnumerable<PartSolutionStatus> statuses)
         : base(statuses) { }

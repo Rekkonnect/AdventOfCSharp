@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <IsPackable>true</IsPackable>
+    <Version>1.3.1</Version>
+
+    <Authors>Alex Kalfakakos</Authors>
+    <Company />
+    <PackageTags>advent-of-code, aoc</PackageTags>
+    <Description>Analyzers for using Advent of C#.</Description>
+    <Copyright>© 2021-2022, Alex Kalfakakos</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Product>AdventOfCSharp.Analyzers</Product>
+    <PackageId>AdventOfCSharp.Analyzers</PackageId>
+    <PackageReleaseNotes>Additions:
+- Secret string property analyzers</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AdventOfCSharp.Analyzers\AdventOfCSharp.Analyzers.csproj" />
+    <ProjectReference Include="..\AdventOfCSharp.CodeFixes\AdventOfCSharp.CodeFixes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
+  <!-- Add the required packages -->
+  <ItemGroup>
+    <PackageReference Include="RoseLynn" Version="0.4.1.2" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="RoseLynn.Analyzers" Version="0.4.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="RoseLynn.CodeFixes" Version="0.4.1" PrivateAssets="all" GeneratePathProperty="true" />
+
+    <None Include="$(PKGRoseLynn)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
+    <None Include="$(PKGRoseLynn_Analyzers)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
+    <None Include="$(PKGRoseLynn_CodeFixes)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
+
+    <TfmSpecificPackageFile Include="$(OutputPath)\AdventOfCSharp.Analyzers.dll" PackagePath="analyzers/dotnet/cs" />
+    <TfmSpecificPackageFile Include="$(OutputPath)\AdventOfCSharp.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
+  </ItemGroup>
+
+</Project>

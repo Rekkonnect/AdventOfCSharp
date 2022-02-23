@@ -1,0 +1,28 @@
+name: Run Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Checkout Code
+      uses: actions/checkout@v1
+
+    - name: Run Core Tests
+      run: dotnet test AdventOfCSharp.Tests/AdventOfCSharp.Tests.csproj
+      
+    - name: Run Problem Solution Tests
+      run: dotnet test AdventOfCSharp.ProblemSolutionTests/AdventOfCSharp.ProblemSolutionTests.csproj
+      
+    - name: Run Analyzer Tests
+      run: dotnet test AdventOfCSharp.AnalyzerTests/AdventOfCSharp.Analyzers.Tests.csproj
+      
+    - name: Run Code Fix Tests
+      run: dotnet test AdventOfCSharp.CodeFixes.Tests/AdventOfCSharp.CodeFixes.Tests.csproj

@@ -1,147 +1,327 @@
 ﻿namespace AdventOfCSharp;
 
-public sealed class ProblemRunner
+/// <summary>Provides a collection of options for running <seealso cref="Problem"/> instances through <seealso cref="ProblemRunner"/>.</summary>
+public sealed class ProblemRunningOptions
 {
     public static readonly string RunPartMethodPrefix = nameof(Problem<int>.RunPart1)[..^1];
     public static readonly string SolvePartMethodPrefix = nameof(Problem<int>.SolvePart1)[..^1];
     public static readonly string NoReturnSolvePartMethodPrefix = nameof(Problem<int>.NoReturnSolvePart1)[..^1];
+    public static ProblemRunningOptions Default => new();
 
+    /// <summary>Determines whether execution times will be displayed.</summary>
+    public bool DisplayExecutionTimes { get; set; } = true;
+}
+
+public static class ProblemSolverMethodProvider
+{
+    private const BindingFlags hiddenInstanceMember = BindingFlags.NonPublic | BindingFlags.Instance;
+
+    private static readonly string solvePartMethodPrefix = nameof(Problem<int>.SolvePart1)[..^1];
+
+    public static string SolvePartMethodName(int part) => $"{solvePartMethodPrefix}{part}";
+
+    public static MethodInfo MethodForPart(Type problemType, int part)
+    {
+        return problemType.GetMethod(SolvePartMethodName(part))!;
+    }
+    public static MethodInfo MethodForPart<T>(int part)
+        where T : Problem
+    {
+        return MethodForPart(typeof(T), part);
+    }
+    public static MethodInfo MethodForPart(int part) => MethodForPart<Problem>(part);
+    public static MethodInfo[] MethodsForOfficialParts(Type problemType) => new[] { MethodForPart(problemType, 1), MethodForPart(problemType, 2) };
+    public static MethodInfo[] MethodsForOfficialParts() => MethodsForOfficialParts(typeof(Problem));
+
+    public static MethodInfo LoadStateMethod(Type problemType) => PrivateMethod(problemType, "LoadState");
+    public static MethodInfo LoadStateMethod() => LoadStateMethod(typeof(Problem));
+    public static MethodInfo ResetStateMethod(Type problemType) => PrivateMethod(problemType, "ResetState");
+    public static MethodInfo ResetStateMethod() => ResetStateMethod(typeof(Problem));
+
+    private static MethodInfo PrivateMethod(Type problemType, string name) => problemType.GetMethod(name, hiddenInstanceMember)!;
+    private static MethodInfo PrivateMethod<T>(string name)
+        where T : Problem
+    {
+        return typeof(T).GetMethod(name, hiddenInstanceMember)!;
+    }
+    private static MethodInfo PrivateMethod(string name) => PrivateMethod<Problem>(name);
+
+    public static MethodInfo[] PartSolverMethods(Type type) => type.GetMethods().Where(m => m.HasCustomAttribute<PartSolverAttribute>()).ToArray();
+}
+
+/// <summary>Provides mechanisms for running problem solutions.</summary>
+public sealed class ProblemRunner
+{
+    /// <summary>The problem instance that is being run.</summary>
     public Problem Problem { get; }
 
+    /// <summary>Gets the <seealso cref="Type"/> of the given <seealso cref="AdventOfCSharp.Problem"/> instance.</summary>
+    public Type ProblemType => Problem.GetType();
+
+    /// <summary>Gets the options for running the current <seealso cref="AdventOfCSharp.Problem"/> instance.</summary>
+    public ProblemRunningOptions Options { get; }
+
     public ProblemRunner(Problem problem)
+        : this(problem, null) { }
+    public ProblemRunner(Problem problem, ProblemRunningOptions? options)
     {
         Problem = problem;
+        Options = options ?? ProblemRunningOptions.Default;
     }
 
-    public static ProblemRunner ForProblem(int year, int day) => new(ProblemsIndex.Instance[year, day].InitializeInstance());
-
-    public object[] SolveAllParts(bool displayExecutionTimes = true) => SolveAllParts(0, displayExecutionTimes);
-    public object[] SolveAllParts(int testCase, bool displayExecutionTimes = true)
+    private static ProblemRunner? ForInstance(Problem? instance)
     {
-        var methods = Problem.GetType().GetMethods().Where(m => m.Name.StartsWith(SolvePartMethodPrefix)).ToArray();
-        return SolveParts(testCase, methods, displayExecutionTimes);
+        if (instance is null)
+            return null;
+
+        return new(instance);
     }
 
-    public object SolvePart(int part, bool displayExecutionTimes = true) => SolvePart(part, 0, displayExecutionTimes);
-    public object SolvePart(int part, int testCase, bool displayExecutionTimes = true)
+    /// <summary>Creates a new <seealso cref="ProblemRunner"/> instance for the problem of the specified day.</summary>
+    /// <param name="year">The year of the problem.</param>
+    /// <param name="day">The day of the problem.</param>
+    /// <returns>A <seealso cref="ProblemRunner"/> instance for the specified problem, if a solution class is available for it, otherwise <see langword="null"/>.</returns>
+    public static ProblemRunner? ForProblem(int year, int day) => ForInstance(ProblemsIndex.Instance[year, day].InitializeInstance());
+
+    public PartSolutionOutputDictionary SolveAllParts() => SolveAllParts(0);
+    public PartSolutionOutputDictionary SolveAllParts(int testCase)
     {
-        var methods = new[] { SolverForPart(part) };
-        return SolveParts(testCase, methods, displayExecutionTimes)[0];
+        return SolveParts(testCase, ProblemSolverMethodProvider.PartSolverMethods(ProblemType));
     }
 
-    public Action? NoReturnSolverActionForPart(int part) => NoReturnSolverForPart(part)?.CreateDelegate<Action>(Problem);
-
-    public MethodInfo? NoReturnSolverForPart(int part) => ExecutionMethodForPart(part, NoReturnSolvePartMethodName);
-    public MethodInfo? SolverForPart(int part) => ExecutionMethodForPart(part, SolvePartMethodName);
-    public MethodInfo? RunnerForPart(int part) => ExecutionMethodForPart(part, RunPartMethodName);
-
-    private MethodInfo? ExecutionMethodForPart(int part, Func<int, string> nameRetriever) => Problem.GetType().GetMethod(nameRetriever(part));
-
-    public bool FullyValidateAllTestCases()
+    public PartSolutionOutputDictionary SolveAllOfficialParts() => SolveAllOfficialParts(0);
+    public PartSolutionOutputDictionary SolveAllOfficialParts(int testCase)
     {
-        for (int i = 0; i <= Problem.TestCaseFiles; i++)
+        return SolveParts(testCase, ProblemSolverMethodProvider.MethodsForOfficialParts(ProblemType));
+    }
+
+    public object SolvePart(int part) => SolvePart(part, 0);
+    public object SolvePart(int part, int testCase)
+    {
+        var methods = new[] { ProblemSolverMethodProvider.MethodForPart(ProblemType, part) };
+        return SolveParts(testCase, methods).GetPartOutput(part)!;
+    }
+
+    public ValidationProblemResult FullyValidateAllTestCases()
+    {
+        var results = new List<ValidationPartResult>();
+
+        foreach (int testCase in Problem.Input.TestCaseIDs)
         {
-            if (!ValidateAllParts(i))
-                return false;
+            var caseResult = ValidateAllParts(testCase);
+            results.AddRange(caseResult.PartResults);
         }
 
-        return true;
+        return new(results);
     }
-    public bool ValidateAllParts()
+
+    public ValidationProblemResult ValidateAllParts()
     {
         return ValidateAllParts(0);
     }
-    public bool ValidateAllParts(int testCase)
+    public ValidationProblemResult ValidateAllParts(int testCase)
     {
-        return ValidatePart(1, testCase) && ValidatePart(2, testCase);
+        var validations = new[] { ValidatePart(1, testCase), ValidatePart(2, testCase) };
+        return new(validations.Where(Predicates.NotNull) as IEnumerable<ValidationPartResult>);
     }
 
-    public bool ValidatePart(int part) => ValidatePart(part, 0);
-    public bool ValidatePart(int part, int testCase)
+    public ValidationPartResult? ValidatePart(int part) => ValidatePart(part, 0);
+    public ValidationPartResult? ValidatePart(int part, int testCase)
     {
-        var contents = Problem.GetOutputFileContents(testCase, true);
+        var contents = Problem.Output.GetOutputFileContents(testCase, true);
         var expectedPartOutput = contents.ForPart(part);
         if (expectedPartOutput is null)
-            return true;
+            return null;
 
         return ValidatePart(part, testCase, expectedPartOutput);
     }
-    private bool ValidatePart(int part, int testCase, string expected)
+    private ValidationPartResult ValidatePart(int part, int testCase, string expected)
     {
-        return expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase)), StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static string NoReturnSolvePartMethodName(int part) => ExecutePartMethodName(NoReturnSolvePartMethodPrefix, part);
-    private static string SolvePartMethodName(int part) => ExecutePartMethodName(SolvePartMethodPrefix, part);
-    private static string RunPartMethodName(int part) => ExecutePartMethodName(RunPartMethodPrefix, part);
-    private static string ExecutePartMethodName(string prefix, int part) => $"{prefix}{part}";
-
-    private void EnsureLoadState(int testCase, bool displayExecutionTimes)
-    {
-        Problem.CurrentTestCase = testCase;
-        DisplayExecutionTimes(displayExecutionTimes, 0, PrintInputExecutionTime, Problem.EnsureLoadedState);
-    }
-    private object[] SolveParts(int testCase, MethodInfo[] solutionMethods, bool displayExecutionTimes)
-    {
-        var result = new object[solutionMethods.Length];
-
-        EnsureLoadState(testCase, displayExecutionTimes);
-
-        for (int i = 0; i < result.Length; i++)
+        bool valid = false;
+        try
         {
-            DisplayExecutionTimes(displayExecutionTimes, solutionMethods[i].Name.Last().GetNumericValueInteger(), PrintPartExecutionTime, SolveAssignResult);
+            valid = expected.Equals(AnswerStringConversion.Convert(SolvePart(part, testCase)), StringComparison.OrdinalIgnoreCase);
+        }
+        catch { }
+
+        var result = valid switch
+        {
+            true => ValidationResult.Valid,
+            false => ValidationResult.Invalid,
+        };
+
+        return new(ProblemsIndex.Instance.InfoForInstance(Problem).ProblemType, part, testCase, result);
+    }
+
+    private PartSolutionOutputDictionary SolveParts(int testCase, MethodInfo[] solutionMethods)
+    {
+        var result = new PartSolutionOutputDictionary();
+
+        Problem.CurrentTestCase = testCase;
+
+        if (!Problem.StateLoaded)
+        {
+            RunDisplayExecutionTimes(false, "Download", FancyPrinting.PrintCustomPartLabel, Problem.EnsureDownloadedInput);
+
+            var stateLoader = ProblemSolverMethodProvider.LoadStateMethod(ProblemType);
+            bool inputPrints = MethodPrints(stateLoader);
+            RunDisplayExecutionTimes(inputPrints, "Input", FancyPrinting.PrintCustomPartLabel, Problem.EnsureLoadedState);
+        }
+
+        for (int i = 0; i < solutionMethods.Length; i++)
+        {
+            var method = solutionMethods[i];
+            bool prints = MethodPrints(method);
+            var partName = method.GetCustomAttribute<PartSolverAttribute>()!.PartName;
+
+            RunDisplayExecutionTimes(prints, partName, FancyPrinting.GetPartLabelPrinter(partName), SolveAssignResult);
 
             void SolveAssignResult()
             {
-                result[i] = solutionMethods[i].Invoke(Problem, null)!;
+                var output = solutionMethods[i].Invoke(Problem, null)!;
+                result.Add(partName, output);
             }
         }
         return result;
     }
 
-    private static void DisplayExecutionTimes(bool displayExecutionTimes, int part, ExecutionTimePrinter printer, Action action)
+    private static bool MethodPrints(MethodInfo method)
     {
-        var executionTime = BasicBenchmarking.MeasureExecutionTime(action);
-
-        if (displayExecutionTimes)
-            printer(part, executionTime);
+        return method.HasCustomAttribute<PrintsToConsoleAttribute>()
+            || method.GetCustomAttribute<PartSolutionAttribute>() is { Status: PartSolutionStatus.Interactive };
     }
 
-    private delegate void ExecutionTimePrinter(int part, TimeSpan executionTime);
+    private void RunDisplayExecutionTimes(bool prints, string partName, FancyPrinting.PartLabelPrinter printer, Action runner)
+    {
+        bool defaultLivePrintingSetting = ExecutionTimePrinting.EnableLivePrinting;
+        if (prints)
+            ExecutionTimePrinting.EnableLivePrinting = false;
 
-    private static void PrintInputExecutionTime(int part, TimeSpan executionTime)
-    {
-        ConsoleUtilities.WriteWithColor($"Input".PadLeft(8), ConsoleColor.Cyan);
-        PrintExecutionTime(executionTime);
+        if (Options.DisplayExecutionTimes)
+        {
+            printer(partName);
+            ExecutionTimePrinting.BeginExecutionMeasuring();
+        }
+
+        runner();
+
+        if (Options.DisplayExecutionTimes)
+        {
+            ExecutionTimePrinting.StopExecutionMeasuring().Wait();
+        }
+
+        ExecutionTimePrinting.EnableLivePrinting = defaultLivePrintingSetting;
     }
-    private static void PrintPartExecutionTime(int part, TimeSpan executionTime)
+}
+
+public sealed class ValidationReport
+{
+    private readonly Dictionary<ProblemType, ValidationProblemResult> validationResults = new();
+
+    public IEnumerable<ValidationPartResult> AllPartValidationResults => validationResults.Values.SelectMany(problem => problem.PartResults);
+
+    public IEnumerable<ValidationPartResult> ValidPartResults => FilterWithResult(ValidationResult.Valid);
+    public IEnumerable<ValidationPartResult> InvalidPartResults => FilterWithResult(ValidationResult.Invalid);
+
+    public bool HasInvalidParts => InvalidPartResults.Any();
+
+    public void Add(Problem instance, ValidationProblemResult result)
     {
-        ConsoleUtilities.WriteWithColor($"Part ".PadLeft(7), ConsoleColor.Cyan);
-        ConsoleUtilities.WriteWithColor(part.ToString(), GetPartColor(part));
-        PrintExecutionTime(executionTime);
+        validationResults.Add(ProblemsIndex.Instance.InfoForInstance(instance).ProblemType, result);
     }
 
-    private static ConsoleColor GetPartColor(int part) => part switch
-    {
-        1 => ConsoleColor.DarkGray,
-        2 => ConsoleColor.DarkYellow,
-    };
+    public IEnumerable<ValidationPartResult> FilterWithResult(ValidationResult result) => AllPartValidationResults.Where(problem => problem.Result == result);
+}
+public sealed class ValidationProblemResult
+{
+    public IReadOnlyCollection<ValidationPartResult> PartResults { get; }
 
-    private static void PrintExecutionTime(TimeSpan executionTime)
+    public ProblemType Type { get; }
+
+    public bool HasInvalidResults => PartResults.Any(result => result.Result is ValidationResult.Invalid);
+
+    public ValidationProblemResult(IEnumerable<ValidationPartResult> results)
     {
-        Console.Write(':');
-        ConsoleUtilities.WriteLineWithColor($"{executionTime.TotalMilliseconds,13:N2} ms", GetExecutionTimeColor(executionTime));
+        PartResults = results.ToArray();
+        Type = PartResults.First().Type;
     }
-    private static ConsoleColor GetExecutionTimeColor(TimeSpan executionTime) => executionTime.TotalMilliseconds switch
+}
+public sealed record ValidationPartResult(ProblemType Type, int Part, int TestCase, ValidationResult Result);
+
+/// <summary>Represents a validation result.</summary>
+public enum ValidationResult
+{
+    /// <summary>Represents a valid result.</summary>
+    /// <remarks>This guarantees that the correct answer was yielded, and no errors occurred during the validation process.</remarks>
+    Valid,
+    /// <summary>Represents an invalid result.</summary>
+    /// <remarks>This value denotes that the correct answer was not returned. It does not indicate whether the solver threw or if it only yielded an incorrect answer.</remarks>
+    Invalid,
+
+    /// <summary>Represents an aborted validation process.</summary>
+    /// <remarks>Reserved for future usage.</remarks>
+    Aborted,
+}
+
+public sealed class PartSolutionOutputDictionary : IEnumerable<PartSolutionOutputEntry>
+{
+    private readonly Dictionary<string, object> dictionary = new();
+
+    public object? Part1Output { get; private set; }
+    public object? Part2Output { get; private set; }
+
+    public PartSolutionOutputDictionary() { }
+    public PartSolutionOutputDictionary(IEnumerable<PartSolutionOutputEntry> entries)
     {
-        < 1 => ConsoleColor.Blue,
-        < 5 => ConsoleColor.Cyan,
-        < 20 => ConsoleColor.Green,
-        < 100 => ConsoleColor.DarkGreen,
-        < 400 => ConsoleColor.Yellow,
-        < 1000 => ConsoleColor.DarkYellow,
-        < 3000 => ConsoleColor.Magenta,
-        < 15000 => ConsoleColor.Red,
-        _ => ConsoleColor.DarkRed,
-    };
+        AddRange(entries);
+    }
+
+    public void AddRange(IEnumerable<PartSolutionOutputEntry> entries)
+    {
+        foreach (var entry in entries)
+            Add(entry);
+    }
+    public void Add(PartSolutionOutputEntry entry)
+    {
+        Add(entry.PartName, entry.Output);
+    }
+    public void Add(string partName, object output)
+    {
+        dictionary.Add(partName, output);
+        AssignOfficialPartResult(partName, output);
+    }
+    private void AssignOfficialPartResult(string partName, object output)
+    {
+        switch (partName)
+        {
+            case "Part 1":
+                Part1Output = output;
+                break;
+
+            case "Part 2":
+                Part2Output = output;
+                break;
+        }
+    }
+
+    public object? GetPartOutput(int part)
+    {
+        return part switch
+        {
+            1 => Part1Output,
+            2 => Part2Output,
+            _ => null,
+        };
+    }
+
+    public IEnumerator<PartSolutionOutputEntry> GetEnumerator()
+    {
+        return dictionary.Select(PartSolutionOutputEntry.FromKeyValuePair).GetEnumerator();
+    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
+public record struct PartSolutionOutputEntry(string PartName, object Output)
+{
+    public static PartSolutionOutputEntry FromKeyValuePair(KeyValuePair<string, object> kvp) => new(kvp.Key, kvp.Value);
 }

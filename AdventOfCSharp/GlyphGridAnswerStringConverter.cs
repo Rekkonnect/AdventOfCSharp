@@ -1,23 +1,63 @@
-﻿using AdventOfCSharp.Utilities;
+﻿using AdventOfCSharp.Resources;
+using AdventOfCSharp.Utilities;
 
 namespace AdventOfCSharp;
 
-public class GlyphGridAnswerStringConverter : ObjectAnswerStringConverter
+public class GlyphGridAnswerStringConverter : AnswerStringConverter<IGlyphGrid>
 {
-    // So far the baseline is written, and it will soon be available
-    public override string Convert(object value)
+    public override string Convert(IGlyphGrid value)
     {
-        // For the time being use this, until the converter is implemented
-        return CommonAnswerStringConverter.Instance.Convert(value);
-
-        var drawn = value.ToString();
+        var drawn = value.ToString()!.Trim();
         var drawnLines = drawn.GetLines();
         var normalized = Normalize(drawnLines);
+        return ParseGlyphString(normalized) ?? drawn;
+    }
 
-        // TODO: Implement this
-        string parsed = null;
+    private static string? ParseGlyphString(string[] glyphStringLines)
+    {
+        var matchingFont = GetMatchingFont(glyphStringLines);
 
-        return parsed;
+        if (matchingFont is null)
+            return null;
+
+        int currentColumn = 0;
+        var chars = new List<char>();
+
+        while (true)
+        {
+            currentColumn = NextNonEmptyColumn(glyphStringLines, currentColumn);
+            if (currentColumn >= glyphStringLines.First().Length)
+                break;
+
+            chars.Add(matchingFont.MatchCharacter(glyphStringLines, currentColumn, out currentColumn));
+        }
+        return new string(chars.ToArray());
+    }
+
+    private static int NextNonEmptyColumn(string[] stringLines, int startingColumn)
+    {
+        int currentColumn = startingColumn;
+        while (currentColumn < stringLines.First().Length)
+        {
+            if (!IsEmptyColumn(stringLines, currentColumn))
+                break;
+
+            currentColumn++;
+        }
+        return currentColumn;
+    }
+    private static bool IsEmptyColumn(string[] stringLines, int column)
+    {
+        for (int i = 0; i < stringLines.Length; i++)
+            if (stringLines[i][column] is not '.')
+                return false;
+        return true;
+    }
+
+    private static GridFont? GetMatchingFont(string[] glyphStringLines)
+    {
+        // Return the first matching font, because there will most likely not be any other
+        return GridFontStore.Default.Fonts.FirstOrDefault(f => f.CanMatch(glyphStringLines));
     }
 
     private static string[] Normalize(string[] drawn)

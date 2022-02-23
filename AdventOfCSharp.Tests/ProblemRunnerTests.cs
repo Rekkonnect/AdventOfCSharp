@@ -22,7 +22,8 @@ public class ProblemRunnerTests
     [Test]
     public void ValidateProblem()
     {
-        var runner = ProblemRunner.ForProblem(2021, 1);
-        Assert.True(runner.FullyValidateAllTestCases());
+        var runner = ProblemRunner.ForProblem(2021, 1)!;
+        runner.Options.DisplayExecutionTimes = false;
+        Assert.False(runner.FullyValidateAllTestCases().HasInvalidResults);
     }
 }

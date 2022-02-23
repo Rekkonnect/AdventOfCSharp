@@ -3,29 +3,41 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
-    <Version>1.0.1</Version>
-    
+    <Version>1.3.1</Version>
+
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>An aspiring AoC problem solving framework.</Description>
-    <Copyright>© 2021, Alex Kalfakakos</Copyright>
+    <Copyright>© 2021-2022, Alex Kalfakakos</Copyright>
     <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
     <Authors>Alex Kalfakakos</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp</Product>
     <PackageId>AdventOfCSharp</PackageId>
-    <PackageReleaseNotes>- Added benchmarking APIs
-- Added ProblemDate struct
-- Added NoReturnSolvePart methods</PackageReleaseNotes>
-    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Garyon" Version="0.2.6.1" />
+    <PackageReference Include="Garyon" Version="0.2.7" />
+    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\GlyphResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GlyphResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\GlyphResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GlyphResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

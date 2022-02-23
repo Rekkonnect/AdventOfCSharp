@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using AdventOfCSharp.Extensions;
+﻿using AdventOfCSharp.Extensions;
 
 namespace AdventOfCSharp;
 
@@ -28,14 +26,21 @@ public static class AnswerStringConversion
 
     public static string Convert(object value)
     {
+        var specializedConverted = ConvertUsingSpecializedTypeConverter(value);
+        if (specializedConverted is not null)
+            return specializedConverted;
+
+        return CommonAnswerStringConverter.Instance.Convert(value);
+    }
+    private static string? ConvertUsingSpecializedTypeConverter(object value)
+    {
         var converter = typeConverterDictionary.GetInitializedConverterForType(value.GetType());
-        return converter.ConvertObject(value);
+        return converter?.ConvertObject(value);
     }
 
     private class TypeConverterDictionary
     {
         private readonly FlexibleDictionary<Type, Type> dictionary = new();
-        private readonly List<Type> objectConverters = new();
 
         public IEnumerable<Type> ConvertableTypes => dictionary.Keys;
         public IEnumerable<Type> Converters => dictionary.Values;
@@ -43,16 +48,38 @@ public static class AnswerStringConversion
         public void Add(Type convertedType, Type converter)
         {
             if (convertedType == typeof(object))
-                objectConverters.Add(converter);
-            else
-                dictionary.Add(convertedType, converter);
+                return;
+
+            dictionary.Add(convertedType, converter);
         }
 
-        // TODO: Support returning object converters in the future
-        public Type GetConverterForType(Type convertedType) => GetDeclaredConverterForType(convertedType) ?? typeof(CommonAnswerStringConverter);
-        public AnswerStringConverter GetInitializedConverterForType(Type convertedType)
+        public Type? GetConverterForType(Type convertedType) => GetDeclaredOrDeterminedConverterForType(convertedType);
+        public AnswerStringConverter? GetInitializedConverterForType(Type convertedType)
         {
-            return GetDeclaredConverterForType(convertedType)?.InitializeInstance<AnswerStringConverter>() ?? CommonAnswerStringConverter.Instance;
+            return GetDeclaredOrDeterminedConverterForType(convertedType)?.InitializeInstance<AnswerStringConverter>();
+        }
+
+        private Type? GetDeclaredOrDeterminedConverterForType(Type convertedType)
+        {
+            if (IsHandledBuiltInType(convertedType))
+                return typeof(CommonAnswerStringConverter);
+            return GetDeclaredConverterForType(convertedType);
+        }
+        private static bool IsHandledBuiltInType(Type type)
+        {
+            return type.GetTypeCode()
+                is TypeCode.Byte
+                or TypeCode.Int16
+                or TypeCode.Int32
+                or TypeCode.Int64
+                or TypeCode.SByte
+                or TypeCode.UInt16
+                or TypeCode.UInt32
+                or TypeCode.UInt64
+                or TypeCode.Single
+                or TypeCode.Double
+                or TypeCode.Decimal
+                or TypeCode.String;
         }
 
         private Type? GetDeclaredConverterForType(Type convertedType)

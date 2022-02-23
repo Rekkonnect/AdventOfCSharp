@@ -4,8 +4,12 @@ using AdventOfCSharp.Extensions;
 
 namespace AdventOfCSharp;
 
+/// <summary>Represents a problem's correct outputs.</summary>
+/// <param name="Part1">The correct output for part 1.</param>
+/// <param name="Part2">The correct output for part 2.</param>
 public record ProblemOutput(string? Part1, string? Part2)
 {
+    /// <summary>Gets the empty <seealso cref="ProblemOutput"/> instance, where the outputs for both parts are <see langword="null"/>.</summary>
     public static ProblemOutput Empty { get; } = new(null, null);
 
     public string GetFileString()

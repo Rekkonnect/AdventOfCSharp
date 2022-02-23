@@ -1,41 +1,52 @@
-﻿namespace AdventOfCSharp.Extensions;
+﻿using System.Globalization;
+
+namespace AdventOfCSharp.Extensions;
 
 public static class IEnumerableExtensions
 {
-    public static bool CountAtLeast<T>(this IEnumerable<T> source, Func<T, bool> filter, int occurrences)
+    public static IDictionary<TKey, TValue> ToDictionaryWithNotNullKeys<TKey, TValue>(this IEnumerable<TValue> values, Func<TValue, TKey> keySelector)
+        where TKey : notnull
     {
-        var filtered = source.Where(filter);
-        int count = 0;
+        return new Dictionary<TKey, TValue>(Pairs());
 
-        foreach (var e in filtered)
+        IEnumerable<KeyValuePair<TKey, TValue>> Pairs()
         {
-            count++;
-            if (count >= occurrences)
-                return true;
+            foreach (var value in values)
+            {
+                var pair = new KeyValuePair<TKey, TValue>(keySelector(value), value);
+                if (pair.Key is null)
+                    continue;
+
+                yield return pair;
+            }
         }
-        return false;
+    }
+    public static IDictionary<TKey, TValue> ToDictionaryFiltered<TKey, TValue>(this IEnumerable<TValue> values, Func<TValue, TKey> keySelector, Predicate<TValue> valuePredicate)
+        where TKey : notnull
+    {
+        return values.WherePredicate(valuePredicate).ToDictionary(keySelector);
     }
 
-    public static TSource MinSource<TSource, TSelector>(this IEnumerable<TSource> source, Func<TSource, TSelector> selector)
-        where TSelector : IComparable<TSelector>
+    public static TSource? MinSource<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector)
+        where TKey : IComparable<TKey>
     {
         return source.ExtremumSource(selector, ComparisonResult.Less);
     }
-    public static TSource MaxSource<TSource, TSelector>(this IEnumerable<TSource> source, Func<TSource, TSelector> selector)
-        where TSelector : IComparable<TSelector>
+    public static TSource? MaxSource<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector)
+        where TKey : IComparable<TKey>
     {
         return source.ExtremumSource(selector, ComparisonResult.Greater);
     }
 
-    public static TSource ExtremumSource<TSource, TSelector>(this IEnumerable<TSource> source, Func<TSource, TSelector> selector, ComparisonResult matchingResult)
-        where TSelector : IComparable<TSelector>
+    public static TSource? ExtremumSource<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector, ComparisonResult matchingResult)
+        where TKey : IComparable<TKey>
     {
         var first = source.FirstOrDefault();
 
         if (source.Count() <= 1)
             return first;
 
-        var extremumSelected = selector(first);
+        var extremumSelected = selector(first!);
         var extremumSource = first;
 
         foreach (var sourceValue in source.Skip(1))

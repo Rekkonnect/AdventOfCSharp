@@ -3,17 +3,14 @@
 public class NextValueCounterDictionary<T> : ValueCounterDictionary<T>, IEquatable<NextValueCounterDictionary<T>>
 {
     public NextValueCounterDictionary() { }
-    public NextValueCounterDictionary(IEnumerable<T> collection, int initial = 1)
-    {
-        foreach (var v in collection)
-            Add(v, initial);
-    }
-    public NextValueCounterDictionary(IEnumerable collection, int initial = 1)
-    {
-        foreach (var v in collection)
-            Add((T)v, initial);
-    }
-    public NextValueCounterDictionary(NextValueCounterDictionary<T> other) : base(other) { }
+
+    public NextValueCounterDictionary(IEnumerable<T> collection, int initialValue = 1)
+        : base(collection, initialValue) { }
+    public NextValueCounterDictionary(IEnumerable collection, int initialValue = 1)
+        : base(collection.Cast<T>(), initialValue) { }
+
+    public NextValueCounterDictionary(NextValueCounterDictionary<T> other)
+        : base(other) { }
 
     public KeyValuePair<T, int> Max() => Best(ComparisonResult.Greater);
     public KeyValuePair<T, int> Min() => Best(ComparisonResult.Less);
@@ -60,8 +57,18 @@ public class NextValueCounterDictionary<T> : ValueCounterDictionary<T>, IEquatab
             return false;
 
         foreach (var kvp in Dictionary)
-            if (!other.Dictionary.TryGetValue(kvp.Key, out int value) || !kvp.Value.Equals(value))
+        {
+            if (!other.Dictionary.TryGetValue(kvp.Key, out int value))
+            {
+                if (kvp.Value is not 0)
+                    return false;
+
+                continue;
+            }
+
+            if (kvp.Value != value)
                 return false;
+        }
 
         return true;
     }
@@ -72,12 +79,8 @@ public class NextValueCounterDictionary<T> : ValueCounterDictionary<T>, IEquatab
     }
     public override int GetHashCode()
     {
-        // Clearly a "hack" for 
-        var result = new HashCode();
-        var values = Dictionary.Values.ToArray();
-        var sortedValues = values.Sort();
-        foreach (var value in sortedValues)
-            result.Add(value);
-        return result.ToHashCode();
+        var entries = Dictionary.ToArray();
+        Array.Sort(entries, EntryValueComparer<T, int>.Default);
+        return HashCodeFactory.Combine(entries);
     }
 }

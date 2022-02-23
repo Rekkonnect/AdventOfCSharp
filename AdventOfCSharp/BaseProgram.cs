@@ -1,36 +1,105 @@
 ﻿using AdventOfCSharp.Extensions;
+using AdventOfCSharp.Generation;
 using static Garyon.Functions.ConsoleUtilities;
 using static System.Console;
 
 namespace AdventOfCSharp;
 
+using static Utilities.ConsolePrinting;
+
 public abstract class BaseProgram
 {
     protected static void ValidateAllSolutions()
     {
-        var allProblems = ProblemsIndex.Instance.AllProblems();
         WriteLine($"Validating All Problems\n");
-        foreach (var problem in allProblems)
+        var allProblems = ProblemsIndex.Instance.AllProblems();
+        ValidateSolutions(allProblems);
+    }
+
+    protected static void ValidateThisYearsSolutions()
+    {
+        ValidateAllYearSolutions(ServerClock.Now.Year);
+    }
+    protected static void ValidateTodaysSolution()
+    {
+        var now = ServerClock.Now;
+        ValidateSolution(now.Year, now.Day);
+    }
+
+    protected static void ValidateAllYearSolutions(int year)
+    {
+        Write($"Validating All ");
+        DisplayInlineProblemYear(year);
+        WriteLine(" Solutions\n");
+        ValidateSolutions(ProblemsIndex.Instance.GetYearProblemInfo(year));
+    }
+    protected static void ValidateSolution(int year, int day)
+    {
+        Write($"Validating ");
+        DisplayInlineProblemDate(year, day);
+        WriteLine(" Solution\n");
+        ValidateSolution(ProblemsIndex.Instance[year, day]);
+    }
+
+    private static void ValidateSolutions(IEnumerable<ProblemInfo> problems)
+    {
+        var validator = new ProblemValidator();
+
+        foreach (var problem in problems)
+            ValidateSolution(problem, validator);
+
+        var report = validator.Report;
+        var invalidParts = report.InvalidPartResults.ToArray();
+        int validCount = report.ValidPartResults.Count();
+        int invalidCount = invalidParts.Length;
+        int totalCount = report.AllPartValidationResults.Count();
+
+        bool hasInvalids = validator.Report.HasInvalidParts;
+        var invalidPartsColor = hasInvalids ? ConsoleColor.Red : ConsoleColor.Yellow;
+        var totalPartsColor = hasInvalids ? ConsoleColor.Yellow : ConsoleColor.Green;
+
+        WriteLineWithColor("  Validation Report", ConsoleColor.Cyan);
+        Write("- ");
+        WriteLineWithColor($"{validCount  ,3}   valid parts", ConsoleColor.Green);
+        Write("- ");
+        WriteLineWithColor($"{invalidCount,3} invalid parts", invalidPartsColor);
+        Write("- ");
+        WriteLineWithColor($"{totalCount  ,3}   total parts", totalPartsColor);
+
+        if (hasInvalids)
         {
-            var instance = problem.ProblemType.ProblemClass?.InitializeInstance<Problem>();
-            if (instance is null)
-                continue;
+            WriteLineWithColor("\nInvalid parts", ConsoleColor.Red);
 
-            var runner = new ProblemRunner(instance);
-
-            DisplayProblemDate(problem.Year, problem.Day);
-            ValidatePart(1);
-            ValidatePart(2);
-            WriteLine();
-
-            void ValidatePart(int part)
+            foreach (var invalidPart in invalidParts)
             {
-                if (problem.StatusForPart(part) is not PartSolutionStatus.Valid)
-                    return;
-                if (!runner.ValidatePart(part))
-                    WriteLineWithColor($"Part {part} yielded an invalid answer", ConsoleColor.Red);
+                Write("- ");
+                DisplayInlineProblemDate(invalidPart.Type.Year, invalidPart.Type.Day, invalidPart.Part, true);
+                WriteLine();
             }
         }
+        else
+        {
+            WriteLineWithColor("\nValidation Successful", ConsoleColor.DarkGreen);
+        }
+    }
+    private static void ValidateSolution(ProblemInfo problem, ProblemValidator? validator = null)
+    {
+        if (problem.HasNoValidSolutions)
+            return;
+
+        if (validator is null)
+            validator = new ProblemValidator();
+
+        DisplayProblemDate(problem.Year, problem.Day);
+        var parts = validator.Validate(problem)!;
+
+        foreach (var result in parts.PartResults)
+        {
+            if (result.Result is ValidationResult.Invalid)
+                WriteLineWithColor($"Part {result.Part} yielded an invalid answer", ConsoleColor.Red);
+        }
+
+        WriteLine();
     }
 
     protected static void EnterMainMenu()
@@ -80,7 +149,7 @@ public abstract class BaseProgram
         var currentDate = ServerClock.Now;
 
         if (selectedYear == currentDate.Year && currentDate.Month == 12)
-            maxDay = currentDate.Day;
+            maxDay = Math.Min(maxDay, currentDate.Day);
 
         WriteLine("\nAvailable Days:");
         var (leftOffset, topOffset) = GetCursorPosition();
@@ -126,63 +195,41 @@ public abstract class BaseProgram
         }
     }
 
-    #region Pretty console writing
-    // This kind of functionality must be available somewhere
-    // I should browse some packages
-    protected static void ClearUntilCursorReposition(int startLeft, int startTop)
-    {
-        ClearUntilCursor(startLeft, startTop);
-        SetCursorPosition(startLeft, startTop);
-    }
-    protected static void ClearUntilCursor(int startLeft, int startTop)
-    {
-        int length = GetConsoleBufferDifference(startLeft, startTop);
-
-        CursorTop = startTop;
-        CursorLeft = startLeft;
-
-        var clearString = new string(' ', length);
-        Write(clearString);
-    }
-    protected static int GetConsoleBufferDifference(int startLeft, int startTop)
-    {
-        var (endLeft, endTop) = GetCursorPosition();
-        return GetConsoleBufferDifference(startLeft, startTop, endLeft, endTop);
-    }
-    protected static int GetConsoleBufferDifference(int startLeft, int startTop, int endLeft, int endTop)
-    {
-        int width = BufferWidth;
-        int differenceLeft = endLeft - startLeft;
-        int differenceTop = endTop - startTop;
-        return differenceTop * width - differenceLeft;
-    }
-    #endregion
-
     protected static void WriteLegend()
     {
         ResetColor();
         WriteLine("Legend:");
 
         // Valid solutions
-        WriteWithColor($"*", GetStarColor(PartSolutionStatus.Valid));
+        WriteWithColor($"*", GetStatusColor(PartSolutionStatus.Valid));
         Write(" = valid solution (includes ");
-        WriteWithColor("unoptimized", GetStarColor(PartSolutionStatus.Unoptimized));
+        WriteWithColor("unoptimized", GetStatusColor(PartSolutionStatus.Unoptimized));
         WriteLine(" solutions)");
 
         // Unoptimized solutions
-        WriteWithColor("*", GetStarColor(PartSolutionStatus.Unoptimized));
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Unoptimized));
         WriteLine(" = unoptimized solution");
 
+        // Interactive solutions
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Interactive));
+        WriteLine(" = interactive solution");
+
+        // Refactoring solutions
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Refactoring));
+        WriteLine(" = refactoring solution");
+
         // WIP solutions
-        WriteWithColor("*", GetStarColor(PartSolutionStatus.WIP));
-        WriteLine(" = WIP solution");
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.WIP));
+        Write(" = WIP solution (includes ");
+        WriteWithColor("refactoring", GetStatusColor(PartSolutionStatus.Refactoring));
+        WriteLine(" solutions)");
 
         // Uninitialized solutions
-        WriteWithColor("*", GetStarColor(PartSolutionStatus.Uninitialized));
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Uninitialized));
         WriteLine(" = uninitialized solution (empty solution)");
 
         // Unavailable free stars
-        WriteWithColor("*", GetStarColor(PartSolutionStatus.UnavailableFreeStar));
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.UnavailableFreeStar));
         WriteLine(" = unavailable free star");
     }
 
@@ -197,14 +244,14 @@ public abstract class BaseProgram
     protected static void WriteSummary(YearSummary summary)
     {
         WriteWithColor($"{summary.Year}  ", ItemColorForAvailability(summary.HasAvailableSolutions));
-        WriteSummaryStars(summary.StatusCounters.TotalValidSolutions, GetStarColor(PartSolutionStatus.Valid));
+        WriteSummaryStars(summary.StatusCounters.TotalValidSolutions, GetStatusColor(PartSolutionStatus.Valid));
         WriteSummaryStars(summary, PartSolutionStatus.Unoptimized);
-        WriteSummaryStars(summary, PartSolutionStatus.WIP);
+        WriteSummaryStars(summary.StatusCounters.TotalWIPSolutions, GetStatusColor(PartSolutionStatus.WIP));
         WriteLine();
     }
     protected static void WriteSummaryStars(YearSummary summary, PartSolutionStatus status)
     {
-        WriteSummaryStars(summary.StatusCounters[status], GetStarColor(status));
+        WriteSummaryStars(summary.StatusCounters[status], GetStatusColor(status));
     }
     protected static void WriteSummaryStars(int starCount, ConsoleColor starColor)
     {
@@ -215,19 +262,21 @@ public abstract class BaseProgram
 
     protected static void WriteStar(PartSolutionStatus status)
     {
-        WriteStar(GetStarColor(status));
+        WriteStar(GetStatusColor(status));
     }
     protected static void WriteStar(ConsoleColor starColor)
     {
         WriteWithColor("*", starColor);
     }
-    protected static ConsoleColor GetStarColor(PartSolutionStatus status) => status switch
+    protected static ConsoleColor GetStatusColor(PartSolutionStatus status) => status switch
     {
         PartSolutionStatus.Valid => ConsoleColor.DarkYellow,
         PartSolutionStatus.Unoptimized => ConsoleColor.Magenta,
         PartSolutionStatus.WIP => ConsoleColor.Blue,
         PartSolutionStatus.Uninitialized => ConsoleColor.DarkGray,
         PartSolutionStatus.UnavailableFreeStar => ConsoleColor.DarkRed,
+        PartSolutionStatus.Refactoring => ConsoleColor.Cyan,
+        PartSolutionStatus.Interactive => ConsoleColor.DarkGreen,
     };
 
     protected static void RunTodaysProblem(bool testCases = true)
@@ -243,6 +292,12 @@ It seems today's problem has no solution class
 Focus on development, you lazy fucking ass
               --A happy AoC solver, to himself
 ");
+
+            if (SolutionTemplateGeneration.EnabledGeneration)
+            {
+                SolutionTemplateGeneration.CreateSolutionFile(currentYear, currentDay);
+                WriteLine("The solution file for today's problem has been automatically created.");
+            }
         }
     }
 
@@ -268,11 +323,11 @@ Focus on development, you lazy fucking ass
     }
     protected static bool RunProblem(Type problemType, bool testCases = true)
     {
-        var instance = problemType?.GetConstructor(Type.EmptyTypes)!.Invoke(null) as Problem;
-        if (instance is null)
+        var instance = problemType?.GetConstructor(Type.EmptyTypes)!.Invoke(null);
+        if (instance is not Problem problem)
             return false;
 
-        RunProblemWithTestCases(instance, testCases);
+        RunProblemWithTestCases(problem, testCases);
         return true;
     }
     protected static void RunProblemWithTestCases(Problem instance, bool testCases)
@@ -287,9 +342,8 @@ Focus on development, you lazy fucking ass
     }
     protected static void RunProblemTestCases(Problem instance)
     {
-        int testCases = instance.TestCaseFiles;
-        for (int i = 1; i <= testCases; i++)
-            RunProblemCase(instance, i);
+        foreach (int testCase in instance.Input.TestCaseIDs)
+            RunProblemCase(instance, testCase);
     }
 
     protected static void RunProblemCase(Problem instance, int testCase)
@@ -307,10 +361,59 @@ Focus on development, you lazy fucking ass
         var parts = new ProblemRunner(instance).SolveAllParts(testCase);
         WriteLine();
         foreach (var part in parts)
-            WriteLine(AnswerStringConversion.Convert(part));
+        {
+            FancyPrinting.PrintLabel(part.PartName);
+            WriteLineWithColor($" {AnswerStringConversion.Convert(part.Output)}", GetAnswerColor(instance, part.PartName));
+        }
         WriteLine();
     }
 
+    private static ConsoleColor GetAnswerColor(Problem instance, string partName)
+    {
+        if (IsFinalDayPart2(instance, partName))
+        {
+            return IFinalDay.IsAvailable(instance.Year) switch
+            {
+                true => ConsoleColor.Green,
+                false => ConsoleColor.Red,
+            };
+        }
+
+        return ConsoleColor.Yellow;
+    }
+    private static bool IsFinalDayPart2(Problem instance, string partName)
+    {
+        return partName is "Part 2" && instance is IFinalDay;
+    }
+
+    private static void DisplayInlineProblemStat(string label, int stat, int minWidth = 1)
+    {
+        Write(label);
+        WriteWithColor(stat.ToString().PadLeft(minWidth), ConsoleColor.Cyan);
+    }
+    protected static void DisplayInlineProblemYear(int year)
+    {
+        DisplayInlineProblemStat("Year ", year);
+    }
+    protected static void DisplayInlineProblemDay(int day, bool pad = false)
+    {
+        int minWidth = pad ? 2 : 1;
+        DisplayInlineProblemStat(" Day ", day, minWidth);
+    }
+    protected static void DisplayInlineProblemPart(int part)
+    {
+        DisplayInlineProblemStat(" Part ", part);
+    }
+    protected static void DisplayInlineProblemDate(int year, int day, bool padDay = false)
+    {
+        DisplayInlineProblemYear(year);
+        DisplayInlineProblemDay(day, padDay);
+    }
+    protected static void DisplayInlineProblemDate(int year, int day, int part, bool padDay = false)
+    {
+        DisplayInlineProblemDate(year, day, padDay);
+        DisplayInlineProblemPart(part);
+    }
     protected static void DisplayProblemDate(int year, int day)
     {
         WriteWithColor("Year ", ConsoleColor.DarkRed, false);
