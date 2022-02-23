@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <IsPackable>true</IsPackable>
-    <Version>1.3.0</Version>
+    <Version>1.3.1</Version>
 
     <Authors>Alex Kalfakakos</Authors>
     <Company />
@@ -20,7 +20,8 @@
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp.Analyzers</Product>
     <PackageId>AdventOfCSharp.Analyzers</PackageId>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>Additions:
+- Secret string property analyzers</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
