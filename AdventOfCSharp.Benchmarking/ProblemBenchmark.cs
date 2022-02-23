@@ -21,9 +21,15 @@ public class ProblemBenchmark
     {
         var problemInfo = ProblemsIndex.Instance[Year, Day];
         runner = new ProblemRunner(problemInfo.InitializeInstance());
-        solverPart1 = runner.NoReturnSolverActionForPart(1);
-        solverPart2 = runner.NoReturnSolverActionForPart(2);
+        solverPart1 = GetSolverDelegate(1);
+        solverPart2 = GetSolverDelegate(2);
         runner.Problem.EnsureLoadedState();
+
+        Action GetSolverDelegate(int part)
+        {
+            var method = ProblemSolverMethodProvider.NoReturnMethodForPart(part);
+            return method.CreateDelegate<Action>(runner.Problem);
+        }
     }
 
     [Benchmark]

@@ -157,7 +157,7 @@ public sealed class YearProblemInfo : ProblemInfoBucket<ProblemInfo, YearProblem
         private set => this[25] = value;
     }
 
-    public IEnumerable<int> ValidDays => summaryTable.NonNullValues.Select(problemInfo => problemInfo!.Day);
+    public IEnumerable<int> ValidDays => this.Select(problemInfo => problemInfo!.Day);
 
     public bool IsLastDayPart2Available => LastDay.Part2Status is not PartSolutionStatus.UnavailableFreeStar;
 

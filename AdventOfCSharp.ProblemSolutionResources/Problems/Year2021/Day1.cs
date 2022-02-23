@@ -1,6 +1,4 @@
-﻿// Too trivial case to include nullability
-// Consider removing this line on al soluti
-#nullable disable
+﻿#nullable disable
 
 using System.Linq;
 

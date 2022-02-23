@@ -351,9 +351,9 @@ public abstract class Problem<T1, T2> : Problem
     public abstract T2 SolvePart2();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void NoReturnSolvePart1() => SolvePart1();
+    internal void NoReturnSolvePart1() => SolvePart1();
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void NoReturnSolvePart2() => SolvePart2();
+    internal void NoReturnSolvePart2() => SolvePart2();
 }
 
 public abstract class Problem<T> : Problem<T, T>
