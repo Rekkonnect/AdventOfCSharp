@@ -1,19 +1,42 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <IsPackable>true</IsPackable>
+    <PublishTrimmed>false</PublishTrimmed>
+
+    <Version>1.4.0-alpha2</Version>
+
+    <PackageTags>advent-of-code, aoc</PackageTags>
+    <Description>Benchmarking tools for the Advent of C# framework.</Description>
+    <Copyright>© 2021-2022, Alex Kalfakakos</Copyright>
+    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <Authors>Alex Kalfakakos</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Product>AdventOfCSharp.Benchmarking</Product>
+    <PackageId>AdventOfCSharp.Benchmarking</PackageId>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
     <PackageReference Include="Garyon" Version="0.2.7" />
+    <PackageReference Include="VeryUnsafe" Version="1.0.1" />
+    
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCSharp\AdventOfCSharp.csproj" />
+
+    <ProjectReference Include="..\AdventOfCSharp.SourceGenerators\AdventOfCSharp.SourceGenerators.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="true" />
+    <None Include="$(OutputPath)\AdventOfCSharp.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="true" />
   </ItemGroup>
 
 </Project>

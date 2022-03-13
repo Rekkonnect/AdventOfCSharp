@@ -18,10 +18,45 @@ public static class ProblemSolverMethodProvider
     private const BindingFlags hiddenInstanceMember = BindingFlags.NonPublic | BindingFlags.Instance;
 
     private static readonly string solvePartMethodPrefix = nameof(Problem<int>.SolvePart1)[..^1];
-    private static readonly string noReturnolvePartMethodPrefix = nameof(Problem<int>.NoReturnSolvePart1)[..^1];
+    private static readonly string loadStateMethodName = "LoadState";
 
     public static string SolvePartMethodName(int part) => $"{solvePartMethodPrefix}{part}";
-    internal static string NoReturnSolvePartMethodName(int part) => $"{noReturnolvePartMethodPrefix}{part}";
+
+    public static Action CreateLoadStateDelegate(Problem instance)
+    {
+        var method = GetLoadStateMethod(instance);
+        return method.CreateDelegate<Action>(instance);
+    }
+
+    public static MethodInfo GetLoadStateMethod(Problem instance) => GetLoadStateMethod(instance.GetType());
+    public static MethodInfo GetLoadStateMethod(Type problemType)
+    {
+        if (!problemType.Inherits<Problem>())
+            throw new ArgumentException("The provided type should inherit from Problem");
+
+        return GetLoadStateMethodUnsafe(problemType);
+    }
+    public static MethodInfo GetLoadStateMethod<T>()
+        where T : Problem
+    {
+        return GetLoadStateMethod(typeof(T));
+    }
+    internal static MethodInfo GetLoadStateMethodUnsafe(Type problemType)
+    {
+        return problemType.GetMethod(loadStateMethodName)!;
+    }
+
+    public static Action CreateSolverDelegate(int part, Problem instance)
+    {
+        var method = MethodForPart(instance.GetType(), part);
+
+        var returnType = method.ReturnType;
+        var unboundFuncType = typeof(Func<>);
+        var boundFuncType = unboundFuncType.MakeGenericType(returnType);
+        var del = method.CreateDelegate(boundFuncType, instance);
+        var action = VeryUnsafe.VeryUnsafe.ChangeType<Action>(del);
+        return action;
+    }
 
     public static MethodInfo MethodForPart(Type problemType, int part)
     {
@@ -35,11 +70,6 @@ public static class ProblemSolverMethodProvider
     public static MethodInfo MethodForPart(int part) => MethodForPart<Problem<int>>(part);
     public static MethodInfo[] MethodsForOfficialParts(Type problemType) => new[] { MethodForPart(problemType, 1), MethodForPart(problemType, 2) };
     public static MethodInfo[] MethodsForOfficialParts() => MethodsForOfficialParts(typeof(Problem));
-
-    internal static MethodInfo NoReturnMethodForPart(int part)
-    {
-        return typeof(Problem<int>).GetMethod(NoReturnSolvePartMethodName(part), BindingFlags.NonPublic | BindingFlags.Instance)!;
-    }
 
     public static MethodInfo LoadStateMethod(Type problemType) => PrivateMethod(problemType, "LoadState");
     public static MethodInfo LoadStateMethod() => LoadStateMethod(typeof(Problem));

@@ -412,6 +412,15 @@ namespace AdventOfCSharp.Analyzers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Numerical types are not valid for secret string properties.
+        /// </summary>
+        internal static string AoCS0083_Title {
+            get {
+                return ResourceManager.GetString("AoCS0083_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Only types inheriting ISecretsContainer should contain properties with the SecretStringPropertyAttribute.
         /// </summary>
         internal static string AoCS0084_MessageFormat {

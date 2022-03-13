@@ -23,6 +23,8 @@ AoCS0013 | Validity | Error | PartSolverAttributeAnalyzer, [Documentation](../..
 
 ### New Rules
 
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
 AoCS0014 | Validity | Error | PartSolverAttributeAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0014.md)
 AoCS0015 | Information | Warning | PartSolverAttributeAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0015.md)
 
@@ -30,6 +32,8 @@ AoCS0015 | Information | Warning | PartSolverAttributeAnalyzer, [Documentation](
 
 ### New Rules
 
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
 AoCS0016 | Validity | Error | AnswerStringConverterAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0016.md)
 AoCS0017 | Validity | Error | AnswerStringConverterAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0017.md)
 AoCS0018 | Validity | Error | AnswerStringConverterAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0018.md)
@@ -38,6 +42,8 @@ AoCS0018 | Validity | Error | AnswerStringConverterAnalyzer, [Documentation](../
 
 ### New Rules
 
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
 AoCS0080 | Validity | Error | SecretStringPropertyAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0080.md)
 AoCS0081 | Design | Warning | SecretStringPropertyAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0081.md)
 AoCS0082 | Best Practice | Info | SecretStringPropertyAnalyzer, [Documentation](../../docs/analyzers/rules/AoCS0082.md)

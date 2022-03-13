@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Parameters;
 using BenchmarkDotNet.Reports;
@@ -54,16 +55,10 @@ public static class ProblemBenchmarkRunner
         var immutableConfig = minimumImmutableConfig;
         if (config is not null)
             immutableConfig = ImmutableConfigBuilder.Create(config);
+        
         return new BenchmarkRunInfo(GenerateCases(dates).ToArray(), typeof(ProblemBenchmark), immutableConfig);
     }
 
-    /*
-     * ISSUE: The buidler doesn't like generating certain objects, and so it attempts to initialize
-     *        them by calling .ToString() and pasing the result on the code itself
-     *        This has the result of trying to initialize a ProblemDate as a literal which is impossible (as of now)
-     *        There will have to be a change in the implementation and use two parameters; Year and Day
-     *        ProblemDate instances will have to be separated onto those two properties
-     */
     private static IEnumerable<BenchmarkCase> GenerateCases(IEnumerable<ProblemDate> dates) => dates.SelectMany(GenerateCases);
 
     private static IEnumerable<BenchmarkCase> GenerateCases(ProblemDate date)
