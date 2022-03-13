@@ -9,7 +9,7 @@ using System.IO;
 
 namespace AdventOfCSharp.AnalysisTestsBase.Verifiers;
 
-internal static class CSharpVerifierHelper
+public static class CSharpVerifierHelper
 {
     /// <summary>
     /// By default, the compiler reports diagnostics for nullable reference types at
