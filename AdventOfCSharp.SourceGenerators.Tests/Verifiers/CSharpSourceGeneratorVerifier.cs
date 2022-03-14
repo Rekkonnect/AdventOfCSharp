@@ -10,7 +10,7 @@ namespace AdventOfCSharp.SourceGenerators.Tests.Verifiers;
 public static class CSharpSourceGeneratorVerifier<TSourceGenerator>
     where TSourceGenerator : ISourceGenerator, new()
 {
-    public class Test : CSharpSourceGeneratorTest<TSourceGenerator, MSTestVerifier>
+    public class Test : CSharpSourceGeneratorTest<TSourceGenerator, NUnitVerifier>
     {
         public Test()
         {

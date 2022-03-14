@@ -2,7 +2,6 @@
 using AdventOfCSharp.SourceGenerators.Utilities;
 using Microsoft.CodeAnalysis;
 using System.Diagnostics;
-using System.Linq;
 
 namespace AdventOfCSharp.SourceGenerators;
 
@@ -19,10 +18,6 @@ public class BenchmarkSourceGenerator : ISourceGenerator
             var sourceName = GetBenchmarkSourceFileName(correlation.Year, correlation.Day);
             context.AddSource(sourceName, source);
         }
-
-        AddDebugSource(context, "report.g.cs",
-$@"// Correlations found: {correlations.Count()}"
-);
     }
 
     public void Initialize(GeneratorInitializationContext context)
@@ -38,7 +33,7 @@ $@"// Correlations found: {correlations.Count()}"
 
     public static string GetBenchmarkSourceFileName(int year, int day)
     {
-        return $"Benchmarks/Year{year}/Day{day}.g.cs";
+        return $"Benchmarks.Year{year}.Day{day}.g.cs";
     }
 
     private static string GenerateBenchmarkSource(ProblemClassDeclarationCorrelation correlation)
@@ -46,7 +41,7 @@ $@"// Correlations found: {correlations.Count()}"
         // Avoid conflicts at all costs; use the full name
         var fullDeclarationName = correlation.DeclarationSyntax.FullDeclaredSymbolName();
 
-        return GenerateBenchmarkSource(correlation.Day, correlation.Year, fullDeclarationName);
+        return GenerateBenchmarkSource(correlation.Year, correlation.Day, fullDeclarationName);
     }
     public static string GenerateBenchmarkSourceFromBaseNamespace(int year, int day, string baseNamespace)
     {

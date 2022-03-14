@@ -11,7 +11,7 @@ using VerifyCS = CSharpSourceGeneratorVerifier<BenchmarkSourceGenerator>;
 public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
     where TSourceGenerator : class, ISourceGenerator
 {
-    public abstract TSourceGenerator InitializeGeneratorInstance();
+    protected abstract TSourceGenerator InitializeGeneratorInstance();
 
     protected Compilation CreateCompilation(string source, out GeneratorDriver resultingGeneratorDriver)
     {

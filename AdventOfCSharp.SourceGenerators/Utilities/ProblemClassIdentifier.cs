@@ -33,14 +33,16 @@ public static class ProblemClassIdentifier
 
     public static IEnumerable<ProblemClassDeclarationCorrelation> GetProblemClassCorrelationsSymbols(Compilation compilation)
     {
-        var globalNamespaces = GetAllReferenceSymbols(compilation).Select(GetGlobalNamespace).Where(gn => gn is not null) as IEnumerable<INamespaceSymbol>;
+        var globalNamespaces = GetAllAssemblySymbols(compilation).Select(GetGlobalNamespace).Where(gn => gn is not null) as IEnumerable<INamespaceSymbol>;
         var allTypes = globalNamespaces.SelectMany(gn => gn.GetAllContainedTypes());
         // Safe to ignore the current assembly's global namespace; it should not 
         return allTypes.Select(CorrelateProblemClass).Where(v => v is not null) as IEnumerable<ProblemClassDeclarationCorrelation>;
     }
 
-    private static IEnumerable<ISymbol> GetAllReferenceSymbols(Compilation compilation)
+    private static IEnumerable<ISymbol> GetAllAssemblySymbols(Compilation compilation)
     {
+        return compilation.SourceModule.ReferencedAssemblySymbols.Concat(new[] { compilation.Assembly });
+
         var modules = compilation.Assembly.Modules;
         var assemblies = modules.SelectMany(module => module.ReferencedAssemblySymbols);
         return assemblies;
