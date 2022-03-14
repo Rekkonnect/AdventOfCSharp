@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
@@ -23,7 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AdventOfCSharp.AnalysisTestsBase\AdventOfCSharp.AnalysisTestsBase.csproj" />
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking\AdventOfCSharp.Benchmarking.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.SourceGenerators\AdventOfCSharp.SourceGenerators.csproj" />
+    <ProjectReference Include="..\AdventOfCSharp\AdventOfCSharp.csproj" />
   </ItemGroup>
 
 </Project>

@@ -46,6 +46,11 @@ public static class CSharpVerifierHelper
                 "Microsoft.NETCore.App.Ref", "6.0.0"),
                 Path.Combine("ref", "net6.0"));
 
+        SetupAoCSDependencies(test);
+    }
+    public static void SetupAoCSDependencies<TVerifier>(AnalyzerTest<TVerifier> test)
+        where TVerifier : IVerifier, new()
+    {
         test.TestState.AdditionalReferences.AddRange(new[]
         {
             MetadataReferenceFactory.CreateFromType<Problem>(),
