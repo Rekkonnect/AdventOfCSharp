@@ -23,8 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AdventOfCSharp.AdditionalProblemSolutionTests\AdventOfCSharp.AdditionalProblemSolutionTests.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.AnalysisTestsBase\AdventOfCSharp.AnalysisTestsBase.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.Benchmarking\AdventOfCSharp.Benchmarking.csproj" />
+    <ProjectReference Include="..\AdventOfCSharp.ProblemSolutionResources\AdventOfCSharp.ProblemSolutionResources.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.SourceGenerators\AdventOfCSharp.SourceGenerators.csproj" />
     <ProjectReference Include="..\AdventOfCSharp\AdventOfCSharp.csproj" />
   </ItemGroup>

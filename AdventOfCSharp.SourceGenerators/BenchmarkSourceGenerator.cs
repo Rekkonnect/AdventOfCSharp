@@ -1,7 +1,8 @@
-﻿using AdventOfCSharp.SourceGenerators.Extensions;
-using AdventOfCSharp.SourceGenerators.Utilities;
+﻿using AdventOfCSharp.SourceGenerators.Utilities;
 using Microsoft.CodeAnalysis;
+using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace AdventOfCSharp.SourceGenerators;
 
@@ -10,8 +11,11 @@ public class BenchmarkSourceGenerator : ISourceGenerator
 {
     public void Execute(GeneratorExecutionContext context)
     {
-        var correlations = ProblemClassIdentifier.GetProblemClassCorrelationsSymbols(context.Compilation);
+        var correlations = ProblemClassIdentifier.GetProblemClassCorrelationsSymbols(context.Compilation).ToArray();
 
+        // The sorting takes place to avoid issues with determinism during testing
+        // The generated sources are lexicographically sorted by their hint name
+        Array.Sort(correlations, ProblemClassDeclarationCorrelation.Comaprer.Default);
         foreach (var correlation in correlations)
         {
             var source = GenerateBenchmarkSource(correlation);
@@ -39,7 +43,7 @@ public class BenchmarkSourceGenerator : ISourceGenerator
     private static string GenerateBenchmarkSource(ProblemClassDeclarationCorrelation correlation)
     {
         // Avoid conflicts at all costs; use the full name
-        var fullDeclarationName = correlation.DeclarationSyntax.FullDeclaredSymbolName();
+        var fullDeclarationName = correlation.FullSymbolName;
 
         return GenerateBenchmarkSource(correlation.Year, correlation.Day, fullDeclarationName);
     }

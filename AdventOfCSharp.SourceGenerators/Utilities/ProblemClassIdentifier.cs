@@ -42,12 +42,6 @@ public static class ProblemClassIdentifier
     private static IEnumerable<ISymbol> GetAllAssemblySymbols(Compilation compilation)
     {
         return compilation.SourceModule.ReferencedAssemblySymbols.Concat(new[] { compilation.Assembly });
-
-        var modules = compilation.Assembly.Modules;
-        var assemblies = modules.SelectMany(module => module.ReferencedAssemblySymbols);
-        return assemblies;
-
-        return compilation.References.Select(compilation.GetAssemblyOrModuleSymbol).Where(s => s is not null) as IEnumerable<ISymbol>;
     }
     private static INamespaceSymbol? GetGlobalNamespace(ISymbol? symbol)
     {
@@ -111,13 +105,24 @@ public static class ProblemClassIdentifier
 
 public class ProblemClassDeclarationCorrelation
 {
-    public ClassDeclarationSyntax DeclarationSyntax { get; }
+    public ClassDeclarationSyntax? DeclarationSyntax { get; }
     public INamedTypeSymbol? ClassSymbol { get; }
 
     public int Year { get; }
     public int Day { get; }
 
-    internal ProblemClassDeclarationCorrelation(ClassDeclarationSyntax declarationSyntax, INamedTypeSymbol? classSymbol, int year, int day)
+    public string FullSymbolName
+    {
+        get
+        {
+            if (DeclarationSyntax is not null)
+                return DeclarationSyntax.FullDeclaredSymbolName();
+
+            return ClassSymbol!.GetFullSymbolName()!.FullNameString;
+        }
+    }
+
+    internal ProblemClassDeclarationCorrelation(ClassDeclarationSyntax? declarationSyntax, INamedTypeSymbol? classSymbol, int year, int day)
     {
         DeclarationSyntax = declarationSyntax;
         ClassSymbol = classSymbol;
@@ -127,12 +132,26 @@ public class ProblemClassDeclarationCorrelation
     internal ProblemClassDeclarationCorrelation(ClassDeclarationSyntax declarationSyntax, int year, int day)
         : this(declarationSyntax, null, year, day) { }
     internal ProblemClassDeclarationCorrelation(INamedTypeSymbol classSymbol, int year, int day)
-        : this(classSymbol.DeclaringSyntaxReferences.First().GetSyntax() as ClassDeclarationSyntax, classSymbol, year, day)
+        : this(classSymbol.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() as ClassDeclarationSyntax, classSymbol, year, day)
     {
     }
 
     public string FullNamespace(string baseNamespace)
     {
         return $"{baseNamespace}.Year{Year}";
+    }
+
+    internal sealed class Comaprer : IComparer<ProblemClassDeclarationCorrelation>
+    {
+        public static readonly Comaprer Default = new();
+
+        public int Compare(ProblemClassDeclarationCorrelation x, ProblemClassDeclarationCorrelation y)
+        {
+            int yearComparison = x.Year.CompareTo(y.Year);
+            if (yearComparison is not 0)
+                return yearComparison;
+
+            return x.Day.ToString().CompareTo(y.Day.ToString());
+        }
     }
 }

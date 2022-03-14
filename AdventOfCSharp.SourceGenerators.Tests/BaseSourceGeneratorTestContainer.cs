@@ -37,8 +37,10 @@ public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
     }
     protected async Task VerifyAsync(IEnumerable<string> sources, GeneratedSourceMappings mappings)
     {
-        var test = new VerifyCS.Test();
-
+        await VerifyAsync(sources, mappings, new VerifyCS.Test());
+    }
+    protected async Task VerifyAsync(IEnumerable<string> sources, GeneratedSourceMappings mappings, VerifyCS.Test test)
+    {
         test.TestState.Sources.AddRange(sources);
         foreach (var mapping in mappings)
         {
@@ -48,5 +50,5 @@ public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
         await test.RunAsync();
     }
 
-    protected sealed class GeneratedSourceMappings : Dictionary<string, string> { }
+    protected sealed class GeneratedSourceMappings : SortedDictionary<string, string> { }
 }
