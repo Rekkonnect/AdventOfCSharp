@@ -21,4 +21,9 @@
     <PackageReference Include="RoseLynn" Version="0.4.1.2" />
   </ItemGroup>
   
+  <ItemGroup>
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" />
+    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" />
+  </ItemGroup>
+  
 </Project>

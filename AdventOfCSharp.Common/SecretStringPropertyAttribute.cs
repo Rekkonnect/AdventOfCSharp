@@ -1,6 +1,8 @@
-﻿#nullable enable
+﻿using System;
 
 namespace AdventOfCSharp;
+
+#nullable enable
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public sealed class SecretStringPropertyAttribute : Attribute

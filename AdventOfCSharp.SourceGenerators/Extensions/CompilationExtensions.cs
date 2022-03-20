@@ -26,6 +26,10 @@ public static class CompilationExtensions
 
     public static IEnumerable<ISymbol> GetAllSymbols(this Compilation compilation)
     {
-        return compilation.References.Select(compilation.GetAssemblyOrModuleSymbol).Where(s => s is not null) as IEnumerable<ISymbol>;
+        return compilation.References.Select(compilation.GetAssemblyOrModuleSymbol).Where(s => s is not null);
+    }
+    public static IEnumerable<ISymbol> GetAllAssemblySymbols(this Compilation compilation)
+    {
+        return compilation.SourceModule.ReferencedAssemblySymbols.Concat(new[] { compilation.Assembly });
     }
 }

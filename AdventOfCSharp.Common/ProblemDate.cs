@@ -1,4 +1,10 @@
-﻿namespace AdventOfCSharp;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+#nullable enable
+
+namespace AdventOfCSharp;
 
 public struct ProblemDate : IEquatable<ProblemDate>, IComparable<ProblemDate>
 {
@@ -46,14 +52,16 @@ public struct ProblemDate : IEquatable<ProblemDate>, IComparable<ProblemDate>
         if (days.Length is 0)
             return result;
 
-        var first = new ProblemDate(year, days.First());
-        result.Fill(first);
-
-        // Avoid further validation of the year
-        for (int i = 1; i < days.Length; i++)
-            result[i].Day = days[i];
+        for (int i = 0; i < days.Length; i++)
+            result[i] = new(year, days[i]);
 
         return result;
+    }
+
+    public void Deconstruct(out int year, out int day)
+    {
+        year = Year;
+        day = Day;
     }
 
     // Nice fucking boilerplate

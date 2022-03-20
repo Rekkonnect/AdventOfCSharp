@@ -2,8 +2,9 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RoseLynn;
-using RoseLynn.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -13,56 +14,46 @@ namespace AdventOfCSharp.SourceGenerators.Utilities;
 
 // It is unknown to me whether an ISyntaxReceiver would be more appropriate
 // Further exploration of source generators will determine this
-public static class ProblemClassIdentifier
+public sealed class ProblemClassIdentifier
 {
     private static readonly Regex dayPattern = new(@"Day(?'day'\d+)");
     private static readonly Regex yearPattern = new(@"Year(?'year'\d+)");
 
-    public static IEnumerable<ProblemClassDeclarationCorrelation> GetProblemClassCorrelations(SyntaxTree syntaxTree)
+    private static readonly Dictionary<Compilation, ProblemClassIdentifier> cachedIdentifiers = new();
+
+    private readonly Compilation compilation;
+    private readonly Lazy<ProblemClassDeclarationCorrelationCollection> correlations;
+
+    public ProblemClassIdentifier(Compilation compilation)
     {
-        return GetProblemClassCorrelations(syntaxTree.NodesOfType<ClassDeclarationSyntax>());
-    }
-    public static IEnumerable<ProblemClassDeclarationCorrelation> GetProblemClassCorrelations(Compilation compilation)
-    {
-        return GetProblemClassCorrelations(compilation.NodesOfType<ClassDeclarationSyntax>());
-    }
-    public static IEnumerable<ProblemClassDeclarationCorrelation> GetProblemClassCorrelations(IEnumerable<ClassDeclarationSyntax> allClasses)
-    {
-        return allClasses.Select(CorrelateProblemClass).Where(v => v is not null) as IEnumerable<ProblemClassDeclarationCorrelation>;
+        this.compilation = compilation;
+        correlations = new(CalculateCorrelations);
     }
 
-    public static IEnumerable<ProblemClassDeclarationCorrelation> GetProblemClassCorrelationsSymbols(Compilation compilation)
+    private ProblemClassDeclarationCorrelationCollection CalculateCorrelations()
     {
-        var globalNamespaces = GetAllAssemblySymbols(compilation).Select(GetGlobalNamespace).Where(gn => gn is not null) as IEnumerable<INamespaceSymbol>;
+        var globalNamespaces = compilation.GetAllAssemblySymbols().Select(IAssemblyOrModuleSymbolExtensions.GetGlobalNamespace).Where(gn => gn is not null) as IEnumerable<INamespaceSymbol>;
         var allTypes = globalNamespaces.SelectMany(gn => gn.GetAllContainedTypes());
-        // Safe to ignore the current assembly's global namespace; it should not 
-        return allTypes.Select(CorrelateProblemClass).Where(v => v is not null) as IEnumerable<ProblemClassDeclarationCorrelation>;
+#nullable disable
+        return new(allTypes.Select(CorrelateProblemClass).Where(v => v is not null));
+#nullable enable
+    }
+    public ProblemClassDeclarationCorrelationCollection GetProblemClassCorrelations()
+    {
+        return correlations.Value;
     }
 
-    private static IEnumerable<ISymbol> GetAllAssemblySymbols(Compilation compilation)
+    public static ProblemClassDeclarationCorrelationCollection GetProblemClassCorrelations(Compilation compilation)
     {
-        return compilation.SourceModule.ReferencedAssemblySymbols.Concat(new[] { compilation.Assembly });
-    }
-    private static INamespaceSymbol? GetGlobalNamespace(ISymbol? symbol)
-    {
-        return symbol switch
+        bool contained = cachedIdentifiers.TryGetValue(compilation, out var identifier);
+        if (!contained)
         {
-            IAssemblySymbol assemblySymbol => assemblySymbol.GlobalNamespace,
-            IModuleSymbol moduleSymbol => moduleSymbol.GlobalNamespace,
-
-            _ => null,
-        };
+            identifier = new(compilation);
+            cachedIdentifiers.Add(compilation, identifier);
+        }
+        return identifier.GetProblemClassCorrelations();
     }
 
-    private static ProblemClassDeclarationCorrelation? CorrelateProblemClass(ClassDeclarationSyntax declarationSyntax)
-    {
-        var className = declarationSyntax.Identifier.Text;
-        var namespaceDeclaration = declarationSyntax.GetNearestParentOfType<BaseNamespaceDeclarationSyntax>();
-        var rightmostIdentifier = namespaceDeclaration.Name.GetRightmostIdentifier();
-        var namespaceLeafName = rightmostIdentifier.Text;
-
-        return CorrelateProblemClass(declarationSyntax, className, namespaceLeafName);
-    }
     private static ProblemClassDeclarationCorrelation? CorrelateProblemClass(INamedTypeSymbol typeSymbol)
     {
         if (typeSymbol.GetIdentifiableSymbolKind() is not IdentifiableSymbolKind.Class)
@@ -87,19 +78,47 @@ public static class ProblemClassIdentifier
         int year = int.Parse(yearMatch.Groups["year"].Value);
         return new(classSymbol, year, day);
     }
-    private static ProblemClassDeclarationCorrelation? CorrelateProblemClass(ClassDeclarationSyntax declarationSyntax, string className, string namespaceLeafName)
+}
+
+public sealed class ProblemClassDeclarationCorrelationCollection
+{
+    private readonly Dictionary<ProblemDate, ProblemClassDeclarationCorrelation> dictionary = new();
+
+    public IEnumerable<ProblemDate> Dates => dictionary.Keys;
+
+    public IEnumerable<ProblemClassDeclarationCorrelation> Correlations => dictionary.Values;
+    
+    public ProblemClassDeclarationCorrelationCollection() { }
+    public ProblemClassDeclarationCorrelationCollection(IEnumerable<ProblemClassDeclarationCorrelation> correlations)
     {
-        var dayMatch = dayPattern.Match(className);
-        if (!dayMatch.Success)
-            return null;
+        AddRange(correlations);
+    }
 
-        var yearMatch = yearPattern.Match(namespaceLeafName);
-        if (!yearMatch.Success)
-            return null;
+    public void Add(ProblemClassDeclarationCorrelation correlation)
+    {
+        var date = new ProblemDate(correlation.Year, correlation.Day);
+        dictionary.Add(date, correlation);
+    }
+    public void AddRange(IEnumerable<ProblemClassDeclarationCorrelation> correlations)
+    {
+        foreach (var correlation in correlations)
+            Add(correlation);
+    }
 
-        int day = int.Parse(dayMatch.Groups["day"].Value);
-        int year = int.Parse(yearMatch.Groups["year"].Value);
-        return new(declarationSyntax, year, day);
+    // For filtering, directly filter all the discovered declarations
+    public IEnumerable<ProblemClassDeclarationCorrelation> OfDay(int day)
+    {
+        return Correlations.Where(correlation => correlation.Day == day);
+    }
+    public IEnumerable<ProblemClassDeclarationCorrelation> OfYear(int year)
+    {
+        return Correlations.Where(correlation => correlation.Year == year);
+    }
+
+    public ProblemClassDeclarationCorrelation this[int year, int day] => this[new(year, day)];
+    public ProblemClassDeclarationCorrelation this[ProblemDate date]
+    {
+        get => dictionary[date];
     }
 }
 
@@ -141,9 +160,9 @@ public class ProblemClassDeclarationCorrelation
         return $"{baseNamespace}.Year{Year}";
     }
 
-    internal sealed class Comaprer : IComparer<ProblemClassDeclarationCorrelation>
+    internal sealed class FileNameComparer : IComparer<ProblemClassDeclarationCorrelation>
     {
-        public static readonly Comaprer Default = new();
+        public static readonly FileNameComparer Default = new();
 
         public int Compare(ProblemClassDeclarationCorrelation x, ProblemClassDeclarationCorrelation y)
         {

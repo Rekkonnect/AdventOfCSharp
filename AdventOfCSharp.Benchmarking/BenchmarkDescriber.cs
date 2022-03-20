@@ -1,16 +1,11 @@
 ﻿using BenchmarkDotNet.Attributes;
+using System.Collections.Immutable;
 
 namespace AdventOfCSharp.Benchmarking;
 
 public abstract class BenchmarkDescriber
 {
-    protected virtual int[] Years => Array.Empty<int>();
-    protected virtual int[] Days => Array.Empty<int>();
-    protected virtual ProblemDate[] Dates => Array.Empty<ProblemDate>();
-
-    public virtual BenchmarkingParts Parts => BenchmarkingParts.OnlyParts;
-
-    internal static void CreateAssignBenchmarkedActions(Problem instance, ref Action part1, ref Action part2, ref Action input)
+    protected static void CreateAssignBenchmarkedActions(Problem instance, ref Action part1, ref Action part2, ref Action input)
     {
         part1 = ProblemSolverMethodProvider.CreateSolverDelegate(1, instance);
         part2 = ProblemSolverMethodProvider.CreateSolverDelegate(2, instance);
@@ -18,25 +13,23 @@ public abstract class BenchmarkDescriber
     }
 }
 
-public enum BenchmarkingParts
+#region Attributes PoC
+[Years(2022)]
+[Dates(2016, 2, 4, 7, 15, 21, 25)]
+[Dates(2017, 1, 23)]
+[Parts(BenchmarkingParts.Input | BenchmarkingParts.Part2)]
+public sealed partial class AttributesConsumer : BenchmarkDescriber
 {
-    None = 0,
 
-    Input = 1 << 0,
-    Part1 = 1 << 1,
-    Part2 = 1 << 2,
-
-    OnlyParts = Part1 | Part2,
-
-    All = Input | Part1 | Part2,
 }
+#endregion
 
 #region PoC
+[Years(2016, 2021)]
 public sealed partial class Consumer : BenchmarkDescriber
 {
-    protected override int[] Years => new[] { 2016, 2021 };
 }
-#if DEBUG && false
+#if DEBUG && true
 #nullable disable
 // Consumer.g.cs
 partial class Consumer
@@ -68,7 +61,7 @@ partial class Consumer
         year2021day1part1();
     }
     [Benchmark]
-    [BenchmarkCategory("Year 2021 Day 02")]
+    [BenchmarkCategory("Year 2021 Day 01")]
     public void Year2021_Day01_Part2()
     {
         year2021day1part2();

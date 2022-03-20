@@ -1,4 +1,6 @@
-﻿namespace AdventOfCSharp;
+﻿using System.ComponentModel;
+
+namespace AdventOfCSharp;
 
 /// <summary>Denotes a part's solution status.</summary>
 public enum PartSolutionStatus

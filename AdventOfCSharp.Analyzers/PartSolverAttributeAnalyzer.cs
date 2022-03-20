@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using AdventOfCSharp.CodeAnalysis.Core;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -17,7 +18,7 @@ public sealed class PartSolverAttributeAnalyzer : ProblemAoCSAnalyzer
 {
     protected override void RegisterAnalyzers(AnalysisContext context)
     {
-        context.RegisterTargetAttributeSyntaxNodeAction(AnalyzePartSolverAttribute, KnownSymbolNames.PartSolverAttribute);
+        context.RegisterTargetAttributeSyntaxNodeAction(AnalyzePartSolverAttribute, nameof(PartSolverAttribute));
     }
 
     private void AnalyzePartSolverAttribute(SyntaxNodeAnalysisContext context)
@@ -66,7 +67,7 @@ public sealed class PartSolverAttributeAnalyzer : ProblemAoCSAnalyzer
 
         static AttributeData? GetPartSolverAttribute(IMethodSymbol method)
         {
-            return method.GetAttributes().FirstOrDefault(attribute => attribute.AttributeClass!.Name is KnownSymbolNames.PartSolverAttribute);
+            return method.GetAttributes().FirstOrDefault(attribute => attribute.AttributeClass!.Name is nameof(PartSolverAttribute));
         }
     }
 

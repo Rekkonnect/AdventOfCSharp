@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using AdventOfCSharp.CodeAnalysis.Core;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoseLynn;
@@ -22,7 +23,7 @@ public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
                 // If only I could use dependencies
                 if (!methodSymbol.IsStatic)
                 {
-                    bool isPartSolutionMethod = methodSymbol.HasInheritedAttributeNamed(KnownSymbolNames.PartSolverAttribute);
+                    bool isPartSolutionMethod = methodSymbol.HasInheritedAttributeMatchingType<PartSolverAttribute>();
                     if (isPartSolutionMethod)
                         return;
                 }
@@ -60,6 +61,6 @@ public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
 
     private static AttributeData? GetPartSolutionAttributeData(IMethodSymbol method)
     {
-        return method.FirstOrDefaultAttributeNamed(KnownSymbolNames.PartSolutionAttribute);
+        return method.FirstOrDefaultAttributeNamed(nameof(PartSolutionAttribute));
     }
 }

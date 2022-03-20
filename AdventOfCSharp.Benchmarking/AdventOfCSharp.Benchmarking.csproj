@@ -26,13 +26,14 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
     <PackageReference Include="Garyon" Version="0.2.7" />
-    <PackageReference Include="VeryUnsafe" Version="1.0.1" />
+    <PackageReference Include="VeryUnsafe" Version="1.0.3" />
     
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" />
     <ProjectReference Include="..\AdventOfCSharp\AdventOfCSharp.csproj" />
 
     <ProjectReference Include="..\AdventOfCSharp.SourceGenerators\AdventOfCSharp.SourceGenerators.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="true" />

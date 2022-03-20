@@ -1,6 +1,4 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Microsoft.Diagnostics.Tracing.Parsers.Kernel;
-using System.Reflection;
 
 namespace AdventOfCSharp.Benchmarking;
 
@@ -69,8 +67,6 @@ public class ProblemBenchmark
     {
         var problemInfo = ProblemsIndex.Instance[Year, Day];
 
-        Console.WriteLine($"{Year}/{Day}");
-        Console.WriteLine(problemInfo.ProblemType);
         var instance = problemInfo.InitializeInstance();
         runner = new ProblemRunner(instance);
         solverPart1 = ProblemSolverMethodProvider.CreateSolverDelegate(1, instance);

@@ -1,4 +1,7 @@
-﻿namespace AdventOfCSharp;
+﻿using System;
+using System.ComponentModel;
+
+namespace AdventOfCSharp;
 
 /// <summary>Denotes that a method solves a problem's part. It applies to standard part 1 and 2 solvers, as well as custom part or easter egg solvers.</summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
@@ -8,7 +11,7 @@ public sealed class PartSolverAttribute : Attribute
     public string PartName { get; }
 
     /// <summary>Gets the <seealso cref="PartSolverKind"/> for this part solver.</summary>
-    public PartSolverKind SolverKind { get; init; } = PartSolverKind.Official;
+    public PartSolverKind SolverKind { get; set; } = PartSolverKind.Official;
 
     public PartSolverAttribute(string partName)
     {

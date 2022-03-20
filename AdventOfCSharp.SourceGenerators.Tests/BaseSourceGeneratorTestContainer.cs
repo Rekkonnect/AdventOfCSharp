@@ -13,9 +13,9 @@ public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
 {
     protected abstract TSourceGenerator InitializeGeneratorInstance();
 
+    // TODO: Consider removing
     protected Compilation CreateCompilation(string source, out GeneratorDriver resultingGeneratorDriver)
     {
-        // Create a custom verifier class like in the cookbook
         var compilation = CSharpCompilation.Create(null, new[] { CSharpSyntaxTree.ParseText(source) });
         var generator = InitializeGeneratorInstance();
         var driver = CSharpGeneratorDriver.Create(generator);

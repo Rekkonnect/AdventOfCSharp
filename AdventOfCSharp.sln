@@ -33,7 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.CodeAnalysis
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.SourceGenerators", "AdventOfCSharp.SourceGenerators\AdventOfCSharp.SourceGenerators.csproj", "{267F412A-5315-4D7D-B163-5F4AA43A1ABC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.SourceGenerators.Tests", "AdventOfCSharp.SourceGenerators.Tests\AdventOfCSharp.SourceGenerators.Tests.csproj", "{45BE4717-BB76-43CE-B61B-73E049A33971}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.SourceGenerators.Tests", "AdventOfCSharp.SourceGenerators.Tests\AdventOfCSharp.SourceGenerators.Tests.csproj", "{45BE4717-BB76-43CE-B61B-73E049A33971}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Common", "AdventOfCSharp.Common\AdventOfCSharp.Common.csproj", "{2EA2DBED-4276-4A85-AF6C-2FE453280220}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.Benchmarking.Common", "AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj", "{4C2143CF-75C9-44CB-8857-8D22B1E393AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +109,14 @@ Global
 		{45BE4717-BB76-43CE-B61B-73E049A33971}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45BE4717-BB76-43CE-B61B-73E049A33971}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45BE4717-BB76-43CE-B61B-73E049A33971}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EA2DBED-4276-4A85-AF6C-2FE453280220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EA2DBED-4276-4A85-AF6C-2FE453280220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EA2DBED-4276-4A85-AF6C-2FE453280220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EA2DBED-4276-4A85-AF6C-2FE453280220}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C2143CF-75C9-44CB-8857-8D22B1E393AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C2143CF-75C9-44CB-8857-8D22B1E393AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C2143CF-75C9-44CB-8857-8D22B1E393AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C2143CF-75C9-44CB-8857-8D22B1E393AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

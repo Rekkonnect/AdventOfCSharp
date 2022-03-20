@@ -17,8 +17,6 @@ public sealed class ProblemsIndex
 
     private ProblemsIndex()
     {
-        Console.WriteLine("ProblemsIndex instance created.");
-
         // This acts like the static constructor since the type is a singleton
         AppDomainHelpers.ForceLoadAllAssembliesCurrent();
         var allClasses = AppDomainCache.Current.AllNonAbstractClasses;
@@ -41,7 +39,6 @@ public sealed class ProblemsIndex
         if (problemType is null)
             return;
 
-        Console.WriteLine($"Type found: {type}");
         problemDictionary.SetProblemInfo(GetProblemInfo(problemType));
     }
 

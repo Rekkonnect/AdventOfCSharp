@@ -1,7 +1,6 @@
 ﻿using AdventOfCSharp.SourceGenerators.Utilities;
 using Microsoft.CodeAnalysis;
 using System;
-using System.Diagnostics;
 using System.Linq;
 
 namespace AdventOfCSharp.SourceGenerators;
@@ -11,12 +10,13 @@ public class BenchmarkSourceGenerator : ISourceGenerator
 {
     public void Execute(GeneratorExecutionContext context)
     {
-        var correlations = ProblemClassIdentifier.GetProblemClassCorrelationsSymbols(context.Compilation).ToArray();
+        var correlations = ProblemClassIdentifier.GetProblemClassCorrelations(context.Compilation);
+        var correlationArray = correlations.Correlations.ToArray();
 
         // The sorting takes place to avoid issues with determinism during testing
         // The generated sources are lexicographically sorted by their hint name
-        Array.Sort(correlations, ProblemClassDeclarationCorrelation.Comaprer.Default);
-        foreach (var correlation in correlations)
+        Array.Sort(correlationArray, ProblemClassDeclarationCorrelation.FileNameComparer.Default);
+        foreach (var correlation in correlationArray)
         {
             var source = GenerateBenchmarkSource(correlation);
             var sourceName = GetBenchmarkSourceFileName(correlation.Year, correlation.Day);
@@ -27,12 +27,6 @@ public class BenchmarkSourceGenerator : ISourceGenerator
     public void Initialize(GeneratorInitializationContext context)
     {
         // No initialization required for this one
-    }
-
-    [Conditional("DEBUG")]
-    private static void AddDebugSource(GeneratorExecutionContext context, string fileName, string source)
-    {
-        context.AddSource(fileName, source);
     }
 
     public static string GetBenchmarkSourceFileName(int year, int day)
