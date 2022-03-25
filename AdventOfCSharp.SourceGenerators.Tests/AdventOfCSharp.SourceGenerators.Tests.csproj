@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzer.Testing" Version="1.1.1" />
     
@@ -25,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCSharp.AdditionalProblemSolutionTests\AdventOfCSharp.AdditionalProblemSolutionTests.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.AnalysisTestsBase\AdventOfCSharp.AnalysisTestsBase.csproj" />
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.Benchmarking\AdventOfCSharp.Benchmarking.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.ProblemSolutionResources\AdventOfCSharp.ProblemSolutionResources.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.SourceGenerators\AdventOfCSharp.SourceGenerators.csproj" />

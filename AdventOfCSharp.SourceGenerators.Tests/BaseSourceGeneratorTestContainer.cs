@@ -1,25 +1,28 @@
-﻿using AdventOfCSharp.SourceGenerators.Tests.Verifiers;
+﻿using AdventOfCSharp.SourceGenerators.Tests.Helpers;
+using AdventOfCSharp.SourceGenerators.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AdventOfCSharp.SourceGenerators.Tests;
 
-using VerifyCS = CSharpSourceGeneratorVerifier<BenchmarkSourceGenerator>;
-
 public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
-    where TSourceGenerator : class, ISourceGenerator
+    where TSourceGenerator : class, ISourceGenerator, new()
 {
-    protected abstract TSourceGenerator InitializeGeneratorInstance();
-
-    // TODO: Consider removing
-    protected Compilation CreateCompilation(string source, out GeneratorDriver resultingGeneratorDriver)
+    protected Compilation CreateCompilationRunGenerator(string source, out TSourceGenerator generator, out GeneratorDriver resultingGeneratorDriver, out Compilation initialCompilation)
     {
-        var compilation = CSharpCompilation.Create(null, new[] { CSharpSyntaxTree.ParseText(source) });
-        var generator = InitializeGeneratorInstance();
+        return CreateCompilationRunGenerator(new[] { source }, out generator, out resultingGeneratorDriver, out initialCompilation);
+    }
+    protected Compilation CreateCompilationRunGenerator(IEnumerable<string> sources, out TSourceGenerator generator, out GeneratorDriver resultingGeneratorDriver, out Compilation initialCompilation)
+    {
+        var references = BenchmarkSpecificMetadataReferences.CreateAllBaseMetadataReferences();
+        var trees = sources.Select(source => CSharpSyntaxTree.ParseText(source));
+        initialCompilation = CSharpCompilation.Create(null, trees, references);
+        generator = new();
         var driver = CSharpGeneratorDriver.Create(generator);
-        resultingGeneratorDriver = driver.RunGeneratorsAndUpdateCompilation(compilation, out var resultCompilation, out _);
+        resultingGeneratorDriver = driver.RunGeneratorsAndUpdateCompilation(initialCompilation, out var resultCompilation, out _);
         return resultCompilation;
     }
 
@@ -37,9 +40,9 @@ public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
     }
     protected async Task VerifyAsync(IEnumerable<string> sources, GeneratedSourceMappings mappings)
     {
-        await VerifyAsync(sources, mappings, new VerifyCS.Test());
+        await VerifyAsync(sources, mappings, new CSharpSourceGeneratorVerifier<TSourceGenerator>.Test());
     }
-    protected async Task VerifyAsync(IEnumerable<string> sources, GeneratedSourceMappings mappings, VerifyCS.Test test)
+    protected async Task VerifyAsync(IEnumerable<string> sources, GeneratedSourceMappings mappings, CSharpSourceGeneratorVerifier<TSourceGenerator>.Test test)
     {
         test.TestState.Sources.AddRange(sources);
         foreach (var mapping in mappings)

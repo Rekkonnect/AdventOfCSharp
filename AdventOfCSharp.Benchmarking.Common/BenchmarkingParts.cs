@@ -10,5 +10,5 @@ public enum BenchmarkingParts
 
     OnlyParts = Part1 | Part2,
 
-    All = Input | Part1 | Part2,
+    All = Input | OnlyParts,
 }

@@ -57,7 +57,6 @@ public class ProblemBenchmark
     public int Year { get; set; }
     public int Day { get; set; }
 
-    private ProblemRunner runner;
     private Action solverPart1, solverPart2, loader;
 
     public ProblemBenchmark() { }
@@ -68,11 +67,10 @@ public class ProblemBenchmark
         var problemInfo = ProblemsIndex.Instance[Year, Day];
 
         var instance = problemInfo.InitializeInstance();
-        runner = new ProblemRunner(instance);
         solverPart1 = ProblemSolverMethodProvider.CreateSolverDelegate(1, instance);
         solverPart2 = ProblemSolverMethodProvider.CreateSolverDelegate(2, instance);
         loader = ProblemSolverMethodProvider.CreateLoadStateDelegate(instance);
-        runner.Problem.EnsureLoadedState();
+        instance.EnsureLoadedState();
     }
 
     [Benchmark]

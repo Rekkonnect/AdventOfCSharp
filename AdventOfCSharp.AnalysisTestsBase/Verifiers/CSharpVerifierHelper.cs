@@ -1,8 +1,7 @@
-﻿using AdventOfCSharp.AnalysisTestsBase.Resources;
+﻿using AdventOfCSharp.AnalysisTestsBase.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Testing;
-using RoseLynn;
 using System;
 using System.Collections.Immutable;
 using System.IO;
@@ -51,11 +50,7 @@ public static class CSharpVerifierHelper
     public static void SetupAoCSDependencies<TVerifier>(AnalyzerTest<TVerifier> test)
         where TVerifier : IVerifier, new()
     {
-        test.TestState.AdditionalReferences.AddRange(new[]
-        {
-            MetadataReferenceFactory.CreateFromType<Problem>(),
-            MetadataReferenceFactory.CreateFromType<ExampleAttribute>(),
-        });
+        test.TestState.AdditionalReferences.AddRange(AoCSMetadataReferences.CreateBaseMetadataReferences());
     }
     private static void SetupSolutionTransforms<TVerifier>(AnalyzerTest<TVerifier> test)
         where TVerifier : IVerifier, new()
@@ -69,6 +64,5 @@ public static class CSharpVerifierHelper
 
             return solution;
         });
-
     }
 }

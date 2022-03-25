@@ -4,6 +4,7 @@ using AdventOfCSharp.SourceGenerators.Extensions;
 using AdventOfCSharp.SourceGenerators.Utilities;
 using Microsoft.CodeAnalysis;
 using RoseLynn;
+using RoseLynn.Utilities;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -11,29 +12,46 @@ using System.Text;
 
 namespace AdventOfCSharp.SourceGenerators;
 
-// TODO: Consider implementing this generator as an incremental one
 [Generator]
-public class BenchmarkDescriptorSourceGenerator : ISourceGenerator
+public class BenchmarkDescriberSourceGenerator : ISourceGenerator
 {
+    private readonly Dictionary<Compilation, CompilationBenchmarkDescribers> generatorExecutions = new();
+
     public void Execute(GeneratorExecutionContext context)
     {
+        // Overwrite previously registered, if existing
+        var describers = new CompilationBenchmarkDescribers(context.Compilation);
+        generatorExecutions[context.Compilation] = describers;
+
         var defined = context.Compilation.GetAllDefinedTypes();
         var benchmarkDescribers = defined.Where(IsBenchmarkDescriber);
 
         foreach (var describer in benchmarkDescribers)
         {
-            var source = GenerateBenchmarkDescriberSource(context, describer);
+            var source = GenerateBenchmarkDescriberSource(describer);
             context.AddSource(GetBenchmarkSourceFileName(describer), source);
         }
-    }
 
-    private static bool IsBenchmarkDescriber(INamedTypeSymbol classSymbol)
-    {
-        return AoCSAnalysisHelpers.IsImportantAoCSClass(classSymbol, KnownSymbolNames.BenchmarkDescriber);
+        string GenerateBenchmarkDescriberSource(INamedTypeSymbol benchmarkType)
+        {
+            var generator = new BenchmarkDescriberImplementationGenerator(context.Compilation, benchmarkType);
+            generatorExecutions[context.Compilation].Add(generator.Info);
+            return generator.GenerateBenchmarkDescriberSource();
+        }
+
+        static bool IsBenchmarkDescriber(INamedTypeSymbol classSymbol)
+        {
+            return AoCSAnalysisHelpers.IsImportantAoCSClass(classSymbol, KnownFullSymbolNames.BenchmarkDescriber);
+        }
     }
 
     public void Initialize(GeneratorInitializationContext context)
     {
+    }
+
+    public CompilationBenchmarkDescribers GetExecutionResults(Compilation compilation)
+    {
+        return generatorExecutions[compilation];
     }
 
     public static string GetBenchmarkSourceFileName(string describerNamespace, string describerName)
@@ -49,12 +67,6 @@ public class BenchmarkDescriptorSourceGenerator : ISourceGenerator
         return GetBenchmarkSourceFileName(benchmarkType.GetFullSymbolName().FullNameString);
     }
 
-    private static string GenerateBenchmarkDescriberSource(GeneratorExecutionContext context, INamedTypeSymbol benchmarkType)
-    {
-        var generator = new BenchmarkDescriberImplementationGenerator(context.Compilation, benchmarkType);
-        return generator.GenerateBenchmarkDescriberSource();
-    }
-
     private sealed class DeclaredDatesRuleSystem
     {
         private readonly bool allDatesEnabled;
@@ -65,9 +77,9 @@ public class BenchmarkDescriptorSourceGenerator : ISourceGenerator
 
         public DeclaredDatesRuleSystem(IEnumerable<int>? years, IEnumerable<int>? days, IEnumerable<ProblemDate>? dates)
         {
-            this.years = years?.ToImmutableArray() ?? default;
-            this.days = days?.ToImmutableArray() ?? default;
-            specificDates = dates?.ToImmutableArray() ?? default;
+            this.years = years?.ToImmutableArray() ?? ImmutableArray<int>.Empty;
+            this.days = days?.ToImmutableArray() ?? ImmutableArray<int>.Empty;
+            specificDates = dates?.ToImmutableArray() ?? ImmutableArray<ProblemDate>.Empty;
         }
         public DeclaredDatesRuleSystem(bool allDates)
         {
@@ -100,33 +112,69 @@ public class BenchmarkDescriptorSourceGenerator : ISourceGenerator
         }
     }
 
+    public sealed class CompilationBenchmarkDescribers
+    {
+        private readonly Dictionary<INamedTypeSymbol, BenchmarkDescriberInfo> describers = new(SymbolEqualityComparer.Default);
+
+        public Compilation Compilation { get; }
+
+        public IEnumerable<BenchmarkDescriberInfo> Info => describers.Values;
+
+        public CompilationBenchmarkDescribers(Compilation compilation)
+        {
+            Compilation = compilation;
+        }
+
+        public void Add(BenchmarkDescriberInfo describer)
+        {
+            describers.Add(describer.DescriberSymbol, describer);
+        }
+
+        public BenchmarkDescriberInfo this[INamedTypeSymbol type] => describers.ValueOrDefault(type);
+    }
+
+    public sealed class BenchmarkDescriberInfo
+    {
+        public INamedTypeSymbol DescriberSymbol { get; }
+
+        public ImmutableArray<ProblemDate> Dates { get; }
+        public BenchmarkingParts BenchmarkingParts { get; }
+
+        public BenchmarkDescriberInfo(INamedTypeSymbol describerSymbol, ImmutableArray<ProblemDate> dates, BenchmarkingParts parts)
+        {
+            DescriberSymbol = describerSymbol;
+            Dates = dates;
+            BenchmarkingParts = parts;
+        }
+        public BenchmarkDescriberInfo(INamedTypeSymbol describerSymbol, IEnumerable<ProblemDate> dates, BenchmarkingParts parts)
+            : this(describerSymbol, dates.ToImmutableArray(), parts) { }
+    }
+
     private sealed class BenchmarkDescriberImplementationGenerator
     {
         private readonly StringBuilder sourceBuilder = new();
 
         private readonly Compilation compilation;
-        private readonly INamedTypeSymbol benchmarkType;
+        private readonly INamedTypeSymbol describerType;
         private readonly ProblemClassDeclarationCorrelationCollection correlations;
         private readonly DeclaredDatesRuleSystem declaredDates;
 
-        private ImmutableArray<ProblemDate> benchmarkedDates;
-        private BenchmarkingParts benchmarkedParts = BenchmarkingParts.OnlyParts;
+        public BenchmarkDescriberInfo Info { get; private set; }
 
         public BenchmarkDescriberImplementationGenerator(Compilation compilation, INamedTypeSymbol benchmarkType)
         {
             this.compilation = compilation;
-            this.benchmarkType = benchmarkType;
+            describerType = benchmarkType;
 
             correlations = ProblemClassIdentifier.GetProblemClassCorrelations(compilation);
 
-            AnalyzeDates();
-            AnalyzeBenchmarkedParts();
             declaredDates = GetDeclaredDates();
+            AnalyzeInfo();
         }
 
         private DeclaredDatesRuleSystem GetDeclaredDates()
         {
-            bool allDatesEnabled = benchmarkType.HasAttributeNamed<AllDatesAttribute>();
+            bool allDatesEnabled = describerType.HasAttributeNamed<AllDatesAttribute>();
             if (allDatesEnabled)
             {
                 return DeclaredDatesRuleSystem.WithAllDatesEnabled();
@@ -136,19 +184,19 @@ public class BenchmarkDescriptorSourceGenerator : ISourceGenerator
             int[] days = null;
             List<ProblemDate> specificDates = null;
 
-            var yearsAttribute = benchmarkType.FirstOrDefaultAttributeNamed<YearsAttribute>();
+            var yearsAttribute = describerType.FirstOrDefaultAttributeNamed<YearsAttribute>();
             if (yearsAttribute is not null)
             {
                 years = yearsAttribute.ConstructorArguments[0].Values.Select(value => (int)value.Value).ToArray();
             }
 
-            var daysAttribute = benchmarkType.FirstOrDefaultAttributeNamed<DaysAttribute>();
+            var daysAttribute = describerType.FirstOrDefaultAttributeNamed<DaysAttribute>();
             if (daysAttribute is not null)
             {
                 days = daysAttribute.ConstructorArguments[0].Values.Select(value => (int)value.Value).ToArray();
             }
 
-            var datesAttributes = benchmarkType.GetAttributesNamed<DatesAttribute>();
+            var datesAttributes = describerType.GetAttributesNamed<DatesAttribute>();
             foreach (var dateAttribute in datesAttributes)
             {
                 int year = (int)dateAttribute.ConstructorArguments[0].Value;
@@ -159,33 +207,36 @@ public class BenchmarkDescriptorSourceGenerator : ISourceGenerator
 
             return new(years, days, specificDates);
         }
-        private void AnalyzeDates()
+        private void AnalyzeInfo()
         {
-            benchmarkedDates = declaredDates.FilterDates(correlations.Dates).ToImmutableArray();
-        }
-        private void AnalyzeBenchmarkedParts()
-        {
-            var partsAttribute = benchmarkType.FirstOrDefaultAttributeNamed<PartsAttribute>();
-            if (partsAttribute is null)
-                return;
+            var benchmarkedDates = declaredDates.FilterDates(correlations.Dates).ToImmutableArray();
+            var benchmarkedParts = BenchmarkingParts.OnlyParts;
 
-            benchmarkedParts = (BenchmarkingParts)partsAttribute.ConstructorArguments[0].Value;
+            var partsAttribute = describerType.FirstOrDefaultAttributeNamed<PartsAttribute>();
+            if (partsAttribute is not null)
+            {
+                benchmarkedParts = (BenchmarkingParts)partsAttribute.ConstructorArguments[0].Value;
+            }
+
+            Info = new(describerType, benchmarkedDates, benchmarkedParts);
         }
 
         public string GenerateBenchmarkDescriberSource()
         {
-            var describerNamespace = benchmarkType.GetFullSymbolName().FullNamespaceString;
+            var describerNamespace = describerType.GetFullSymbolName().FullNamespaceString;
 
             var header =
 $@"
+using AdventOfCSharp;
 using AdventOfCSharp.Benchmarking;
 using BenchmarkDotNet.Attributes;
+using System;
 
 #nullable disable
 
 namespace {describerNamespace}
 {{
-    partial class {benchmarkType.Name}
+    partial class {describerType.Name}
     {{
 ";
             var footer =
@@ -210,7 +261,7 @@ $@"
 
         private void GenerateAllBenchmarkFields()
         {
-            foreach (var date in benchmarkedDates)
+            foreach (var date in Info.Dates)
                 GenerateBenchmarkFields(date);
         }
         private void GenerateBenchmarkFields(ProblemDate date)
@@ -220,7 +271,6 @@ $@"
             var correlation = ProblemClassIdentifier.GetProblemClassCorrelations(compilation)[year, day];
 
             // Not too clean, but not too slow either
-            sourceBuilder.AppendLine();
             sourceBuilder
                 .Append(@"        private readonly Problem ").Append(fieldPrefix).Append(" = new ").Append(correlation.FullSymbolName).AppendLine("();")
                 .Append(@"        private Action ").Append(fieldPrefix).Append("part1, ")
@@ -230,7 +280,7 @@ $@"
 
         private void GenerateBenchmarkMethods()
         {
-            foreach (var date in benchmarkedDates)
+            foreach (var date in Info.Dates)
                 ConditionallyGenerateBenchmarkMethods(date);
         }
         private void ConditionallyGenerateBenchmarkMethods(ProblemDate date)
@@ -241,7 +291,7 @@ $@"
         }
         private void ConditionallyGenerateBenchmarkMethod(ProblemDate date, BenchmarkingParts part)
         {
-            if ((part & benchmarkedParts) is 0)
+            if ((part & Info.BenchmarkingParts) is 0)
                 return;
 
             GenerateBenchmarkMethod(date, part);
@@ -261,16 +311,16 @@ $@"
         {
             var (year, day) = date;
             string lowercasePart = part.ToLower();
-            string doubleDigitDay = day.ToString("N2");
+            string doubleDigitDay = day.ToString("D2");
 
             sourceBuilder.AppendLine();
             sourceBuilder
-                .Append(@"        [Benchmark]")
+                .AppendLine(@"        [Benchmark]")
                 .Append(@"        [BenchmarkCategory(""Year ").Append(year).Append(" Day ").Append(doubleDigitDay).AppendLine("\")]")
                 .Append(@"        public void Year").Append(year).Append("_Day").Append(doubleDigitDay).Append("_").Append(part).AppendLine("()")
                 .AppendLine("        {")
-                .Append(@"           year").Append(year).Append("day").Append(doubleDigitDay).Append(lowercasePart).AppendLine("();")
-                .AppendLine("        }");
+                .Append(@"            year").Append(year).Append("day").Append(day).Append(lowercasePart).AppendLine("();")
+                .Append("        }");
         }
 
         private const string setupActionsName = "SetupActions";
@@ -290,12 +340,11 @@ $@"
         }
         private void GenerateSetupActions()
         {
-            sourceBuilder.AppendLine();
             sourceBuilder
                 .AppendLine($@"        private void {setupActionsName}()")
                 .AppendLine(@"        {");
 
-            foreach (var date in benchmarkedDates)
+            foreach (var date in Info.Dates)
                 GenerateSetupAction(date);
 
             sourceBuilder
@@ -306,7 +355,7 @@ $@"
             var fieldPrefix = GetFieldPrefix(date);
 
             sourceBuilder
-                .Append(@"        CreateAssignBenchmarkedActions(").Append(fieldPrefix)
+                .Append(@"            CreateAssignBenchmarkedActions(").Append(fieldPrefix)
                 .Append(@", ref ").Append(fieldPrefix).Append("part1")
                 .Append(@", ref ").Append(fieldPrefix).Append("part2")
                 .Append(@", ref ").Append(fieldPrefix).Append("input")

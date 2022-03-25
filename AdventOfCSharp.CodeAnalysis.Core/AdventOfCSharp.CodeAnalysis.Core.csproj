@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" />
   </ItemGroup>
 

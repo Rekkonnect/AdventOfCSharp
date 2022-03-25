@@ -8,8 +8,6 @@ using VerifyCS = CSharpSourceGeneratorVerifier<BenchmarkSourceGenerator>;
 
 public sealed class BenchmarkSourceGeneratorTests : BaseSourceGeneratorTestContainer<BenchmarkSourceGenerator>
 {
-    protected override BenchmarkSourceGenerator InitializeGeneratorInstance() => new();
-
     private const string baseProblemNamespace = "AoC.Test";
 
     [Test]

@@ -20,7 +20,9 @@ public static class KnownSymbolNames
 public static class KnownFullSymbolNames
 {
     private static readonly string[] BaseAoCSNamespaces = new[] { nameof(AdventOfCSharp) };
+    private static readonly string[] BaseAoCSBenchmarkingNamespaces = new[] { nameof(AdventOfCSharp), nameof(AdventOfCSharp.Benchmarking) };
 
+    // AoCS
     public static readonly FullSymbolName CommonAnswerStringConverter =
         new(KnownSymbolNames.CommonAnswerStringConverter, BaseAoCSNamespaces);
 
@@ -29,4 +31,8 @@ public static class KnownFullSymbolNames
 
     public static readonly FullSymbolName NonGenericAnswerStringConverter =
         new(KnownSymbolNames.AnswerStringConverter, BaseAoCSNamespaces);
+
+    // AoCS.Benchmarking
+    public static readonly FullSymbolName BenchmarkDescriber =
+        new(KnownSymbolNames.BenchmarkDescriber, BaseAoCSBenchmarkingNamespaces);
 }

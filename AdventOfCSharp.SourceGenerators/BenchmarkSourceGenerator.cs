@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace AdventOfCSharp.SourceGenerators;
 
+// TODO: Consider deleting, as the generated benchmark describers are building their own implementation of this
+// It would also be inconvenient to store that many instances and wrap around all of them
+// It's counter-intuitive anyway, and the setting-up is abstracted away in a protected internal method
 [Generator]
 public class BenchmarkSourceGenerator : ISourceGenerator
 {
