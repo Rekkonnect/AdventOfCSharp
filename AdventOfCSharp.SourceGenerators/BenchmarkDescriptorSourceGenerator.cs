@@ -182,7 +182,7 @@ public class BenchmarkDescriberSourceGenerator : ISourceGenerator
 
             int[] years = null;
             int[] days = null;
-            List<ProblemDate> specificDates = null;
+            var specificDates = new List<ProblemDate>();
 
             var yearsAttribute = describerType.FirstOrDefaultAttributeNamed<YearsAttribute>();
             if (yearsAttribute is not null)

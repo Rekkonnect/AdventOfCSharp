@@ -40,7 +40,7 @@ public static class CSharpSourceGeneratorVerifier<TSourceGenerator>
 
         protected override ParseOptions CreateParseOptions()
         {
-            return ((CSharpParseOptions)base.CreateParseOptions()).WithLanguageVersion(LanguageVersion);
+            return (base.CreateParseOptions() as CSharpParseOptions).WithLanguageVersion(LanguageVersion);
         }
     }
 }

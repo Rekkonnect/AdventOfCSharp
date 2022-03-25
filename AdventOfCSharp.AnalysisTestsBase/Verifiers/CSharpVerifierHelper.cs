@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Testing;
 using System;
 using System.Collections.Immutable;
-using System.IO;
 
 namespace AdventOfCSharp.AnalysisTestsBase.Verifiers;
 
@@ -38,12 +37,7 @@ public static class CSharpVerifierHelper
     {
         SetupSolutionTransforms(test);
 
-        // Absolute disgrace of a solution
-        test.ReferenceAssemblies = new ReferenceAssemblies(
-            "net6.0",
-            new PackageIdentity(
-                "Microsoft.NETCore.App.Ref", "6.0.0"),
-                Path.Combine("ref", "net6.0"));
+        test.ReferenceAssemblies = RuntimeReferences.NET6_0Reference;
 
         SetupAoCSDependencies(test);
     }

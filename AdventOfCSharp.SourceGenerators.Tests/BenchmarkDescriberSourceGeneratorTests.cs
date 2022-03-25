@@ -120,7 +120,7 @@ public abstract class TestProblem : Problem<int>
     {
         const string attributes =
 @"
-    [AllDates]
+[AllDates]
 ";
         var expectedDates = new ProblemDate[]
         {
@@ -141,7 +141,7 @@ public abstract class TestProblem : Problem<int>
     {
         const string attributes =
 @"
-    [Years(2021, 2019, 2015)]
+[Years(2021, 2019, 2015)]
 ";
         var expectedDates = new ProblemDate[]
         {
@@ -157,7 +157,7 @@ public abstract class TestProblem : Problem<int>
     {
         const string attributes =
 @"
-    [Days(2, 3, 10)]
+[Days(2, 3, 10)]
 ";
         var expectedDates = new ProblemDate[]
         {
@@ -173,13 +173,11 @@ public abstract class TestProblem : Problem<int>
     {
         const string attributes =
 @"
-    [Dates(2021, 1, 2, 5, 12)]
+[Dates(2021, 1, 2, 5, 12)]
 ";
         var expectedDates = new ProblemDate[]
         {
-            new(2020, 2),
-            new(2020, 3),
-
+            new(2021, 1),
             new(2021, 2),
         };
         DescriberTest(attributes, expectedDates);
@@ -189,9 +187,9 @@ public abstract class TestProblem : Problem<int>
     {
         const string attributes =
 @"
-    [Years(2019)]
-    [Dates(2020, 3)]
-    [Dates(2021, 2)]
+[Years(2019)]
+[Dates(2020, 3)]
+[Dates(2021, 2)]
 ";
         var expectedDates = new ProblemDate[]
         {
@@ -213,12 +211,11 @@ public abstract class TestProblem : Problem<int>
 $@"
 using AdventOfCSharp.Benchmarking;
 
-namespace {baseDescriberNamespace}
-{{
+namespace {baseDescriberNamespace};
+
 {attributes}
-    public sealed partial class {describerName} : BenchmarkDescriber
-    {{
-    }}
+public sealed partial class {describerName} : BenchmarkDescriber
+{{
 }}
 ";
 
