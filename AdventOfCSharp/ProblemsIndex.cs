@@ -77,9 +77,16 @@ public sealed class ProblemsIndex
     public GlobalYearSummary GetGlobalYearSummary() => problemDictionary.GlobalYearSummary;
     public YearProblemInfo GetYearProblemInfo(int year) => problemDictionary[year];
 
+    public IEnumerable<ProblemDate> GetSingleYearValidDays(int year) => ProblemDate.Dates(year, GetYearProblemInfo(year).ValidDays);
+    public IEnumerable<ProblemDate> GetAllValidDates()
+    {
+        return GetGlobalYearSummary().Select(summary => summary.Year).SelectMany(GetSingleYearValidDays);
+    }
+
     public bool DetermineLastDayPart2Availability(int year) => problemDictionary[year].IsLastDayPart2Available;
 
     public ProblemInfo this[int year, int day] => problemDictionary[year]?[day] ?? ProblemInfo.Empty(year, day);
+    public ProblemInfo this[ProblemDate date] => this[date.Year, date.Day];
 }
 
 // Consider creating another custom lookup table wrapper type
@@ -149,6 +156,8 @@ public sealed class YearProblemInfo : ProblemInfoBucket<ProblemInfo, YearProblem
         get => this[25];
         private set => this[25] = value;
     }
+
+    public IEnumerable<int> ValidDays => this.Select(problemInfo => problemInfo!.Day);
 
     public bool IsLastDayPart2Available => LastDay.Part2Status is not PartSolutionStatus.UnavailableFreeStar;
 

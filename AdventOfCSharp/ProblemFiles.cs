@@ -1,8 +1,4 @@
-﻿#nullable enable
-
-using System.IO;
-
-namespace AdventOfCSharp;
+﻿namespace AdventOfCSharp;
 
 /// <summary>Contains information about the problem files, including inputs and outputs.</summary>
 public static class ProblemFiles
@@ -27,8 +23,6 @@ public static class ProblemFiles
 
     private static string GetDefaultBaseDirectory()
     {
-        var entry = Assembly.GetEntryAssembly()!;
-        var executableDirectory = Path.GetDirectoryName(entry.Location)!;
-        return Directory.GetParent(executableDirectory)!.Parent!.Parent!.ToString();
+        return ResourceFileHelpers.GetBaseCodeDirectory();
     }
 }

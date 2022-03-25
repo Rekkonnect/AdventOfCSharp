@@ -1,4 +1,5 @@
 ﻿using AdventOfCSharp.Analyzers.Utilities;
+using AdventOfCSharp.CodeAnalysis.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,7 +18,7 @@ public sealed class SecretStringPropertyAnalyzer : AoCSAnalyzer
 {
     protected override void RegisterAnalyzers(AnalysisContext context)
     {
-        context.RegisterTargetAttributeSyntaxNodeAction(AnalyzeSecretStringPropertyAttribute, KnownSymbolNames.SecretStringPropertyAttribute);
+        context.RegisterTargetAttributeSyntaxNodeAction(AnalyzeSecretStringPropertyAttribute, nameof(SecretStringPropertyAttribute));
         context.RegisterSyntaxNodeAction(AnalyzeSecretStringProperty, SyntaxKind.PropertyDeclaration);
         context.RegisterSymbolAction(AnalyzeDeclarationWithoutSecretStringProperties, SymbolKind.NamedType);
     }
@@ -29,7 +30,7 @@ public sealed class SecretStringPropertyAnalyzer : AoCSAnalyzer
         if (typeSymbol.IsAbstract)
             return;
 
-        var isSecretsContainer = IsImportantAoCSClass(typeSymbol, KnownSymbolNames.ISecretsContainer);
+        var isSecretsContainer = IsImportantAoCSClass<ISecretsContainer>(typeSymbol);
         if (!isSecretsContainer)
             return;
 
@@ -63,7 +64,7 @@ public sealed class SecretStringPropertyAnalyzer : AoCSAnalyzer
             return;
 
         var containingType = propertySymbol.ContainingType;
-        var hasInterface = IsImportantAoCSClass(containingType, KnownSymbolNames.ISecretsContainer);
+        var hasInterface = IsImportantAoCSClass<ISecretsContainer>(containingType);
         if (!hasInterface)
         {
             context.ReportDiagnostic(Diagnostics.CreateAoCS0084(secretStringAttribute));
@@ -120,7 +121,7 @@ public sealed class SecretStringPropertyAnalyzer : AoCSAnalyzer
     {
         while (true)
         {
-            secretStringAttribute = propertySymbol.FirstOrDefaultAttributeNamed(KnownSymbolNames.SecretStringPropertyAttribute);
+            secretStringAttribute = propertySymbol.FirstOrDefaultAttributeNamed(nameof(SecretStringPropertyAttribute));
             if (secretStringAttribute is not null)
                 return true;
 

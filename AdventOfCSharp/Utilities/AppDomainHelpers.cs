@@ -24,4 +24,9 @@ public static class AppDomainHelpers
     {
         ForceLoadAllAssemblies(AppDomain.CurrentDomain);
     }
+
+    public static void NoReturnLoad(this AppDomain domain, AssemblyName name)
+    {
+        domain.Load(name);
+    }
 }

@@ -1,15 +1,13 @@
-﻿using AdventOfCSharp.AnalysisTestsBase.Resources;
+﻿using AdventOfCSharp.AnalysisTestsBase.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Testing;
-using RoseLynn;
 using System;
 using System.Collections.Immutable;
-using System.IO;
 
 namespace AdventOfCSharp.AnalysisTestsBase.Verifiers;
 
-internal static class CSharpVerifierHelper
+public static class CSharpVerifierHelper
 {
     /// <summary>
     /// By default, the compiler reports diagnostics for nullable reference types at
@@ -39,18 +37,14 @@ internal static class CSharpVerifierHelper
     {
         SetupSolutionTransforms(test);
 
-        // Absolute disgrace of a solution
-        test.ReferenceAssemblies = new ReferenceAssemblies(
-            "net6.0",
-            new PackageIdentity(
-                "Microsoft.NETCore.App.Ref", "6.0.0"),
-                Path.Combine("ref", "net6.0"));
+        test.ReferenceAssemblies = RuntimeReferences.NET6_0Reference;
 
-        test.TestState.AdditionalReferences.AddRange(new[]
-        {
-            MetadataReferenceFactory.CreateFromType<Problem>(),
-            MetadataReferenceFactory.CreateFromType<ExampleAttribute>(),
-        });
+        SetupAoCSDependencies(test);
+    }
+    public static void SetupAoCSDependencies<TVerifier>(AnalyzerTest<TVerifier> test)
+        where TVerifier : IVerifier, new()
+    {
+        test.TestState.AdditionalReferences.AddRange(AoCSMetadataReferences.BaseReferences);
     }
     private static void SetupSolutionTransforms<TVerifier>(AnalyzerTest<TVerifier> test)
         where TVerifier : IVerifier, new()
@@ -64,6 +58,5 @@ internal static class CSharpVerifierHelper
 
             return solution;
         });
-
     }
 }

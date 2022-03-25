@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using AdventOfCSharp.CodeAnalysis.Core;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AdventOfCSharp.Analyzers;

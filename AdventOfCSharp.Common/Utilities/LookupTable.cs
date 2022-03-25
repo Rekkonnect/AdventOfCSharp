@@ -1,4 +1,10 @@
-﻿namespace AdventOfCSharp.Utilities;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace AdventOfCSharp.Utilities;
+
+#nullable enable
 
 public class LookupTable<T> : IReadOnlyCollection<T>
 {
@@ -10,7 +16,7 @@ public class LookupTable<T> : IReadOnlyCollection<T>
 
     public int Count => Values.Length;
 
-    public IEnumerable<T> NonNullValues => Values.Where(Predicates.NotNull) as IEnumerable<T>;
+    public IEnumerable<T> NonNullValues => Values.Where(NotNull) as IEnumerable<T>;
 
     public LookupTable(int start, int end)
     {
@@ -22,6 +28,8 @@ public class LookupTable<T> : IReadOnlyCollection<T>
     {
         other.Values.CopyTo(Values, 0);
     }
+
+    private static bool NotNull<U>(U value) => value is not null;
 
     public bool Contains(int index)
     {

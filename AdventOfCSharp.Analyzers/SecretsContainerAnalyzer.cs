@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using AdventOfCSharp.CodeAnalysis.Core;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -13,7 +14,7 @@ public sealed class SecretsContainerAnalyzer : AoCSAnalyzer
 {
     protected override void RegisterAnalyzers(AnalysisContext context)
     {
-        context.RegisterTargetAttributeSyntaxNodeAction(AnalyzeSecretsContainerType, KnownSymbolNames.SecretsContainerAttribute);
+        context.RegisterTargetAttributeSyntaxNodeAction(AnalyzeSecretsContainerType, nameof(SecretsContainerAttribute));
     }
 
     // In an AoC project, attributes should not be too commonly used, meaning less nodes to iterate
@@ -44,7 +45,7 @@ public sealed class SecretsContainerAnalyzer : AoCSAnalyzer
                        IsStatic: false,
                        IsSealed: true,
                    }
-                && IsImportantAoCSClass(classSymbol, KnownSymbolNames.ISecretsContainer)
+                && IsImportantAoCSClass<ISecretsContainer>(classSymbol)
                 && classSymbol.HasPublicParameterlessInstanceConstructor();
         }
     }

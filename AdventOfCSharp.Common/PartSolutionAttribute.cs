@@ -1,4 +1,6 @@
-﻿namespace AdventOfCSharp;
+﻿using System;
+
+namespace AdventOfCSharp;
 
 /// <summary>Denotes a part solution's status.</summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
