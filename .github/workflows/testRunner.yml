@@ -1,11 +1,21 @@
 name: Run Tests
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
-  build:
+  run-tests:
     runs-on: windows-latest
     
+    strategy:
+      matrix:
+        project: [
+          AdventOfCSharp.Tests/AdventOfCSharp.Tests,
+          AdventOfCSharp.ProblemSolutionTests/AdventOfCSharp.ProblemSolutionTests,
+          AdventOfCSharp.AnalyzerTests/AdventOfCSharp.Analyzers.Tests,
+          AdventOfCSharp.CodeFixes.Tests/AdventOfCSharp.CodeFixes.Tests,
+          AdventOfCSharp.SourceGenerators.Tests/AdventOfCSharp.SourceGenerators.Tests
+        ]
+
     steps:
     - name: Setup .NET 6.0
       uses: actions/setup-dotnet@v1
@@ -15,17 +25,5 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v1
 
-    - name: Run Core Tests
-      run: dotnet test AdventOfCSharp.Tests/AdventOfCSharp.Tests.csproj
-      
-    - name: Run Problem Solution Tests
-      run: dotnet test AdventOfCSharp.ProblemSolutionTests/AdventOfCSharp.ProblemSolutionTests.csproj
-      
-    - name: Run Analyzer Tests
-      run: dotnet test AdventOfCSharp.AnalyzerTests/AdventOfCSharp.Analyzers.Tests.csproj
-      
-    - name: Run Code Fix Tests
-      run: dotnet test AdventOfCSharp.CodeFixes.Tests/AdventOfCSharp.CodeFixes.Tests.csproj
-      
-    - name: Run Source Generator Tests
-      run: dotnet test AdventOfCSharp.SourceGenerators.Tests/AdventOfCSharp.SourceGenerators.Tests.csproj
+    - name: Run Tests in Project
+      run: dotnet test ${{ matrix.project }}.csproj
