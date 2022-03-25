@@ -294,6 +294,9 @@ $@"
             if ((part & Info.BenchmarkingParts) is 0)
                 return;
 
+            if (IsInvalidSolution(date, part))
+                return;
+
             GenerateBenchmarkMethod(date, part);
         }
         private void GenerateBenchmarkMethod(ProblemDate date, BenchmarkingParts part)
@@ -306,6 +309,26 @@ $@"
             BenchmarkingParts.Part1 => nameof(BenchmarkingParts.Part1),
             BenchmarkingParts.Part2 => nameof(BenchmarkingParts.Part2),
         };
+        private bool IsInvalidSolution(ProblemDate date, BenchmarkingParts part)
+        {
+            if (part is BenchmarkingParts.Input)
+                return false;
+
+            var correlation = correlations[date];
+
+            int partNumber = part switch
+            {
+                BenchmarkingParts.Part1 => 1,
+                BenchmarkingParts.Part2 => 2,
+            };
+            var method = correlation.PartSolverMethodSymbol(partNumber);
+            var partSolutionAttribute = method.FirstOrDefaultAttributeNamed<PartSolutionAttribute>();
+            if (partSolutionAttribute is null)
+                return false;
+
+            var status = (PartSolutionStatus)partSolutionAttribute.ConstructorArguments[0].Value;
+            return !status.IsValidSolution();
+        }
 
         private void GenerateBenchmarkMethod(ProblemDate date, string part)
         {

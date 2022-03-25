@@ -2,11 +2,9 @@
 using AdventOfCSharp.SourceGenerators.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Testing;
+using NUnit.Framework;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace AdventOfCSharp.SourceGenerators.Tests;
@@ -27,7 +25,7 @@ public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
         initialCompilation = CSharpCompilation.Create(null, trees, references, options);
 
         var diagnostics = initialCompilation.GetDiagnostics();
-        Debug.Assert(diagnostics.IsEmpty);
+        Assert.That(diagnostics.IsEmpty, Is.True);
 
         generator = new();
         var driver = CSharpGeneratorDriver.Create(generator);

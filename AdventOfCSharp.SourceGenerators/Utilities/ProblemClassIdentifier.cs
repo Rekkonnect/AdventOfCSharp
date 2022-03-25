@@ -160,6 +160,11 @@ public class ProblemClassDeclarationCorrelation
         return $"{baseNamespace}.Year{Year}";
     }
 
+    public IMethodSymbol? PartSolverMethodSymbol(int part)
+    {
+        return ClassSymbol?.GetAllMembersIncludingInherited().First(member => member.Name == $"SolvePart{part}") as IMethodSymbol;
+    }
+
     internal sealed class FileNameComparer : IComparer<ProblemClassDeclarationCorrelation>
     {
         public static readonly FileNameComparer Default = new();

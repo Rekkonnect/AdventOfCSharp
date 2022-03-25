@@ -88,6 +88,98 @@ namespace {baseDescriberNamespace}
         VerifyAsync(benchmarkDescriberSource, mappings).Wait();
     }
 
+    [TestCase(PartSolutionStatus.Uninitialized)]
+    [TestCase(PartSolutionStatus.WIP)]
+    [TestCase(PartSolutionStatus.UnavailableFreeStar)]
+    [TestCase(PartSolutionStatus.Interactive)]
+    [TestCase(PartSolutionStatus.Refactoring)]
+    public void InvalidSolutionBenchmarkGenerationTest(PartSolutionStatus invalidPartSolutionStatus)
+    {
+        const string baseDescriberNamespace = "AoC.BenchmarkDescribers";
+        const string describerName = "Consumer";
+
+        string benchmarkDescriberSource =
+$@"
+using AdventOfCSharp;
+using AdventOfCSharp.Benchmarking;
+
+namespace {baseProblemNamespace}.Year2021
+{{
+    public sealed class Day1 : Problem<int>
+    {{
+        [PartSolution(PartSolutionStatus.{invalidPartSolutionStatus})]
+        public sealed override int SolvePart1() => -1;
+        public sealed override int SolvePart2() => -2;
+    }}
+    public sealed class Day2 : Problem<int>
+    {{
+        public sealed override int SolvePart1() => -1;
+        [PartSolution(PartSolutionStatus.{invalidPartSolutionStatus})]
+        public sealed override int SolvePart2() => -2;
+    }}
+}}
+
+namespace {baseDescriberNamespace}
+{{
+    [AllDates]
+    public sealed partial class {describerName} : BenchmarkDescriber
+    {{
+    }}
+}}
+";
+
+        const string describerImplementationSource =
+$@"
+using AdventOfCSharp;
+using AdventOfCSharp.Benchmarking;
+using BenchmarkDotNet.Attributes;
+using System;
+
+#nullable disable
+
+namespace {baseDescriberNamespace}
+{{
+    partial class {describerName}
+    {{
+        private readonly Problem year2021day1 = new {baseProblemNamespace}.Year2021.Day1();
+        private Action year2021day1part1, year2021day1part2, year2021day1input;
+        private readonly Problem year2021day2 = new {baseProblemNamespace}.Year2021.Day2();
+        private Action year2021day2part1, year2021day2part2, year2021day2input;
+
+        [GlobalSetup]
+        public void Setup()
+        {{
+            SetupActions();
+        }}
+
+        private void SetupActions()
+        {{
+            CreateAssignBenchmarkedActions(year2021day1, ref year2021day1part1, ref year2021day1part2, ref year2021day1input);
+            CreateAssignBenchmarkedActions(year2021day2, ref year2021day2part1, ref year2021day2part2, ref year2021day2input);
+        }}
+
+        [Benchmark]
+        [BenchmarkCategory(""Year 2021 Day 01"")]
+        public void Year2021_Day01_Part2()
+        {{
+            year2021day1part2();
+        }}
+        [Benchmark]
+        [BenchmarkCategory(""Year 2021 Day 02"")]
+        public void Year2021_Day02_Part1()
+        {{
+            year2021day2part1();
+        }}
+    }}
+}}
+";
+
+        var mappings = new GeneratedSourceMappings();
+        AddDescriberMapping(mappings, describerName, baseDescriberNamespace, describerImplementationSource);
+
+        VerifyAsync(benchmarkDescriberSource, mappings).Wait();
+    }
+
     private const string problemClasses =
 $@"
 using AdventOfCSharp;
@@ -200,6 +292,21 @@ public abstract class TestProblem : Problem<int>
             new(2021, 2),
         };
         DescriberTest(attributes, expectedDates);
+    }
+    [Test]
+    public void ConstrainedPartsDescriberTest()
+    {
+        const string attributes =
+@"
+[Years(2019)]
+[Parts(BenchmarkingParts.Part1)]
+";
+
+        var expectedDates = new ProblemDate[]
+        {
+            new(2019, 1),
+        };
+        DescriberTest(attributes, expectedDates, BenchmarkingParts.Part1);
     }
 
     private void DescriberTest(string attributes, IEnumerable<ProblemDate> expectedDates, BenchmarkingParts expectedParts = BenchmarkingParts.OnlyParts)
