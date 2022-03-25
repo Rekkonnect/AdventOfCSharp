@@ -17,7 +17,7 @@ public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
     }
     protected Compilation CreateCompilationRunGenerator(IEnumerable<string> sources, out TSourceGenerator generator, out GeneratorDriver resultingGeneratorDriver, out Compilation initialCompilation)
     {
-        var references = BenchmarkSpecificMetadataReferences.CreateAllBaseMetadataReferences();
+        var references = BenchmarkSpecificMetadataReferences.AllBaseReferences;
         var trees = sources.Select(source => CSharpSyntaxTree.ParseText(source));
         initialCompilation = CSharpCompilation.Create(null, trees, references);
         generator = new();

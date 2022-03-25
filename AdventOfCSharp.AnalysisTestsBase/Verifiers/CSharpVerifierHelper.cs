@@ -50,7 +50,7 @@ public static class CSharpVerifierHelper
     public static void SetupAoCSDependencies<TVerifier>(AnalyzerTest<TVerifier> test)
         where TVerifier : IVerifier, new()
     {
-        test.TestState.AdditionalReferences.AddRange(AoCSMetadataReferences.CreateBaseMetadataReferences());
+        test.TestState.AdditionalReferences.AddRange(AoCSMetadataReferences.BaseReferences);
     }
     private static void SetupSolutionTransforms<TVerifier>(AnalyzerTest<TVerifier> test)
         where TVerifier : IVerifier, new()

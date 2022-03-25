@@ -1,11 +1,6 @@
 ﻿using AdventOfCSharp.Benchmarking;
-using Garyon.Extensions.ArrayExtensions;
-using Microsoft.CodeAnalysis;
-using Microsoft.Diagnostics.Tracing.Parsers.Clr;
 using NUnit.Framework;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AdventOfCSharp.SourceGenerators.Tests;
 

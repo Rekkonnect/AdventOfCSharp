@@ -17,7 +17,7 @@ public static class CSharpSourceGeneratorVerifier<TSourceGenerator>
         public Test()
         {
             CSharpVerifierHelper.SetupNET6AndAoCSDependencies(this);
-            TestState.AdditionalReferences.AddRange(BenchmarkSpecificMetadataReferences.CreateAllBaseMetadataReferences());
+            TestState.AdditionalReferences.AddRange(BenchmarkSpecificMetadataReferences.BaseBenchmarkReferences);
         }
 
         protected override CompilationOptions CreateCompilationOptions()

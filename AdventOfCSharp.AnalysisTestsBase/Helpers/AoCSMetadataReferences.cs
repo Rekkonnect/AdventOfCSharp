@@ -1,15 +1,15 @@
 ﻿using AdventOfCSharp.AnalysisTestsBase.Resources;
 using Microsoft.CodeAnalysis;
 using RoseLynn;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace AdventOfCSharp.AnalysisTestsBase.Helpers;
 
 public static class AoCSMetadataReferences
 {
-    public static IEnumerable<MetadataReference> CreateBaseMetadataReferences() => new[]
+    public static readonly ImmutableArray<MetadataReference> BaseReferences = ImmutableArray.Create(new MetadataReference[]
     {
         MetadataReferenceFactory.CreateFromType<Problem>(),
         MetadataReferenceFactory.CreateFromType<ExampleAttribute>(),
-    };
+    });
 }

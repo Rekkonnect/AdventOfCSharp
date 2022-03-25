@@ -29,7 +29,7 @@ public class LookupTable<T> : IReadOnlyCollection<T>
         other.Values.CopyTo(Values, 0);
     }
 
-    private static bool NotNull<T>(T value) => value is not null;
+    private static bool NotNull<U>(U value) => value is not null;
 
     public bool Contains(int index)
     {
