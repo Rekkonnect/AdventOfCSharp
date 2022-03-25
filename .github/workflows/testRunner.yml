@@ -26,4 +26,4 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Run Tests in Project
-      run: dotnet test ${{ project }}.csproj
+      run: dotnet test ${{ matrix.project }}.csproj
