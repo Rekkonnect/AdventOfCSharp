@@ -5,15 +5,16 @@ on: [push]
 jobs:
   run-tests:
     runs-on: windows-latest
-
+    
     strategy:
       matrix:
-        project:
-          - AdventOfCSharp.Tests/AdventOfCSharp.Tests
-          - AdventOfCSharp.ProblemSolutionTests/AdventOfCSharp.ProblemSolutionTests
-          - AdventOfCSharp.AnalyzerTests/AdventOfCSharp.Analyzers.Tests
-          - AdventOfCSharp.CodeFixes.Tests/AdventOfCSharp.CodeFixes.Tests
-          - AdventOfCSharp.SourceGenerators.Tests/AdventOfCSharp.SourceGenerators.Tests
+        project: [
+          AdventOfCSharp.Tests/AdventOfCSharp.Tests,
+          AdventOfCSharp.ProblemSolutionTests/AdventOfCSharp.ProblemSolutionTests,
+          AdventOfCSharp.AnalyzerTests/AdventOfCSharp.Analyzers.Tests,
+          AdventOfCSharp.CodeFixes.Tests/AdventOfCSharp.CodeFixes.Tests,
+          AdventOfCSharp.SourceGenerators.Tests/AdventOfCSharp.SourceGenerators.Tests
+        ]
 
     steps:
     - name: Setup .NET 6.0
