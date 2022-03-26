@@ -5,12 +5,11 @@
     <LangVersion>10.0</LangVersion>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
   
   <ItemGroup>
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="*\AdventOfCSharp*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
       
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
       <PrivateAssets>all</PrivateAssets>
@@ -22,8 +21,9 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" />
-    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" />
+    <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" OutputItemType="Analyzer" />
   </ItemGroup>
   
 </Project>

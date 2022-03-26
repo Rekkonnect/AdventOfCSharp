@@ -40,6 +40,14 @@ public abstract partial class Problem
     {
         Input.TriggerFileContentCache();
     }
+
+    public static T CreateNewLoadedState<T>()
+        where T : Problem, new()
+    {
+        var problem = new T();
+        problem.EnsureLoadedState();
+        return problem;
+    }
 }
 
 [Flags]

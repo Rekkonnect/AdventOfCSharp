@@ -32,8 +32,9 @@ namespace {baseProblemNamespace}.Year2021
 
 namespace {baseDescriberNamespace}
 {{
+    [BenchmarkDescriber]
     [AllDates]
-    public sealed partial class {describerName} : BenchmarkDescriber
+    public sealed partial class {describerName}
     {{
     }}
 }}
@@ -46,13 +47,15 @@ using AdventOfCSharp.Benchmarking;
 using BenchmarkDotNet.Attributes;
 using System;
 
+using static AdventOfCSharp.Benchmarking.BenchmarkDescriberHelpers;
+
 #nullable disable
 
 namespace {baseDescriberNamespace}
 {{
     partial class {describerName}
     {{
-        private readonly Problem year2021day1 = new {baseProblemNamespace}.Year2021.Day1();
+        private readonly Problem year2021day1 = Problem.CreateNewLoadedState<{baseProblemNamespace}.Year2021.Day1>();
         private Action year2021day1part1, year2021day1part2, year2021day1input;
 
         [GlobalSetup]
@@ -121,8 +124,9 @@ namespace {baseProblemNamespace}.Year2021
 
 namespace {baseDescriberNamespace}
 {{
+    [BenchmarkDescriber]
     [AllDates]
-    public sealed partial class {describerName} : BenchmarkDescriber
+    public sealed partial class {describerName}
     {{
     }}
 }}
@@ -135,15 +139,17 @@ using AdventOfCSharp.Benchmarking;
 using BenchmarkDotNet.Attributes;
 using System;
 
+using static AdventOfCSharp.Benchmarking.BenchmarkDescriberHelpers;
+
 #nullable disable
 
 namespace {baseDescriberNamespace}
 {{
     partial class {describerName}
     {{
-        private readonly Problem year2021day1 = new {baseProblemNamespace}.Year2021.Day1();
+        private readonly Problem year2021day1 = Problem.CreateNewLoadedState<{baseProblemNamespace}.Year2021.Day1>();
         private Action year2021day1part1, year2021day1part2, year2021day1input;
-        private readonly Problem year2021day2 = new {baseProblemNamespace}.Year2021.Day2();
+        private readonly Problem year2021day2 = Problem.CreateNewLoadedState<{baseProblemNamespace}.Year2021.Day2>();
         private Action year2021day2part1, year2021day2part2, year2021day2input;
 
         [GlobalSetup]
@@ -227,7 +233,6 @@ public abstract class TestProblem : Problem<int>
         };
         DescriberTest(attributes, expectedDates);
     }
-    // TODO: Investigate strange binding errors
     [Test]
     public void SelectedYearsDescriberTest()
     {
@@ -320,8 +325,9 @@ using AdventOfCSharp.Benchmarking;
 
 namespace {baseDescriberNamespace};
 
+[BenchmarkDescriber]
 {attributes}
-public sealed partial class {describerName} : BenchmarkDescriber
+public sealed partial class {describerName}
 {{
 }}
 ";

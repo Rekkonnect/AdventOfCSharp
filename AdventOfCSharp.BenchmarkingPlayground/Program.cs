@@ -1,10 +1,5 @@
-﻿using AdventOfCSharp.Benchmarking;
-using AdventOfCSharp.ProblemSolutionResources;
-using BenchmarkDotNet.Configs;
+using AdventOfCSharp;
+using AdventOfCSharp.BenchmarkingPlayground;
 using BenchmarkDotNet.Running;
 
-ResourceFileManagement.SetResourceProjectAsBaseProblemFileDirectory();
-ProblemBenchmarkRunner.RunAllProblems();
-//ProblemBenchmarkRunner.IncludeAllProblems();
-
-//BenchmarkSwitcher.FromTypes(new[] { typeof(ProblemBenchmark) }).Run(args, new DebugInProcessConfig());
+BenchmarkRunner.Run<Consumer>();

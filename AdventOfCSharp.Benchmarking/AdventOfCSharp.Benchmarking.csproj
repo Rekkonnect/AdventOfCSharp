@@ -9,7 +9,7 @@
     <IsPackable>true</IsPackable>
     <PublishTrimmed>false</PublishTrimmed>
 
-    <Version>1.4.0-alpha2</Version>
+    <Version>1.4.0-alpha3</Version>
 
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>Benchmarking tools for the Advent of C# framework.</Description>
@@ -35,9 +35,6 @@
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" />
     <ProjectReference Include="..\AdventOfCSharp\AdventOfCSharp.csproj" />
-
-    <ProjectReference Include="..\AdventOfCSharp.SourceGenerators\AdventOfCSharp.SourceGenerators.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="true" />
-    <None Include="$(OutputPath)\AdventOfCSharp.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="true" />
   </ItemGroup>
 
 </Project>

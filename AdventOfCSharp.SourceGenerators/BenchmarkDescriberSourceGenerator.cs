@@ -41,6 +41,9 @@ public class BenchmarkDescriberSourceGenerator : ISourceGenerator
 
         static bool IsBenchmarkDescriber(INamedTypeSymbol classSymbol)
         {
+            return classSymbol.HasAttributeNamed<BenchmarkDescriberAttribute>();
+            // BDN doesn't like types inheriting types from other assemblies
+            // It already has tons of reference issues, let's not stress it further
             return AoCSAnalysisHelpers.IsImportantAoCSClass(classSymbol, KnownFullSymbolNames.BenchmarkDescriber);
         }
     }
@@ -224,13 +227,15 @@ public class BenchmarkDescriberSourceGenerator : ISourceGenerator
         public string GenerateBenchmarkDescriberSource()
         {
             var describerNamespace = describerType.GetFullSymbolName().FullNamespaceString;
-
+            
             var header =
 $@"
 using AdventOfCSharp;
 using AdventOfCSharp.Benchmarking;
 using BenchmarkDotNet.Attributes;
 using System;
+
+using static AdventOfCSharp.Benchmarking.BenchmarkDescriberHelpers;
 
 #nullable disable
 
@@ -272,7 +277,9 @@ $@"
 
             // Not too clean, but not too slow either
             sourceBuilder
-                .Append(@"        private readonly Problem ").Append(fieldPrefix).Append(" = new ").Append(correlation.FullSymbolName).AppendLine("();")
+                .Append(@"        private readonly Problem ").Append(fieldPrefix).Append(" = Problem.CreateNewLoadedState<")
+                                                                                 .Append(correlation.FullSymbolName)
+                                                                                 .AppendLine(">();")
                 .Append(@"        private Action ").Append(fieldPrefix).Append("part1, ")
                                                    .Append(fieldPrefix).Append("part2, ")
                                                    .Append(fieldPrefix).AppendLine("input;");

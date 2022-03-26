@@ -1,5 +1,4 @@
 ﻿using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Parameters;
 using BenchmarkDotNet.Reports;
@@ -9,7 +8,7 @@ using System.Reflection;
 
 namespace AdventOfCSharp.Benchmarking;
 
-public static class ProblemBenchmarkRunner
+internal static class ProblemBenchmarkRunner
 {
     public static IEnumerable<ProblemDate> Dates { get; set; }
 

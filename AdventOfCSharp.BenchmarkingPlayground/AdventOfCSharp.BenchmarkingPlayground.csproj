@@ -5,14 +5,19 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <EmitCompilerGeneratedFiles>True</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.1.0" />
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" />
     
     <ProjectReference Include="..\AdventOfCSharp.Benchmarking\AdventOfCSharp.Benchmarking.csproj" PrivateAssets="all" ReferenceOutputAssembly="true" />
-    <ProjectReference Include="..\AdventOfCSharp.SourceGenerators\AdventOfCSharp.SourceGenerators.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\AdventOfCSharp.SourceGenerators\AdventOfCSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\AdventOfCSharp.ProblemSolutionResources\AdventOfCSharp.ProblemSolutionResources.csproj" />
     <ProjectReference Include="..\AdventOfCSharp\AdventOfCSharp.csproj" />
   </ItemGroup>
