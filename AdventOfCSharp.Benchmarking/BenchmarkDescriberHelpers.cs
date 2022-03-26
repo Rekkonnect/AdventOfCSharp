@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCSharp.Benchmarking;
 
-public abstract class BenchmarkDescriberHelpers
+public static class BenchmarkDescriberHelpers
 {
     public static void CreateAssignBenchmarkedActions(Problem instance, ref Action part1, ref Action part2, ref Action input)
     {

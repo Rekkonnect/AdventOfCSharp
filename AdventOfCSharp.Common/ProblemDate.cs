@@ -8,12 +8,12 @@ namespace AdventOfCSharp;
 
 public struct ProblemDate : IEquatable<ProblemDate>, IComparable<ProblemDate>
 {
-    private uint bits;
-
     private const int dayBitMaskBits = 5;
 
     private const uint dayBitMask = (1U << dayBitMaskBits) - 1;
     private const uint yearBitMask = ~dayBitMask;
+
+    private uint bits;
 
     public int Year
     {

@@ -1,4 +1,4 @@
-﻿using AdventOfCSharp.SourceGenerators.Extensions;
+﻿using AdventOfCSharp.CodeAnalysis.Core.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RoseLynn;
@@ -169,13 +169,13 @@ public class ProblemClassDeclarationCorrelation
     {
         public static readonly FileNameComparer Default = new();
 
-        public int Compare(ProblemClassDeclarationCorrelation x, ProblemClassDeclarationCorrelation y)
+        public int Compare(ProblemClassDeclarationCorrelation left, ProblemClassDeclarationCorrelation right)
         {
-            int yearComparison = x.Year.CompareTo(y.Year);
+            int yearComparison = left.Year.CompareTo(right.Year);
             if (yearComparison is not 0)
                 return yearComparison;
 
-            return x.Day.ToString().CompareTo(y.Day.ToString());
+            return left.Day.ToString().CompareTo(right.Day.ToString());
         }
     }
 }

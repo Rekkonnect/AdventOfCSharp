@@ -1,6 +1,6 @@
 ﻿using AdventOfCSharp.Benchmarking;
 using AdventOfCSharp.CodeAnalysis.Core;
-using AdventOfCSharp.SourceGenerators.Extensions;
+using AdventOfCSharp.CodeAnalysis.Core.Extensions;
 using AdventOfCSharp.SourceGenerators.Utilities;
 using Microsoft.CodeAnalysis;
 using RoseLynn;

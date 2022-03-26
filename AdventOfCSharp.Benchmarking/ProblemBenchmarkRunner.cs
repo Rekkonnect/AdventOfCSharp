@@ -8,9 +8,11 @@ using System.Reflection;
 
 namespace AdventOfCSharp.Benchmarking;
 
+// Keep this here until BDN supports custom project references when building BenchmarkInfo
+// TODO: Transform this into an instance class
 internal static class ProblemBenchmarkRunner
 {
-    public static IEnumerable<ProblemDate> Dates { get; set; }
+    public static IEnumerable<ProblemDate> Dates { get; set; } = Array.Empty<ProblemDate>();
 
     public static void AppendDates(IEnumerable<ProblemDate> dates) => Dates = Dates.Concat(dates);
 
