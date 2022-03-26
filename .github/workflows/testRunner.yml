@@ -9,10 +9,10 @@ jobs:
     strategy:
       matrix:
         project:
-        - Tests,
-        - AdditionalProblemSolutionTests,
-        - Analyzers.Tests,
-        - CodeFixes.Tests,
+        - Tests
+        - AdditionalProblemSolutionTests
+        - Analyzers.Tests
+        - CodeFixes.Tests
         - SourceGenerators.Tests
 
     steps:
