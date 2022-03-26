@@ -31,7 +31,12 @@ public static class ProblemSolverMethodProvider
         return GetLoadStateMethod(typeof(T));
     }
 
-    public static Action CreateSolverDelegate(int part, Problem instance)
+    /// <summary>Creates a new <seealso cref="Action"/> instance that represents a part solver for a given problem instance.</summary>
+    /// <param name="part">The part of the instance which will be solved.</param>
+    /// <param name="instance">The instance on which the delegate will perform.</param>
+    /// <returns>The no-return part solver delegate acting on the given <seealso cref="Problem"/> instance.</returns>
+    /// <remarks>WARNING: This function uses a <see langword="very unsafe"/> trick from <seealso cref="VeryUnsafe.VeryUnsafe"/>, though no issues have been recorded so far.</remarks>
+    public static Action CreateNoReturnSolverDelegate(int part, Problem instance)
     {
         var method = MethodForPart(instance.GetType(), part);
 

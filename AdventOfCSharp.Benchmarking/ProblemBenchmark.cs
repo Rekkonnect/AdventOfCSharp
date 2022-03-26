@@ -23,8 +23,8 @@ internal class ProblemBenchmark
         var problemInfo = ProblemsIndex.Instance[Year, Day];
 
         var instance = problemInfo.InitializeInstance();
-        solverPart1 = ProblemSolverMethodProvider.CreateSolverDelegate(1, instance);
-        solverPart2 = ProblemSolverMethodProvider.CreateSolverDelegate(2, instance);
+        solverPart1 = ProblemSolverMethodProvider.CreateNoReturnSolverDelegate(1, instance);
+        solverPart2 = ProblemSolverMethodProvider.CreateNoReturnSolverDelegate(2, instance);
         loader = ProblemSolverMethodProvider.CreateLoadStateDelegate(instance);
         instance.EnsureLoadedState();
     }
