@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <IsPackable>true</IsPackable>
-    <Version>1.3.1</Version>
+    <Version>1.4.0</Version>
 
     <Authors>Alex Kalfakakos</Authors>
     <Company />
@@ -27,6 +27,8 @@
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCSharp.Analyzers\AdventOfCSharp.Analyzers.csproj" />
     <ProjectReference Include="..\AdventOfCSharp.CodeFixes\AdventOfCSharp.CodeFixes.csproj" />
+    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" />
+    <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +47,8 @@
 
     <TfmSpecificPackageFile Include="$(OutputPath)\AdventOfCSharp.Analyzers.dll" PackagePath="analyzers/dotnet/cs" />
     <TfmSpecificPackageFile Include="$(OutputPath)\AdventOfCSharp.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
+    <TfmSpecificPackageFile Include="$(OutputPath)\AdventOfCSharp.CodeAnalysis.Core.dll" PackagePath="analyzers/dotnet/cs" />
+    <TfmSpecificPackageFile Include="$(OutputPath)\AdventOfCSharp.Common.dll" PackagePath="analyzers/dotnet/cs" />
   </ItemGroup>
 
 </Project>
