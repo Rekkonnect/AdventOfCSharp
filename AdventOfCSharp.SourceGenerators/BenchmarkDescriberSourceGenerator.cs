@@ -321,6 +321,10 @@ $@"
             if (part is BenchmarkingParts.Input)
                 return false;
 
+            // Exclude D25P2
+            if (date.Day is 25 && part is BenchmarkingParts.Part2)
+                return true;
+
             var correlation = correlations[date];
 
             int partNumber = part switch
