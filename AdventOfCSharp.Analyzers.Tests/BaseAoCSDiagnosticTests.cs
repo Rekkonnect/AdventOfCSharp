@@ -74,4 +74,34 @@ public abstract class BaseAoCSDiagnosticTests : BaseDiagnosticTests
     {
         ValidateCodeWithUsings("");
     }
+
+    [TestMethod]
+    public void IrrelevantDeclarations()
+    {
+        const string code =
+@"
+public sealed class A { }
+public sealed class A<T1> : A { }
+public sealed class A<T1, T2> : A<T1> { }
+public sealed class A<T1, T2, T3> : A<T1, T2> { }
+
+public struct S : I { }
+public struct S<T1> : I<T1> { }
+public struct S<T1, T2> : I<T1, T2> { }
+public struct S<T1, T2, T3> : I<T1, T2, T3> { }
+
+public interface I { }
+public interface I<T1> { }
+public interface I<T1, T2> { }
+public interface I<T1, T2, T3> { }
+
+public enum E { }
+public enum F { }
+
+public delegate void D();
+public delegate int RD(int a);
+";
+
+        ValidateCodeWithUsings(code);
+    }
 }

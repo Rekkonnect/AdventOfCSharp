@@ -7,6 +7,8 @@ using System.Linq;
 
 namespace AdventOfCSharp.Analyzers;
 
+#nullable enable
+
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class AnswerStringConverterAnalyzer : ProblemAoCSAnalyzer
 {
@@ -19,7 +21,7 @@ public sealed class AnswerStringConverterAnalyzer : ProblemAoCSAnalyzer
     {
         var classSymbol = context.Symbol as INamedTypeSymbol;
 
-        if (classSymbol.TypeKind is not TypeKind.Class)
+        if (classSymbol?.TypeKind is not TypeKind.Class)
             return;
 
         var baseType = classSymbol.BaseType;
@@ -27,18 +29,23 @@ public sealed class AnswerStringConverterAnalyzer : ProblemAoCSAnalyzer
             return;
 
         var declaringSyntax = classSymbol.DeclaringSyntaxReferences.First().GetSyntax() as ClassDeclarationSyntax;
-        var baseList = declaringSyntax.BaseList!;
+        if (declaringSyntax is null)
+            return;
+
+        var baseList = declaringSyntax.BaseList;
+        if (baseList is null)
+            return;
 
         var baseTypeNode = baseList.Types.First();
 
         // Do not report on CommonAnswerStringConverter or AnswerStringConverter<TSource>
-        var classFullSymbolName = classSymbol.GetFullSymbolName();
+        var classFullSymbolName = classSymbol.GetFullSymbolName()!;
         if (classFullSymbolName.Matches(KnownFullSymbolNames.CommonAnswerStringConverter, SymbolNameMatchingLevel.Namespace))
             return;
         if (classFullSymbolName.Matches(KnownFullSymbolNames.GenericAnswerStringConverter, SymbolNameMatchingLevel.Namespace))
             return;
 
-        var baseFullSymbolName = baseType.GetFullSymbolName();
+        var baseFullSymbolName = baseType.GetFullSymbolName()!;
         if (baseFullSymbolName.Matches(KnownFullSymbolNames.NonGenericAnswerStringConverter, SymbolNameMatchingLevel.Namespace))
         {
             context.ReportDiagnostic(Diagnostics.CreateAoCS0016(baseTypeNode));

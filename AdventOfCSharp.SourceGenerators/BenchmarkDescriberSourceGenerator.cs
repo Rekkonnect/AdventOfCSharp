@@ -78,7 +78,9 @@ public class BenchmarkDescriberSourceGenerator : ISourceGenerator
         private readonly ImmutableArray<int> days;
         private readonly ImmutableArray<ProblemDate> specificDates;
 
+#nullable enable
         public DeclaredDatesRuleSystem(IEnumerable<int>? years, IEnumerable<int>? days, IEnumerable<ProblemDate>? dates)
+#nullable restore
         {
             this.years = years?.ToImmutableArray() ?? ImmutableArray<int>.Empty;
             this.days = days?.ToImmutableArray() ?? ImmutableArray<int>.Empty;

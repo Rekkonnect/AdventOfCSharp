@@ -24,7 +24,7 @@ public static class ISymbolExtensions
     public static IEnumerable<AttributeData> GetAttributesNamed<T>(this ISymbol symbol)
         where T : Attribute
     {
-        return symbol.GetAttributes().Where(attribute => attribute.AttributeClass.Name == typeof(T).Name);
+        return symbol.GetAttributes().Where(attribute => attribute.AttributeClass?.Name == typeof(T).Name);
     }
 
     // TODO: Implement for completeness in RoseLynn
