@@ -5,6 +5,19 @@
     <LangVersion>10.0</LangVersion>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
+
+    <Version>1.4.0</Version>
+
+    <PackageTags>advent-of-code, aoc</PackageTags>
+    <Description>Source generators for generating benchmarks and unit tests for the Advent of C# framework.</Description>
+    <Copyright>© 2022, Alex Kalfakakos</Copyright>
+    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <Authors>Alex Kalfakakos</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Product>AdventOfCSharp.SourceGenerators</Product>
+    <PackageId>AdventOfCSharp.SourceGenerators</PackageId>
   </PropertyGroup>
   
   <ItemGroup>
