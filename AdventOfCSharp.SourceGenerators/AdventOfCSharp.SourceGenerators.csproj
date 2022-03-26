@@ -5,12 +5,24 @@
     <LangVersion>10.0</LangVersion>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IsPackable>true</IsPackable>
+
+    <Version>1.4.0</Version>
+
+    <PackageTags>advent-of-code, aoc</PackageTags>
+    <Description>Source generators for generating benchmarks and unit tests for the Advent of C# framework.</Description>
+    <Copyright>© 2022, Alex Kalfakakos</Copyright>
+    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <Authors>Alex Kalfakakos</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Product>AdventOfCSharp.SourceGenerators</Product>
+    <PackageId>AdventOfCSharp.SourceGenerators</PackageId>
   </PropertyGroup>
   
   <ItemGroup>
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="*\AdventOfCSharp*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
       
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
       <PrivateAssets>all</PrivateAssets>
@@ -22,8 +34,9 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" />
-    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" />
+    <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" OutputItemType="Analyzer" />
   </ItemGroup>
   
 </Project>

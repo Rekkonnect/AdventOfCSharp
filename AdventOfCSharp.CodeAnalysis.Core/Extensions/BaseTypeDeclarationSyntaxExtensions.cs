@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RoseLynn;
 
-namespace AdventOfCSharp.SourceGenerators.Extensions;
+namespace AdventOfCSharp.CodeAnalysis.Core.Extensions;
 
 public static class BaseTypeDeclarationSyntaxExtensions
 {

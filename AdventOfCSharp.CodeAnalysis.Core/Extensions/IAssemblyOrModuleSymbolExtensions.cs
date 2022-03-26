@@ -2,7 +2,7 @@
 
 #nullable enable
 
-namespace AdventOfCSharp.SourceGenerators.Extensions;
+namespace AdventOfCSharp.CodeAnalysis.Core.Extensions;
 
 public static class IAssemblyOrModuleSymbolExtensions
 {

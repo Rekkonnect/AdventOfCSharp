@@ -3,14 +3,16 @@ using System.Collections.Immutable;
 
 namespace AdventOfCSharp.Benchmarking;
 
-public abstract class BenchmarkDescriberAttribute : Attribute { }
+public sealed class BenchmarkDescriberAttribute : Attribute { }
+
+public abstract class BaseBenchmarkDescriberAttribute : Attribute { }
 
 // Names can be this free because of the context being limited, barely touching other areas
 // that could cause confusion to the programmer
 // In the context of benchmarking AoC# solutions, the concepts of years, days and dates are
 // clear and distinct enough to the consumer
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-public sealed class YearsAttribute : BenchmarkDescriberAttribute
+public sealed class YearsAttribute : BaseBenchmarkDescriberAttribute
 {
     public ImmutableArray<int> Years { get; }
 
@@ -21,7 +23,7 @@ public sealed class YearsAttribute : BenchmarkDescriberAttribute
 }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-public sealed class DaysAttribute : BenchmarkDescriberAttribute
+public sealed class DaysAttribute : BaseBenchmarkDescriberAttribute
 {
     public ImmutableArray<int> Days { get; }
 
@@ -32,7 +34,7 @@ public sealed class DaysAttribute : BenchmarkDescriberAttribute
 }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public sealed class DatesAttribute : BenchmarkDescriberAttribute
+public sealed class DatesAttribute : BaseBenchmarkDescriberAttribute
 {
     public int Year { get; }
     public ImmutableArray<int> Days { get; }
@@ -47,11 +49,11 @@ public sealed class DatesAttribute : BenchmarkDescriberAttribute
 // This attribute is specially treated to include all dates,
 // completely disregarding other date attributes
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-public sealed class AllDatesAttribute : BenchmarkDescriberAttribute
+public sealed class AllDatesAttribute : BaseBenchmarkDescriberAttribute
 { }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-public sealed class PartsAttribute : BenchmarkDescriberAttribute
+public sealed class PartsAttribute : BaseBenchmarkDescriberAttribute
 {
     public BenchmarkingParts Parts { get; }
 

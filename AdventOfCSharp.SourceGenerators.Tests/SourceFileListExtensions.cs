@@ -1,5 +1,4 @@
-﻿using AdventOfCSharp.SourceGenerators.Tests.Verifiers;
-using Microsoft.CodeAnalysis.Testing;
+﻿using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCSharp.SourceGenerators.Extensions;
+namespace AdventOfCSharp.CodeAnalysis.Core.Extensions;
 
 public static class CompilationExtensions
 {
