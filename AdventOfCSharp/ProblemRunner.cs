@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using AdventOfCSharp.Utilities;
+using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("AdventOfCSharp.Benchmarking")]
 
@@ -31,6 +32,14 @@ public sealed class ProblemRunner
     {
         Problem = problem;
         Options = options ?? ProblemRunningOptions.Default;
+
+        DisablePrintingIfUnavailable();
+    }
+
+    private void DisablePrintingIfUnavailable()
+    {
+        if (!ConsoleAvailability.SupportsCursorPosition)
+            Options.DisplayExecutionTimes = false;
     }
 
     private static ProblemRunner? ForInstance(Problem? instance)

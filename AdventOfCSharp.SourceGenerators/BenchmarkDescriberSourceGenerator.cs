@@ -12,7 +12,7 @@ using System.Text;
 
 namespace AdventOfCSharp.SourceGenerators;
 
-[Generator]
+[Generator(LanguageNames.CSharp)]
 public class BenchmarkDescriberSourceGenerator : ISourceGenerator
 {
     private readonly Dictionary<Compilation, CompilationBenchmarkDescribers> generatorExecutions = new();
@@ -334,13 +334,7 @@ $@"
                 BenchmarkingParts.Part1 => 1,
                 BenchmarkingParts.Part2 => 2,
             };
-            var method = correlation.PartSolverMethodSymbol(partNumber);
-            var partSolutionAttribute = method.FirstOrDefaultAttributeNamed<PartSolutionAttribute>();
-            if (partSolutionAttribute is null)
-                return false;
-
-            var status = (PartSolutionStatus)partSolutionAttribute.ConstructorArguments[0].Value;
-            return !status.IsValidSolution();
+            return !correlation.IsValidPartSolution(partNumber);
         }
 
         private void GenerateBenchmarkMethod(ProblemDate date, string part)

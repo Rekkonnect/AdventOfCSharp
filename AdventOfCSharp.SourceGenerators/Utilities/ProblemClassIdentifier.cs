@@ -165,6 +165,35 @@ public class ProblemClassDeclarationCorrelation
         return ClassSymbol?.GetAllMembersIncludingInherited().First(member => member.Name == $"SolvePart{part}") as IMethodSymbol;
     }
 
+    public bool HasQualityAssertableParts(out bool part1, out bool part2)
+    {
+        part1 = IsQualityAssertablePart(1);
+        part2 = IsQualityAssertablePart(2);
+        return part1 || part2;
+    }
+
+    public bool IsQualityAssertablePart(int part)
+    {
+        if (Day is 25 && part is 2)
+            return false;
+
+        return IsValidPartSolution(part);
+    }
+    public bool IsValidPartSolution(int part)
+    {
+        var method = PartSolverMethodSymbol(part);
+        if (method is null)
+            return false;
+
+        var partSolutionAttribute = method.FirstOrDefaultAttributeNamed<PartSolutionAttribute>();
+        // No attribute defaults to a valid solution
+        if (partSolutionAttribute is null)
+            return true;
+
+        var status = (PartSolutionStatus)partSolutionAttribute.ConstructorArguments[0].Value!;
+        return status.IsValidSolution();
+    }
+
     internal sealed class FileNameComparer : IComparer<ProblemClassDeclarationCorrelation>
     {
         public static readonly FileNameComparer Default = new();
