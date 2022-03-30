@@ -25,12 +25,15 @@ public class BenchmarkDescriberSourceGenerator : ISourceGenerator
 
         var defined = context.Compilation.GetAllDefinedTypes();
         var benchmarkDescribers = defined.Where(IsBenchmarkDescriber);
+        var conductor = new GeneratorExecutionConductor(context);
 
         foreach (var describer in benchmarkDescribers)
         {
             var source = GenerateBenchmarkDescriberSource(describer);
-            context.AddSource(GetBenchmarkSourceFileName(describer), source);
+            conductor.AddSource(GetBenchmarkSourceFileName(describer), source);
         }
+
+        conductor.FinalizeGeneratorExecution();
 
         string GenerateBenchmarkDescriberSource(INamedTypeSymbol benchmarkType)
         {

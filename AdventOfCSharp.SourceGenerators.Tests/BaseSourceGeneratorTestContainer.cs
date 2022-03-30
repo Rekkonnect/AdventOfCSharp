@@ -1,5 +1,6 @@
 ﻿using AdventOfCSharp.SourceGenerators.Tests.Helpers;
 using AdventOfCSharp.SourceGenerators.Tests.Verifiers;
+using AdventOfCSharp.SourceGenerators.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
@@ -59,6 +60,4 @@ public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
 
         await test.RunAsync();
     }
-
-    protected sealed class GeneratedSourceMappings : SortedDictionary<string, string> { }
 }

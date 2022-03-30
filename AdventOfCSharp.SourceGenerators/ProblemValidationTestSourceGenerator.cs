@@ -2,11 +2,9 @@
 using AdventOfCSharp.SourceGenerators.Utilities;
 using AdventOfCSharp.Testing;
 using Microsoft.CodeAnalysis;
-using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 
 namespace AdventOfCSharp.SourceGenerators;
 
@@ -23,6 +21,15 @@ public sealed class ProblemValidationTestSourceGenerator : ISourceGenerator
     {
     }
 
+    public static string GetTestCaseSourceFileName(string baseTestNamespace, int year, int day)
+    {
+        return GetTestCaseSourceFileName($"{baseTestNamespace}.Year{year}.Day{day}{ConstantNames.ValidationTestsSuffix}");
+    }
+    public static string GetTestCaseSourceFileName(string fullSymbolName)
+    {
+        return $"{fullSymbolName}.g.cs";
+    }
+
     private sealed class TestClassGenerator
     {
         private const string testingFrameworkNameGroupName = "framework";
@@ -33,7 +40,9 @@ public sealed class ProblemValidationTestSourceGenerator : ISourceGenerator
         private readonly TestingFrameworkIdentifiers identifiers;
         private readonly ProblemClassDeclarationCorrelationCollection correlations;
         private readonly string baseTestNamespace;
-        private string? problemFileBaseDirectory;
+        private string problemFileBaseDirectory;
+
+        private readonly GeneratorExecutionConductor executionConductor;
 
         public GeneratorExecutionContext Context { get; }
 
@@ -42,6 +51,7 @@ public sealed class ProblemValidationTestSourceGenerator : ISourceGenerator
         public TestClassGenerator(GeneratorExecutionContext context)
         {
             Context = context;
+            executionConductor = new(context);
 
             Usable = ScanProblemFileBaseDirectory();
             if (!Usable)
@@ -90,7 +100,7 @@ public sealed class ProblemValidationTestSourceGenerator : ISourceGenerator
             // As long as the user uses at least one of the frameworks, they are meant to work
             var frameworkNames = matches.Select(match => match.Groups[testingFrameworkNameGroupName].Value);
             var identifier = frameworkNames
-                .Select(TestingFrameworkIdentifiers.CreateFromFrameworkName)
+                .Select(TestingFrameworkIdentifiers.GetForFrameworkName)
                 .FirstOrDefault(identifier => identifier is not null);
 
             return identifier;
@@ -107,6 +117,8 @@ public sealed class ProblemValidationTestSourceGenerator : ISourceGenerator
             {
                 GenerateTestClass(correlation);
             }
+
+            executionConductor.FinalizeClearGeneratorExecution();
         }
 
         private void GenerateBaseAssemblyTestClass()
@@ -116,6 +128,7 @@ public sealed class ProblemValidationTestSourceGenerator : ISourceGenerator
             string header =
 $@"
 using {identifiers.AttributeNamespace};
+using AdventOfCSharp;
 using AdventOfCSharp.Testing.{identifiers.FrameworkNamePrefix};
 
 namespace {baseTestNamespace};
@@ -134,7 +147,7 @@ $@"
                 code += baseDirectoryMethodOverride;
             code += footer;
 
-            Context.AddSource($"{ConstantNames.AssemblyProblemValidationTests}.g.cs", code);
+            executionConductor.AddSource(ConstantNames.AssemblyProblemValidationTestsHintName, code);
         }
 
         private void GenerateTestClass(ProblemClassDeclarationCorrelation correlation)
@@ -144,7 +157,7 @@ $@"
                 return;
 
             var testNamespace = $"{baseTestNamespace}.Year{correlation.Year}";
-            var className = $"Day{correlation.Day}ValidationTests";
+            var className = $"Day{correlation.Day}{ConstantNames.ValidationTestsSuffix}";
 
             // Header
             var builder = new StringBuilder();
@@ -176,7 +189,8 @@ $@"
     }
 }");
 
-            Context.AddSource($"{testNamespace}.{className}.g.cs", builder.ToString());
+            var hintName = GetTestCaseSourceFileName($"{testNamespace}.{className}");
+            executionConductor.AddSource(hintName, builder.ToString());
 
             void AppendPartAttribute(bool validPart, int partNumber)
             {
@@ -186,10 +200,13 @@ $@"
                 builder.Append("    [").Append(identifiers.InlineDataAttributeName).Append("(").Append(partNumber).AppendLine(")]");
             }
         }
+    }
 
-        private static class ConstantNames
-        {
-            public const string AssemblyProblemValidationTests = nameof(AssemblyProblemValidationTests);
-        }
+    public static class ConstantNames
+    {
+        public const string AssemblyProblemValidationTests = nameof(AssemblyProblemValidationTests);
+        public const string AssemblyProblemValidationTestsHintName = $"{AssemblyProblemValidationTests}.g.cs";
+
+        public const string ValidationTestsSuffix = "ValidationTests";
     }
 }

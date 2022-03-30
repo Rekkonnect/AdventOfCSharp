@@ -1,4 +1,5 @@
 ﻿using AdventOfCSharp.Benchmarking;
+using AdventOfCSharp.SourceGenerators.Utilities;
 using NUnit.Framework;
 using System.Collections.Generic;
 
