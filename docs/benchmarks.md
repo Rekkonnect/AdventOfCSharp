@@ -6,7 +6,7 @@ The framework provides a built-in mechanism to **generate** benchmarks using [Be
 
 It is important that solving either part of the two of a problem should be an isolated process. In other words, solving part 2 shouldn't depend on having solved part 1.
 
-Additionally, this feature is offered exclusively to C# projects. However, this only limits the project that contains the benchmarks; you are still free to write your problem solutions in other projects in your language of preference (either VB or F#).
+Additionally, this feature is offered exclusively to C# projects. However, this only limits the project that contains the benchmarks; you are still free to write your problem solutions in other projects in your language of preference (C#, VB or F#).
 
 ## Setting up the project
 
@@ -21,6 +21,8 @@ When adding the `AdventOfCSharp.SourceGenerators` dependency, edit the .csproj f
 ```
 
 The `OutputItemType` attribute enables the source generators to generate sources by being considered analyzers.
+
+Do not forget to add project/package references to your problem solution projects.
 
 ## Describing the benchmarks
 

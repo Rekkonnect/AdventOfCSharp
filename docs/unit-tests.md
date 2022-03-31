@@ -11,7 +11,7 @@ This guide includes information about setting up unit tests for your solution.
 
 It is important that solving either part of the two of a problem should be an isolated process. In other words, solving part 2 shouldn't depend on having solved part 1.
 
-Additionally, this feature is offered exclusively to C# projects. However, this only limits the project that contains the unit tests; you are still free to write your problem solutions in other projects in your language of preference (either VB or F#).
+Additionally, this feature is offered exclusively to C# projects. However, this only limits the project that contains the unit tests; you are still free to write your problem solutions in other projects in your language of preference (C#, VB or F#).
 
 ### Performance
 
