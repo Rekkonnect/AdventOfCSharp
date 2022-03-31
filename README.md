@@ -16,9 +16,12 @@ Donations are welcome on the specified links, and would be greatly appreciated. 
 
 Found [here](https://github.com/AlFasGD/AdventOfCSharp.Template)
 
-## Package
+## Packages
 
 - [AdventOfCSharp](https://www.nuget.org/packages/AdventOfCSharp)
+- [AdventOfCSharp.Benchmarking](https://www.nuget.org/packages/AdventOfCSharp.Benchmarking)
+- AdventOfCSharp.Testing ([NUnit](https://www.nuget.org/packages/AdventOfCSharp.Testing.NUnit) - [xUnit](https://www.nuget.org/packages/AdventOfCSharp.Testing.XUnit) - [MSTest](https://www.nuget.org/packages/AdventOfCSharp.Testing.MSTest))
+- [AdventOfCSharp.SourceGenerators](https://www.nuget.org/packages/AdventOfCSharp.SourceGenerators) (for using benchmarking and unit testing features)
 
 ## Features
 
@@ -35,15 +38,22 @@ Found [here](https://github.com/AlFasGD/AdventOfCSharp.Template)
 - Detailed part solution status declaration and tracking
 - Custom part solvers (fanmade "Part 3" problems, easter eggs, and more)
 - Source analyzers that ensure correct usage of the framework
+- Source generated benchmarking and unit testing
+  - Customized input file path
+  - Easy to setup in very few lines of code
+  - Automatically generated unit tests for all available referenced problem solutions
+  - Flexibility customizing generated benchmarks and unit tests
 
 Upcoming features:
-- Benchmarking
+- Further flexibility for customizing benchmarking methods
+- Support solving the same problem in multiple languages
+- Nested solution classes
+- Improved input generation tools
 - and [more](https://github.com/AlFasGD/AdventOfCSharp/issues)
 
 ## Documentation
 
-A full documentation guide outside the project template will be completed soon.
-For the time being, documentation is available on the [docs directory](/docs).
+The documentation guides outside the project template are continuously in the works, available on the [docs directory](/docs/).
 
 ## Demo
 
