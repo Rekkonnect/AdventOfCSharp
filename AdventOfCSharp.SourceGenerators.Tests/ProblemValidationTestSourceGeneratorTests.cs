@@ -15,10 +15,7 @@ public sealed class ProblemValidationTestSourceGeneratorTests : BaseSourceGenera
 
     private const string customBaseDirectory = @"C:\Example\Path";
 
-    [Test]
-    public void NUnitTest()
-    {
-        const string testingAssemblyCode =
+    private const string testingAssemblyCode =
 $@"
 using AdventOfCSharp;
 using AdventOfCSharp.Testing;
@@ -42,21 +39,22 @@ public abstract class TestProblem : Problem<int>
 }}
 ";
 
+    [Test]
+    [TestCase(TestingFramework.NUnit)]
+    [TestCase(TestingFramework.XUnit)]
+    [TestCase(TestingFramework.MSTest)]
+    public void GeneralTestingFrameworks(TestingFramework testingFramework)
+    {
         var test = new Test();
-        test.AddFrameworkReference(TestingFramework.NUnit);
+        test.AddFrameworkReference(testingFramework);
         
         var mappings = new GeneratedSourceMappings();
-        GenerateBaseAssemblyValidationTestsClass(mappings, TestingFramework.NUnit);
-        AddGeneratedCaseMappingNUnit(mappings, 2020, 1);
-        AddGeneratedCaseMappingNUnit(mappings, 2020, 2);
-        AddGeneratedCaseMappingNUnit(mappings, 2021, 1);
+        GenerateBaseAssemblyValidationTestsClass(mappings, testingFramework);
+        AddGeneratedCaseMapping(mappings, testingFramework, 2020, 1);
+        AddGeneratedCaseMapping(mappings, testingFramework, 2020, 2);
+        AddGeneratedCaseMapping(mappings, testingFramework, 2021, 1);
 
-        var originalSources = new[]
-        {
-            testingAssemblyCode
-        };
-        
-        VerifyAsync(originalSources, mappings, test).Wait();
+        VerifyAsync(testingAssemblyCode, mappings, test).Wait();
     }
 
     private static void GenerateBaseAssemblyValidationTestsClass(GeneratedSourceMappings mappings, TestingFramework framework)
@@ -81,6 +79,15 @@ public abstract class {AssemblyProblemValidationTests}<TProblem> : {identifiers.
         mappings.Add(AssemblyProblemValidationTestsHintName, source);
     }
 
+    private static string GenerateTestSource(TestingFramework framework, int year, int day)
+    {
+        return framework switch
+        {
+            TestingFramework.NUnit => GenerateNUnitTestSource(year, day),
+            TestingFramework.XUnit => GenerateXUnitTestSource(year, day),
+            TestingFramework.MSTest => GenerateMSTestTestSource(year, day),
+        };
+    }
     private static string GenerateNUnitTestSource(int year, int day)
     {
         return
@@ -100,10 +107,49 @@ public sealed partial class Day{day}ValidationTests : {AssemblyProblemValidation
 }}
 ";
     }
-
-    private static void AddGeneratedCaseMappingNUnit(GeneratedSourceMappings mappings, int year, int day)
+    private static string GenerateXUnitTestSource(int year, int day)
     {
-        var source = GenerateNUnitTestSource(year, day);
+        return
+$@"using Xunit;
+
+namespace {baseTestNamespace}.Year{year};
+
+public sealed partial class Day{day}ValidationTests : {AssemblyProblemValidationTests}<{baseProblemNamespace}.Year{year}.Day{day}>
+{{
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    public void PartTest(int part)
+    {{
+        PartTestImpl(part);
+    }}
+}}
+";
+    }
+    private static string GenerateMSTestTestSource(int year, int day)
+    {
+        return
+$@"using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace {baseTestNamespace}.Year{year};
+
+[TestClass]
+public sealed partial class Day{day}ValidationTests : {AssemblyProblemValidationTests}<{baseProblemNamespace}.Year{year}.Day{day}>
+{{
+    [DataTestMethod]
+    [DataRow(1)]
+    [DataRow(2)]
+    public void PartTest(int part)
+    {{
+        PartTestImpl(part);
+    }}
+}}
+";
+    }
+
+    private static void AddGeneratedCaseMapping(GeneratedSourceMappings mappings, TestingFramework framework, int year, int day)
+    {
+        var source = GenerateTestSource(framework, year, day);
         AddGeneratedCaseMapping(mappings, year, day, source);
     }
     private static void AddGeneratedCaseMapping(GeneratedSourceMappings mappings, int year, int day, string source)

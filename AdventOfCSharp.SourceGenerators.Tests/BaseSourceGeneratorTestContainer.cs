@@ -46,6 +46,10 @@ public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
     {
         await VerifyAsync(new[] { source }, mappings);
     }
+    protected async Task VerifyAsync(string source, GeneratedSourceMappings mappings, CSharpSourceGeneratorVerifier<TSourceGenerator>.Test test)
+    {
+        await VerifyAsync(new[] { source }, mappings, test);
+    }
     protected async Task VerifyAsync(IEnumerable<string> sources, GeneratedSourceMappings mappings)
     {
         await VerifyAsync(sources, mappings, new CSharpSourceGeneratorVerifier<TSourceGenerator>.Test());

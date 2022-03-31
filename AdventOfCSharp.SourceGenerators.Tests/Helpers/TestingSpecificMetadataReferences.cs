@@ -27,15 +27,15 @@ public static class TestingSpecificMetadataReferences
             TestingReference
         );
 
-        var nunitFramework = MetadataReferenceFactory.CreateFromType<NUnit.Framework.Assert>();
+        var nunitFramework = MetadataReferenceFactory.CreateFromType<NUnit.Framework.TestAttribute>();
         var nunitTesting = MetadataReferenceFactory.CreateFromType(typeof(AdventOfCSharp.Testing.NUnit.NUnitProblemValidationTests<>));
         NUnitReferences = new(nunitTesting, nunitFramework);
         
-        var xunitFramework = MetadataReferenceFactory.CreateFromType<Xunit.Assert>();
+        var xunitFramework = MetadataReferenceFactory.CreateFromType<Xunit.TheoryAttribute>();
         var xunitTesting = MetadataReferenceFactory.CreateFromType(typeof(AdventOfCSharp.Testing.XUnit.XUnitProblemValidationTests<>));
         XUnitReferences = new(xunitTesting, xunitFramework);
 
-        var mstestFramework = MetadataReferenceFactory.CreateFromType<Microsoft.VisualStudio.TestTools.UnitTesting.Assert>();
+        var mstestFramework = MetadataReferenceFactory.CreateFromType<Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute>();
         var mstestTesting = MetadataReferenceFactory.CreateFromType(typeof(AdventOfCSharp.Testing.MSTest.MSTestProblemValidationTests<>));
         MSTestReferences = new(mstestTesting, mstestFramework);
     }
