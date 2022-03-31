@@ -37,6 +37,7 @@
     <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\AdventOfCSharp.Testing.Common\AdventOfCSharp.Testing.Common.csproj" OutputItemType="Analyzer" />
   </ItemGroup>
   
 </Project>

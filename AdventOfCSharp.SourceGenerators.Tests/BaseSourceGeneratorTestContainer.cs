@@ -1,5 +1,6 @@
 ﻿using AdventOfCSharp.SourceGenerators.Tests.Helpers;
 using AdventOfCSharp.SourceGenerators.Tests.Verifiers;
+using AdventOfCSharp.SourceGenerators.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
@@ -45,6 +46,10 @@ public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
     {
         await VerifyAsync(new[] { source }, mappings);
     }
+    protected async Task VerifyAsync(string source, GeneratedSourceMappings mappings, CSharpSourceGeneratorVerifier<TSourceGenerator>.Test test)
+    {
+        await VerifyAsync(new[] { source }, mappings, test);
+    }
     protected async Task VerifyAsync(IEnumerable<string> sources, GeneratedSourceMappings mappings)
     {
         await VerifyAsync(sources, mappings, new CSharpSourceGeneratorVerifier<TSourceGenerator>.Test());
@@ -59,6 +64,4 @@ public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
 
         await test.RunAsync();
     }
-
-    protected sealed class GeneratedSourceMappings : SortedDictionary<string, string> { }
 }

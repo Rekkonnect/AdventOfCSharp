@@ -23,7 +23,6 @@ public class ProblemRunnerTests
     public void ValidateProblem()
     {
         var runner = ProblemRunner.ForProblem(2021, 1)!;
-        runner.Options.DisplayExecutionTimes = false;
         Assert.False(runner.FullyValidateAllTestCases().HasInvalidResults);
     }
 }

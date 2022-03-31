@@ -12,7 +12,7 @@ using System.Text;
 
 namespace AdventOfCSharp.SourceGenerators;
 
-[Generator]
+[Generator(LanguageNames.CSharp)]
 public class BenchmarkDescriberSourceGenerator : ISourceGenerator
 {
     private readonly Dictionary<Compilation, CompilationBenchmarkDescribers> generatorExecutions = new();
@@ -25,12 +25,15 @@ public class BenchmarkDescriberSourceGenerator : ISourceGenerator
 
         var defined = context.Compilation.GetAllDefinedTypes();
         var benchmarkDescribers = defined.Where(IsBenchmarkDescriber);
+        var conductor = new GeneratorExecutionConductor(context);
 
         foreach (var describer in benchmarkDescribers)
         {
             var source = GenerateBenchmarkDescriberSource(describer);
-            context.AddSource(GetBenchmarkSourceFileName(describer), source);
+            conductor.AddSource(GetBenchmarkSourceFileName(describer), source);
         }
+
+        conductor.FinalizeGeneratorExecution();
 
         string GenerateBenchmarkDescriberSource(INamedTypeSymbol benchmarkType)
         {
@@ -334,13 +337,7 @@ $@"
                 BenchmarkingParts.Part1 => 1,
                 BenchmarkingParts.Part2 => 2,
             };
-            var method = correlation.PartSolverMethodSymbol(partNumber);
-            var partSolutionAttribute = method.FirstOrDefaultAttributeNamed<PartSolutionAttribute>();
-            if (partSolutionAttribute is null)
-                return false;
-
-            var status = (PartSolutionStatus)partSolutionAttribute.ConstructorArguments[0].Value;
-            return !status.IsValidSolution();
+            return !correlation.IsValidPartSolution(partNumber);
         }
 
         private void GenerateBenchmarkMethod(ProblemDate date, string part)

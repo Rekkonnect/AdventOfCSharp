@@ -1,11 +1,15 @@
 ﻿using AdventOfCSharp.AnalysisTestsBase.Verifiers;
 using AdventOfCSharp.SourceGenerators.Tests.Helpers;
+using AdventOfCSharp.Testing;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Testing;
+using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 using System;
 using System.Collections.Immutable;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AdventOfCSharp.SourceGenerators.Tests.Verifiers;
 
@@ -14,10 +18,19 @@ public static class CSharpSourceGeneratorVerifier<TSourceGenerator>
 {
     public class Test : CSharpSourceGeneratorTest<TSourceGenerator, NUnitVerifier>
     {
+        // Expose it like that
+        public string AssemblyName => DefaultTestProjectName;
+
         public Test()
         {
             CSharpVerifierHelper.SetupNET6AndAoCSDependencies(this);
             TestState.AdditionalReferences.AddRange(BenchmarkSpecificMetadataReferences.BaseBenchmarkReferences);
+            TestState.AdditionalReferences.AddRange(TestingSpecificMetadataReferences.BaseTestingReferences);
+        }
+
+        public void AddFrameworkReference(TestingFramework framework)
+        {
+            TestState.AdditionalReferences.AddRange(TestingSpecificMetadataReferences.ForFramework(framework).References);
         }
 
         protected override CompilationOptions CreateCompilationOptions()

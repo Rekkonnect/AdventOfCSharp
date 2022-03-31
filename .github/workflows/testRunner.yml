@@ -9,12 +9,16 @@ jobs:
     strategy:
       matrix:
         project:
-        - Tests
-        - AdditionalProblemSolutionTests
-        - Analyzers.Tests
-        - CodeFixes.Tests
-        - SourceGenerators.Tests
-
+        - name: Tests
+        - name: AdditionalProblemSolutionTests
+        - name: Analyzers.Tests
+        - name: CodeFixes.Tests
+        - name: SourceGenerators.Tests
+          
+        - name: Testing.Tests.MSTest
+        - name: Testing.Tests.NUnit
+        - name: Testing.Tests.XUnit
+          
     steps:
     - name: Setup .NET 6.0
       uses: actions/setup-dotnet@v1
@@ -25,4 +29,4 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Run Tests in Project
-      run: dotnet test AdventOfCSharp.${{ matrix.project }}/AdventOfCSharp.${{ matrix.project }}.csproj
+      run: dotnet test ${{ matrix.project.directory }}AdventOfCSharp.${{ matrix.project.name }}/AdventOfCSharp.${{ matrix.project.name }}.csproj
