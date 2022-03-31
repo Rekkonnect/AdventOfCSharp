@@ -9,23 +9,15 @@ jobs:
     strategy:
       matrix:
         project:
-        - directory: ""
-          name: Tests
-        - directory: ""
-          name: AdditionalProblemSolutionTests
-        - directory: ""
-          name: Analyzers.Tests
-        - directory: ""
-          name: CodeFixes.Tests
-        - directory: ""
-          name: SourceGenerators.Tests
+        - name: Tests
+        - name: AdditionalProblemSolutionTests
+        - name: Analyzers.Tests
+        - name: CodeFixes.Tests
+        - name: SourceGenerators.Tests
           
-        - directory: Testing/
-          name: Testing.Tests.MSTest
-        - directory: Testing/
-          name: Testing.Tests.NUnit
-        - directory: Testing/
-          name: Testing.Tests.XUnit
+        - name: Testing.Tests.MSTest
+        - name: Testing.Tests.NUnit
+        - name: Testing.Tests.XUnit
           
     steps:
     - name: Setup .NET 6.0
