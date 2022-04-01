@@ -19,6 +19,7 @@ Found [here](https://github.com/AlFasGD/AdventOfCSharp.Template)
 ## Packages
 
 - [AdventOfCSharp](https://www.nuget.org/packages/AdventOfCSharp)
+- [AdventOfCSharp.Analyzers](https://www.nuget.org/packages/AdventOfCSharp.Analyzers)
 - [AdventOfCSharp.Benchmarking](https://www.nuget.org/packages/AdventOfCSharp.Benchmarking)
 - AdventOfCSharp.Testing ([NUnit](https://www.nuget.org/packages/AdventOfCSharp.Testing.NUnit) - [xUnit](https://www.nuget.org/packages/AdventOfCSharp.Testing.XUnit) - [MSTest](https://www.nuget.org/packages/AdventOfCSharp.Testing.MSTest))
 - [AdventOfCSharp.SourceGenerators](https://www.nuget.org/packages/AdventOfCSharp.SourceGenerators) (for using benchmarking and unit testing features)

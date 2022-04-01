@@ -4,19 +4,28 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
 
-    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
+    
+    <Version>1.4.0</Version>
+
+    <PackageTags>advent-of-code, aoc, testing, mstest</PackageTags>
+    <Description>Testing components for the Advent of C# framework for MSTest projects.</Description>
+    <Copyright>© 2022, Alex Kalfakakos</Copyright>
+    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <Authors>Alex Kalfakakos</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Product>AdventOfCSharp.Testing.MSTest</Product>
+    <PackageId>AdventOfCSharp.Testing.MSTest</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
-    <PackageReference Include="coverlet.collector" Version="3.1.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCSharp.Testing\AdventOfCSharp.Testing.csproj" />
-    <ProjectReference Include="..\AdventOfCSharp\AdventOfCSharp.csproj" />
   </ItemGroup>
 
 </Project>

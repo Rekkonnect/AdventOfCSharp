@@ -7,9 +7,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
-    <Version>1.4.0</Version>
+    <Version>1.4.0.1</Version>
 
-    <PackageTags>advent-of-code, aoc</PackageTags>
+    <PackageTags>advent-of-code, aoc, source-generator, unit-test, test, benchmark</PackageTags>
     <Description>Source generators for generating benchmarks and unit tests for the Advent of C# framework.</Description>
     <Copyright>© 2022, Alex Kalfakakos</Copyright>
     <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
@@ -19,25 +19,25 @@
     <Product>AdventOfCSharp.SourceGenerators</Product>
     <PackageId>AdventOfCSharp.SourceGenerators</PackageId>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="*\AdventOfCSharp*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
-      
+
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    
+
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0" />
     <PackageReference Include="RoseLynn" Version="0.4.1.2" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\AdventOfCSharp.Testing.Common\AdventOfCSharp.Testing.Common.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
+    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
+    <ProjectReference Include="..\AdventOfCSharp.Testing.Common\AdventOfCSharp.Testing.Common.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
   </ItemGroup>
-  
+
 </Project>
