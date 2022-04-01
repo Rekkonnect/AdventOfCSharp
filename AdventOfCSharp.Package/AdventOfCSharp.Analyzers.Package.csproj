@@ -20,8 +20,11 @@
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp.Analyzers</Product>
     <PackageId>AdventOfCSharp.Analyzers</PackageId>
-    <PackageReleaseNotes>Additions:
-- Secret string property analyzers</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfixes:
+- Fix unfavorable NullReferenceExceptions in AnswerStringConverterAnalyzer triggered by irrelevant non-generic types
+
+Internals:
+General abstractions in favor of source generators.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

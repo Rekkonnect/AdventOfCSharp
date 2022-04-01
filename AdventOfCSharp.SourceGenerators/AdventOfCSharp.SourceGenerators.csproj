@@ -7,7 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
-    <Version>1.4.0</Version>
+    <Version>1.4.0.1</Version>
 
     <PackageTags>advent-of-code, aoc, source-generator, unit-test, test, benchmark</PackageTags>
     <Description>Source generators for generating benchmarks and unit tests for the Advent of C# framework.</Description>
@@ -34,10 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\AdventOfCSharp.Testing.Common\AdventOfCSharp.Testing.Common.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
+    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
+    <ProjectReference Include="..\AdventOfCSharp.Testing.Common\AdventOfCSharp.Testing.Common.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
