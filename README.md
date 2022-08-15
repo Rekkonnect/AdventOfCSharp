@@ -6,7 +6,7 @@ It aims to aid users into primarily focusing on the core of solving this marvelo
 ## What *is* Advent of Code?
 
 [Advent of Code](https://adventofcode.com/) is an annual event running during December 1 through 25, presenting one two-part problem every day.
-Users are challenged to write a working solution for their personalized input, given the problem's description. More information on the [website](https://adventofcode.com/2021/about).
+Users are challenged to write a working solution for their personalized input, given the problem's description. More information on the [website](https://adventofcode.com/about).
 
 ## Donating
 
@@ -23,6 +23,14 @@ Found [here](https://github.com/AlFasGD/AdventOfCSharp.Template)
 - [AdventOfCSharp.Benchmarking](https://www.nuget.org/packages/AdventOfCSharp.Benchmarking)
 - AdventOfCSharp.Testing ([NUnit](https://www.nuget.org/packages/AdventOfCSharp.Testing.NUnit) - [xUnit](https://www.nuget.org/packages/AdventOfCSharp.Testing.XUnit) - [MSTest](https://www.nuget.org/packages/AdventOfCSharp.Testing.MSTest))
 - [AdventOfCSharp.SourceGenerators](https://www.nuget.org/packages/AdventOfCSharp.SourceGenerators) (for using benchmarking and unit testing features)
+
+### Mandatory packages for special cases
+
+These packages are publicly released for until dependencies are self-contained and do not depend on other projects that should be kept private so as to not bloat the dependency graph.
+- [AdventOfCSharp.Benchmarking.Common](https://www.nuget.org/packages/AdventOfCSharp.Benchmarking.Common/)
+- [AdventOfCSharp.Testing.Common](https://www.nuget.org/packages/AdventOfCSharp.Testing.Common/)
+- [AdventOfCSharp.Common](https://www.nuget.org/packages/AdventOfCSharp.Common/)
+- [AdventOfCSharp.Testing](https://www.nuget.org/packages/AdventOfCSharp.Testing/)
 
 ## Features
 

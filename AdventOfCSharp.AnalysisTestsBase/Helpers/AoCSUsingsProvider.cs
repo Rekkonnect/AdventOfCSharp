@@ -1,4 +1,4 @@
-﻿using RoseLynn.Testing;
+﻿using RoseLynn;
 
 namespace AdventOfCSharp.AnalysisTestsBase;
 

@@ -2,6 +2,7 @@
 using AdventOfCSharp.SourceGenerators.Utilities;
 using AdventOfCSharp.Testing;
 using NUnit.Framework;
+using RoseLynn.Generators;
 
 namespace AdventOfCSharp.SourceGenerators.Tests;
 

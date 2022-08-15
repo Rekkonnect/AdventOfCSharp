@@ -1,6 +1,7 @@
 ﻿using AdventOfCSharp.Benchmarking;
 using AdventOfCSharp.SourceGenerators.Utilities;
 using NUnit.Framework;
+using RoseLynn.Generators;
 using System.Collections.Generic;
 
 namespace AdventOfCSharp.SourceGenerators.Tests;

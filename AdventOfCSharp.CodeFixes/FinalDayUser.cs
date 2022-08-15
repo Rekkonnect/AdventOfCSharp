@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RoseLynn;
+using RoseLynn.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
@@ -54,8 +55,7 @@ public sealed class FinalDayUser : AoCSCodeFixProvider
         {
             var genericBaseType = baseTypeSyntax.Type as GenericNameSyntax;
             var firstArgument = genericBaseType.TypeArgumentList.Arguments[0];
-            // TODO: Add ExtendedSyntaxFactory.SeparatedList(params TNode[]) RoseLynn
-            var newBaseTypeArgumentList = SyntaxFactory.TypeArgumentList(SyntaxFactory.SeparatedList(new[] { firstArgument }));
+            var newBaseTypeArgumentList = ExtendedSyntaxFactory.TypeArgumentList(firstArgument);
             var finalDayIdentifier = SyntaxFactory.Identifier(KnownSymbolNames.FinalDay);
             var newBaseTypeSyntax = SyntaxFactory.SimpleBaseType(SyntaxFactory.GenericName(finalDayIdentifier, newBaseTypeArgumentList))
                 .WithTriviaFrom(baseTypeSyntax);

@@ -1,4 +1,6 @@
 ﻿
+using Danger.VeryUnsafe;
+
 namespace AdventOfCSharp;
 
 public static class ProblemSolverMethodProvider
@@ -44,7 +46,7 @@ public static class ProblemSolverMethodProvider
         var unboundFuncType = typeof(Func<>);
         var boundFuncType = unboundFuncType.MakeGenericType(returnType);
         var del = method.CreateDelegate(boundFuncType, instance);
-        var action = VeryUnsafe.VeryUnsafe.ChangeType<Action>(del);
+        var action = VeryUnsafe.ChangeType<Action>(del);
         return action;
     }
 

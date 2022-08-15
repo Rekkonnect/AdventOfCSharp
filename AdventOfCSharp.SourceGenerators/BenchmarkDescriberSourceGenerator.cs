@@ -4,6 +4,7 @@ using AdventOfCSharp.CodeAnalysis.Core.Extensions;
 using AdventOfCSharp.SourceGenerators.Utilities;
 using Microsoft.CodeAnalysis;
 using RoseLynn;
+using RoseLynn.Generators;
 using RoseLynn.Utilities;
 using System.Collections.Generic;
 using System.Collections.Immutable;

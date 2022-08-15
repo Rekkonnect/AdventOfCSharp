@@ -3,7 +3,10 @@ using AdventOfCSharp.SourceGenerators.Tests.Verifiers;
 using AdventOfCSharp.SourceGenerators.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Testing.Verifiers;
 using NUnit.Framework;
+using RoseLynn.Generators;
+using RoseLynn.Testing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +14,7 @@ using System.Threading.Tasks;
 namespace AdventOfCSharp.SourceGenerators.Tests;
 
 public abstract class BaseSourceGeneratorTestContainer<TSourceGenerator>
+    : BaseSourceGeneratorTestContainer<TSourceGenerator, NUnitVerifier, CSharpSourceGeneratorVerifier<TSourceGenerator>.Test>
     where TSourceGenerator : class, ISourceGenerator, new()
 {
     protected Compilation CreateCompilationRunGenerator(string source, out TSourceGenerator generator, out GeneratorDriver resultingGeneratorDriver, out Compilation initialCompilation)

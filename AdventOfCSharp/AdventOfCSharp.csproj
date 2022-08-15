@@ -23,7 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Garyon" Version="0.2.7" />
     <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.4.0" />
-    <PackageReference Include="VeryUnsafe" Version="1.0.3" />
+    <PackageReference Include="VeryUnsafe" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>

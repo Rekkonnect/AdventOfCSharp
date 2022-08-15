@@ -40,9 +40,9 @@ General abstractions in favor of source generators.</PackageReleaseNotes>
   
   <!-- Add the required packages -->
   <ItemGroup>
-    <PackageReference Include="RoseLynn" Version="0.4.1.2" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="RoseLynn.Analyzers" Version="0.4.1" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="RoseLynn.CodeFixes" Version="0.4.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="RoseLynn" Version="0.5.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="RoseLynn.Analyzers" Version="0.5.0" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="RoseLynn.CodeFixes" Version="0.5.0" PrivateAssets="all" GeneratePathProperty="true" />
 
     <None Include="$(PKGRoseLynn)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
     <None Include="$(PKGRoseLynn_Analyzers)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
