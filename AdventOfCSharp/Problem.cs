@@ -134,6 +134,7 @@ public abstract partial class Problem
                 {
                     ProblemContentKind.Input => InputProvider.ProblemInputGetter.Instance,
                     ProblemContentKind.Output => OutputProvider.ProblemOutputGetter.Instance,
+                    _ => null!, // Unreachable
                 };
             }
         }

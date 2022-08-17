@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS8785: Generator 'GeneratorName' failed to generate source. It will not contribute to the output and compilation errors may occur as a result.'
+dotnet_diagnostic.CS8785.severity = error

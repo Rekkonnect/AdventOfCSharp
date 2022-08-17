@@ -40,11 +40,15 @@ public sealed class Day[day] : [baseClass]<int>
     /// <summary>Determines whether the generation of files is enabled. Defaults to <see langword="false"/>.</summary>
     public static bool EnabledGeneration { get; set; } = false;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
     /// <summary>Gets or sets the base namespace of the generated solution class. It must be non-<see langword="null"/> when generating files.</summary>
     /// <remarks>The '.YearXXXX' suffix is automatically added during file creation, do not add it on your own.</remarks>
     public static string BaseNamespace { get; set; }
     /// <summary>Gets or sets the base dictionary of the generated solution class. It must be non-<see langword="null"/> when generating files.</summary>
     public static string BaseDirectory { get; set; }
+
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     internal static string InternalBaseNamespace => BaseNamespace ?? throw new InvalidOperationException("The base namespace must be explicitly set.");
     internal static string InternalBaseDirectory => BaseDirectory ?? throw new InvalidOperationException("The base directory must be explicitly set.");

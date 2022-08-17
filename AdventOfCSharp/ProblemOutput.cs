@@ -27,6 +27,7 @@ public record ProblemOutput(string? Part1, string? Part2)
     {
         1 => Part1,
         2 => Part2,
+        _ => null,
     };
 
     public static ProblemOutput Parse(string fileString)

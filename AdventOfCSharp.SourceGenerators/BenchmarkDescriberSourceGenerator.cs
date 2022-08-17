@@ -48,7 +48,7 @@ public class BenchmarkDescriberSourceGenerator : ISourceGenerator
             return classSymbol.HasAttributeNamed<BenchmarkDescriberAttribute>();
             // BDN doesn't like types inheriting types from other assemblies
             // It already has tons of reference issues, let's not stress it further
-            return AoCSAnalysisHelpers.IsImportantAoCSClass(classSymbol, KnownFullSymbolNames.BenchmarkDescriber);
+            //return AoCSAnalysisHelpers.IsImportantAoCSClass(classSymbol, KnownFullSymbolNames.BenchmarkDescriber);
         }
     }
 
@@ -321,6 +321,7 @@ $@"
             BenchmarkingParts.Input => nameof(BenchmarkingParts.Input),
             BenchmarkingParts.Part1 => nameof(BenchmarkingParts.Part1),
             BenchmarkingParts.Part2 => nameof(BenchmarkingParts.Part2),
+            _ => null!, // Unreachable
         };
         private bool IsInvalidSolution(ProblemDate date, BenchmarkingParts part)
         {
@@ -337,6 +338,7 @@ $@"
             {
                 BenchmarkingParts.Part1 => 1,
                 BenchmarkingParts.Part2 => 2,
+                _ => 0, // Unreachable
             };
             return !correlation.IsValidPartSolution(partNumber);
         }

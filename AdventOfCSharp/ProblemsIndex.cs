@@ -273,6 +273,7 @@ public sealed record ProblemInfo(ProblemType ProblemType, PartSolutionStatus Par
     {
         1 => Part1Status,
         2 => Part2Status,
+        _ => default,
     };
 
     public static ProblemInfo Empty(int year, int day) => new(ProblemType.Mock(year, day), PartSolutionStatus.Uninitialized, PartSolutionStatus.Uninitialized);

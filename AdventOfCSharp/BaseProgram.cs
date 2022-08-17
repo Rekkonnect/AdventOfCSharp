@@ -277,6 +277,7 @@ public abstract class BaseProgram
         PartSolutionStatus.UnavailableFreeStar => ConsoleColor.DarkRed,
         PartSolutionStatus.Refactoring => ConsoleColor.Cyan,
         PartSolutionStatus.Interactive => ConsoleColor.DarkGreen,
+        _ => ConsoleColor.White,
     };
 
     protected static void RunTodaysProblem(bool testCases = true)
