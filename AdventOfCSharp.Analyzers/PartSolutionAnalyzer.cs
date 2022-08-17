@@ -6,6 +6,8 @@ using RoseLynn;
 
 namespace AdventOfCSharp.Analyzers;
 
+#nullable enable
+
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
 {
@@ -32,7 +34,7 @@ public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
                 if (solutionAttribute is null)
                     return;
 
-                var solutionAttributeNode = solutionAttribute.ApplicationSyntaxReference.GetSyntax() as AttributeSyntax;
+                var solutionAttributeNode = solutionAttribute.ApplicationSyntaxReference!.GetSyntax() as AttributeSyntax;
                 context.ReportDiagnostic(Diagnostics.CreateAoCS0001(solutionAttributeNode));
                 break;
         }
@@ -51,8 +53,8 @@ public sealed class PartSolutionAnalyzer : ProblemAoCSAnalyzer
                 if (argument.IsDefinedEnumValue())
                     return;
 
-                var attributeNode = solutionAttribute.ApplicationSyntaxReference.GetSyntax() as AttributeSyntax;
-                var undefinedEnumValueNode = attributeNode.ArgumentList.Arguments[0];
+                var attributeNode = solutionAttribute.ApplicationSyntaxReference!.GetSyntax() as AttributeSyntax;
+                var undefinedEnumValueNode = attributeNode!.ArgumentList!.Arguments[0];
                 context.ReportDiagnostic(Diagnostics.CreateAoCS0002(undefinedEnumValueNode));
 
                 break;

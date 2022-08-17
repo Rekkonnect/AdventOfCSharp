@@ -7,6 +7,7 @@ using RoseLynn.Generators;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using TestIdentity;
 
 namespace AdventOfCSharp.SourceGenerators;
 
@@ -102,7 +103,7 @@ public sealed class ProblemValidationTestSourceGenerator : ISourceGenerator
             // As long as the user uses at least one of the frameworks, they are meant to work
             var frameworkNames = matches.Select(match => match.Groups[testingFrameworkNameGroupName].Value);
             var identifier = frameworkNames
-                .Select(TestingFrameworkIdentifiers.GetForFrameworkName)
+                .Select(TestingFrameworkIdentifiers.GetForFrameworkCodeName)
                 .FirstOrDefault(identifier => identifier is not null);
 
             return identifier;
@@ -131,11 +132,11 @@ public sealed class ProblemValidationTestSourceGenerator : ISourceGenerator
 $@"
 using {identifiers.AttributeNamespace};
 using AdventOfCSharp;
-using AdventOfCSharp.Testing.{identifiers.FrameworkNamePrefix};
+using AdventOfCSharp.Testing.{identifiers.CodeFrameworkName};
 
 namespace {baseTestNamespace};
 
-public abstract class {ConstantNames.AssemblyProblemValidationTests}<TProblem> : {identifiers.FrameworkNamePrefix}ProblemValidationTests<TProblem>
+public abstract class {ConstantNames.AssemblyProblemValidationTests}<TProblem> : {identifiers.CodeFrameworkName}ProblemValidationTests<TProblem>
     where TProblem : Problem, new()
 {{
 ";

@@ -6,8 +6,9 @@
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
 
-    <Version>1.4.0.1</Version>
+    <Version>1.4.11</Version>
 
     <PackageTags>advent-of-code, aoc, source-generator, unit-test, test, benchmark</PackageTags>
     <Description>Source generators for generating benchmarks and unit tests for the Advent of C# framework.</Description>
@@ -21,27 +22,44 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="*\AdventOfCSharp*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
 
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.2.0" PrivateAssets="all" />
 
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.2.0" />
-    <PackageReference Include="RoseLynn" Version="0.5.0.1" GeneratePathProperty="true" />
-    <PackageReference Include="RoseLynn.Generators" Version="0.5.0" GeneratePathProperty="true" />
-    
-    <None Include="$(PKGRoseLynn)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
-    <None Include="$(PKGRoseLynn_Generators)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
+    <PackageReference Include="RoseLynn" Version="0.5.1-rc01" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="RoseLynn.Generators" Version="0.5.1-rc01" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="TestIdentity" Version="1.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
-    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
-    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
-    <ProjectReference Include="..\AdventOfCSharp.Testing.Common\AdventOfCSharp.Testing.Common.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
+    <ProjectReference Include="..\AdventOfCSharp.Common\AdventOfCSharp.Common.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\AdventOfCSharp.Benchmarking.Common\AdventOfCSharp.Benchmarking.Common.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\AdventOfCSharp.CodeAnalysis.Core\AdventOfCSharp.CodeAnalysis.Core.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\AdventOfCSharp.Testing.Common\AdventOfCSharp.Testing.Common.csproj" PrivateAssets="all" />
   </ItemGroup>
 
+  <!-- Source generator resources - Microsoft can you please improve this tooling already? -->
+
+  <PropertyGroup>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GetDependencyTargetPaths" AfterTargets="ResolvePackageDependenciesForBuild">
+    <ItemGroup>
+      <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
+
+      <None Include="$(PKGRoseLynn)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <None Include="$(PKGRoseLynn_Generators)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <None Include="$(PKGTestIdentity)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <None Include="$(PKGSystem_Collections_Immutable)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+      <!-- This is eating me up -->
+      <None Include="..\AdventOfCSharp.Testing.Common\bin\Release\netstandard2.0\AdventOfCSharp.Testing.Common.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <None Include="..\AdventOfCSharp.CodeAnalysis.Core\bin\Release\netstandard2.0\AdventOfCSharp.CodeAnalysis.Core.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <None Include="..\AdventOfCSharp.Benchmarking.Common\bin\Release\netstandard2.0\AdventOfCSharp.Benchmarking.Common.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <None Include="..\AdventOfCSharp.Common\bin\Release\netstandard2.0\AdventOfCSharp.Common.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+  </Target>
+  
 </Project>

@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using RoseLynn;
 using System;
 using System.Collections.Immutable;
+using TestIdentity;
 
 namespace AdventOfCSharp.SourceGenerators.Tests.Helpers;
 
@@ -19,7 +20,7 @@ public static class TestingSpecificMetadataReferences
 
     static TestingSpecificMetadataReferences()
     {
-        TestingCommonReference = MetadataReferenceFactory.CreateFromType<AdventOfCSharp.Testing.TestingFrameworkIdentifiers>();
+        TestingCommonReference = MetadataReferenceFactory.CreateFromType<AdventOfCSharp.Testing.AoCSTestAssemblyAttribute>();
         TestingReference = MetadataReferenceFactory.CreateFromType(typeof(AdventOfCSharp.Testing.FrameworkUnboundProblemValidationTests<>));
 
         BaseTestingReferences = ImmutableArray.Create(

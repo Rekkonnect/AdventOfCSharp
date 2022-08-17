@@ -54,6 +54,8 @@ public static class AccessorKindExtensions
 
             AccessorKind.Add => SyntaxKind.AddKeyword,
             AccessorKind.Remove => SyntaxKind.RemoveKeyword,
+
+            _ => default,
         };
     }
 }

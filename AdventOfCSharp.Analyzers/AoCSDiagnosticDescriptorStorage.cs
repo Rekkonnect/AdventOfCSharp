@@ -80,6 +80,7 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
             BrevityCategory => DiagnosticSeverity.Info,
             InformationCategory => DiagnosticSeverity.Warning,
             BestPracticeCategory => DiagnosticSeverity.Info,
+            _ => null,
         };
     }
     #endregion

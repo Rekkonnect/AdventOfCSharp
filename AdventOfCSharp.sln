@@ -49,13 +49,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Testing.MSTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Testing.Common", "AdventOfCSharp.Testing.Common\AdventOfCSharp.Testing.Common.csproj", "{CD6E285E-6B9B-4444-BE0F-C04D4FA18235}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.Testing.Tests.NUnit", "AdventOfCSharp.Testing.Tests.NUnit\AdventOfCSharp.Testing.Tests.NUnit.csproj", "{3F29DDAF-5C4A-4BB3-935A-82E9781AC80C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Testing.Tests.NUnit", "AdventOfCSharp.Testing.Tests.NUnit\AdventOfCSharp.Testing.Tests.NUnit.csproj", "{3F29DDAF-5C4A-4BB3-935A-82E9781AC80C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.Testing.Tests.Common", "AdventOfCSharp.Testing.Tests.Common\AdventOfCSharp.Testing.Tests.Common.csproj", "{E133DEFF-6370-4925-BB4A-032DC6690C77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Testing.Tests.Common", "AdventOfCSharp.Testing.Tests.Common\AdventOfCSharp.Testing.Tests.Common.csproj", "{E133DEFF-6370-4925-BB4A-032DC6690C77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.Testing.Tests.XUnit", "AdventOfCSharp.Testing.Tests.XUnit\AdventOfCSharp.Testing.Tests.XUnit.csproj", "{193A3A79-0822-425B-AF83-53323DB59FF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Testing.Tests.XUnit", "AdventOfCSharp.Testing.Tests.XUnit\AdventOfCSharp.Testing.Tests.XUnit.csproj", "{193A3A79-0822-425B-AF83-53323DB59FF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCSharp.Testing.Tests.MSTest", "AdventOfCSharp.Testing.Tests.MSTest\AdventOfCSharp.Testing.Tests.MSTest.csproj", "{9F358626-AFB5-44D0-B42D-B01AB4F6F839}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCSharp.Testing.Tests.MSTest", "AdventOfCSharp.Testing.Tests.MSTest\AdventOfCSharp.Testing.Tests.MSTest.csproj", "{9F358626-AFB5-44D0-B42D-B01AB4F6F839}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B9B9BD4F-221F-413D-868A-53B4FD63D465}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

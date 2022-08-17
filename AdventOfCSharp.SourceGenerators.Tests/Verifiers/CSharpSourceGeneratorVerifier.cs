@@ -4,6 +4,7 @@ using AdventOfCSharp.Testing;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 using RoseLynn.Generators.Testing;
+using TestIdentity;
 
 namespace AdventOfCSharp.SourceGenerators.Tests.Verifiers;
 

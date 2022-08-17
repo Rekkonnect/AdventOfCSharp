@@ -3,6 +3,8 @@ using AdventOfCSharp.SourceGenerators.Utilities;
 using AdventOfCSharp.Testing;
 using NUnit.Framework;
 using RoseLynn.Generators;
+using System.ComponentModel;
+using TestIdentity;
 
 namespace AdventOfCSharp.SourceGenerators.Tests;
 
@@ -66,11 +68,11 @@ public abstract class TestProblem : Problem<int>
 $@"
 using {identifiers.AttributeNamespace};
 using AdventOfCSharp;
-using AdventOfCSharp.Testing.{identifiers.FrameworkNamePrefix};
+using AdventOfCSharp.Testing.{identifiers.CodeFrameworkName};
 
 namespace {baseTestNamespace};
 
-public abstract class {AssemblyProblemValidationTests}<TProblem> : {identifiers.FrameworkNamePrefix}ProblemValidationTests<TProblem>
+public abstract class {AssemblyProblemValidationTests}<TProblem> : {identifiers.CodeFrameworkName}ProblemValidationTests<TProblem>
     where TProblem : Problem, new()
 {{
     protected override string GetProblemFileBaseDirectory() => @""{customBaseDirectory}"";
@@ -87,6 +89,8 @@ public abstract class {AssemblyProblemValidationTests}<TProblem> : {identifiers.
             TestingFramework.NUnit => GenerateNUnitTestSource(year, day),
             TestingFramework.XUnit => GenerateXUnitTestSource(year, day),
             TestingFramework.MSTest => GenerateMSTestTestSource(year, day),
+
+            _ => throw new InvalidEnumArgumentException("An unknown testing framework was requested."),
         };
     }
     private static string GenerateNUnitTestSource(int year, int day)
