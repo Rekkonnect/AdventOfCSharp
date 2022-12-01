@@ -1,4 +1,6 @@
 ﻿
+using Danger.VeryUnsafe;
+
 namespace AdventOfCSharp;
 
 public static class ProblemSolverMethodProvider
@@ -35,7 +37,7 @@ public static class ProblemSolverMethodProvider
     /// <param name="part">The part of the instance which will be solved.</param>
     /// <param name="instance">The instance on which the delegate will perform.</param>
     /// <returns>The no-return part solver delegate acting on the given <seealso cref="Problem"/> instance.</returns>
-    /// <remarks>WARNING: This function uses a <see langword="very unsafe"/> trick from <seealso cref="VeryUnsafe.VeryUnsafe"/>, though no issues have been recorded so far.</remarks>
+    /// <remarks>WARNING: This function uses a <see langword="very unsafe"/> trick from <seealso cref="VeryUnsafe"/>, though no issues have been recorded so far.</remarks>
     public static Action CreateNoReturnSolverDelegate(int part, Problem instance)
     {
         var method = MethodForPart(instance.GetType(), part);
@@ -44,7 +46,7 @@ public static class ProblemSolverMethodProvider
         var unboundFuncType = typeof(Func<>);
         var boundFuncType = unboundFuncType.MakeGenericType(returnType);
         var del = method.CreateDelegate(boundFuncType, instance);
-        var action = VeryUnsafe.VeryUnsafe.ChangeType<Action>(del);
+        var action = VeryUnsafe.ChangeType<Action>(del);
         return action;
     }
 

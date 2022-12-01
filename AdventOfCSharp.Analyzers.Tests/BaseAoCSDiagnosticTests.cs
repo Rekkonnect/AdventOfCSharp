@@ -3,6 +3,7 @@ using AdventOfCSharp.AnalysisTestsBase.Verifiers;
 using Gu.Roslyn.Asserts;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RoseLynn;
 using RoseLynn.Analyzers;
 using RoseLynn.Testing;
 

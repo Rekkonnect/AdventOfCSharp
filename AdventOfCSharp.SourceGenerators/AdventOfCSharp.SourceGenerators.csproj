@@ -29,8 +29,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0" />
-    <PackageReference Include="RoseLynn" Version="0.4.1.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.4.0" />
+    <PackageReference Include="RoseLynn" Version="0.6.1" />
   </ItemGroup>
 
   <ItemGroup>

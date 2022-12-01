@@ -1,7 +1,7 @@
-﻿using AdventOfCSharp.CodeAnalysis.Core.Extensions;
-using AdventOfCSharp.SourceGenerators.Utilities;
+﻿using AdventOfCSharp.SourceGenerators.Utilities;
 using AdventOfCSharp.Testing;
 using Microsoft.CodeAnalysis;
+using RoseLynn;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
