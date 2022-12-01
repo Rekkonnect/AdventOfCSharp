@@ -230,8 +230,13 @@ public abstract partial class Problem
         {
             get
             {
-                var validFiles = Directory.GetFiles(BaseInputDirectory).Select(f => Path.GetFileName(f)).Where(f => f.StartsWith($"{Day}T"));
-                return validFiles.Select(file => TestCaseFilePathPattern.Match(file).Groups["id"].Value.ParseInt32());
+                var baseInputDirectoryInfo = new DirectoryInfo(BaseInputDirectory);
+                if (!baseInputDirectoryInfo.Exists)
+                    return Enumerable.Empty<int>();
+
+                var allFiles = baseInputDirectoryInfo.GetFiles();
+                var validFiles = allFiles.Where(f => f.Name.StartsWith($"{Day}T"));
+                return validFiles.Select(file => TestCaseFilePathPattern.Match(file.Name).Groups["id"].Value.ParseInt32());
             }
         }
 
