@@ -8,7 +8,7 @@ internal sealed class AoCSDiagnosticDescriptorStorage : DiagnosticDescriptorStor
 {
     public static readonly AoCSDiagnosticDescriptorStorage Instance = new();
 
-    protected override string BaseRuleDocsURI => "https://github.com/AlFasGD/AdventOfCSharp/blob/master/docs/analyzers/rules";
+    protected override string BaseRuleDocsURI => "https://github.com/Rekkonnect/AdventOfCSharp/blob/master/docs/analyzers/rules";
     protected override string DiagnosticIDPrefix => "AoCS";
     protected override ResourceManager ResourceManager => DiagnosticStringResources.ResourceManager;
 

@@ -7,12 +7,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
-    <Version>1.4.0</Version>
+    <Version>1.4.1</Version>
 
     <PackageTags>advent-of-code, aoc, testing, xunit</PackageTags>
     <Description>Testing components for the Advent of C# framework for xUnit projects.</Description>
     <Copyright>© 2022, Alex Kalfakakos</Copyright>
-    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Rekkonnect/AdventOfCSharp</RepositoryUrl>
     <Authors>Alex Kalfakakos</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>

@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <IsPackable>true</IsPackable>
-    <Version>1.4.0</Version>
+    <Version>1.4.1</Version>
 
     <Authors>Alex Kalfakakos</Authors>
     <Company />
@@ -16,15 +16,10 @@
     <Description>Analyzers for using Advent of C#.</Description>
     <Copyright>© 2021-2022, Alex Kalfakakos</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Rekkonnect/AdventOfCSharp</RepositoryUrl>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp.Analyzers</Product>
     <PackageId>AdventOfCSharp.Analyzers</PackageId>
-    <PackageReleaseNotes>Bugfixes:
-- Fix unfavorable NullReferenceExceptions in AnswerStringConverterAnalyzer triggered by irrelevant non-generic types
-
-Internals:
-General abstractions in favor of source generators.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

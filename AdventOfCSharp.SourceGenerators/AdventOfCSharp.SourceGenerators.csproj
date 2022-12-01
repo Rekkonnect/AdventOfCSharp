@@ -12,7 +12,7 @@
     <PackageTags>advent-of-code, aoc, source-generator, unit-test, test, benchmark</PackageTags>
     <Description>Source generators for generating benchmarks and unit tests for the Advent of C# framework.</Description>
     <Copyright>© 2022, Alex Kalfakakos</Copyright>
-    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Rekkonnect/AdventOfCSharp</RepositoryUrl>
     <Authors>Alex Kalfakakos</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>

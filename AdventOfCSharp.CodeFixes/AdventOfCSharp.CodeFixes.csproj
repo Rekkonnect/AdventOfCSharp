@@ -10,7 +10,7 @@
     <Company />
     <Copyright>© 2021, Alex Kalfakakos</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/AlFasGD/AdventOfCSharp</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Rekkonnect/AdventOfCSharp</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
