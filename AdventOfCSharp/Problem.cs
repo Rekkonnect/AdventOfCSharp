@@ -295,8 +295,12 @@ public abstract partial class Problem
         private string DownloadSaveInput()
         {
             var input = WebsiteScraping.DownloadInput(Year, Day);
-            FileHelpers.WriteAllTextEnsuringDirectory(GetInputFileLocation(0), input);
-            return input;
+            if (input is not null)
+            {
+                FileHelpers.WriteAllTextEnsuringDirectory(GetInputFileLocation(0), input);
+            }
+            // Silence warning because we throw the exception at another point when the input is returned as null
+            return input!;
         }
 
         internal sealed class ProblemInputGetter : BaseProblemContentGetter<string>
@@ -360,7 +364,10 @@ public abstract class Problem<T1, T2> : Problem
     public abstract T2 SolvePart2();
 }
 
+// Warning on our own framework, that's how powerful analyzers are
+#pragma warning disable AoCS0003 // Prefer using Problem<T> for problems whose both parts have the same return type
 public abstract class Problem<T> : Problem<T, T>
+#pragma warning restore AoCS0003 // Prefer using Problem<T> for problems whose both parts have the same return type
     where T : notnull
 {
 }

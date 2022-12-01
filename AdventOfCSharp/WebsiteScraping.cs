@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCSharp;
@@ -9,7 +7,7 @@ public static class WebsiteScraping
 {
     private static readonly Regex puzzleAnswerPattern = new(@"Your puzzle answer was <code>(?'answer'.*?)</code>");
 
-    public static string DownloadInput(int year, int day, bool outputLog = false)
+    public static string? DownloadInput(int year, int day, bool outputLog = false)
     {
         var inputURI = GetProblemInputURI(year, day);
         return DownloadContent(inputURI, "input", outputLog);
@@ -22,8 +20,11 @@ public static class WebsiteScraping
         return ParseAnsweredCorrectOutputs(content);
     }
 
-    private static ProblemOutput ParseAnsweredCorrectOutputs(string siteContents)
+    private static ProblemOutput ParseAnsweredCorrectOutputs(string? siteContents)
     {
+        if (siteContents is null)
+            return ProblemOutput.Empty;
+
         var matches = puzzleAnswerPattern.Matches(siteContents);
         return ProblemOutput.Parse(matches.Select(match => match.Groups["answer"].Value).ToArray());
     }
@@ -31,7 +32,7 @@ public static class WebsiteScraping
     public static string GetProblemInputURI(int year, int day) => $"{GetProblemURI(year, day)}/input";
     public static string GetProblemURI(int year, int day) => $"https://adventofcode.com/{year}/day/{day}";
 
-    private static string DownloadContent(string targetURI, string contentKind, bool outputLog)
+    private static string? DownloadContent(string targetURI, string contentKind, bool outputLog)
     {
         if (SecretsStorage.Cookies is null)
             throw new InvalidOperationException("No cookie container class to use during input retrieval has been specified.");
@@ -48,6 +49,16 @@ public static class WebsiteScraping
 
                 var response = client.GetAsync(targetURI).Result;
                 var responseString = response.Content.ReadAsStringAsync().Result;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (outputLog)
+                    {
+                        Console.WriteLine($"Received HTTP status code {response.StatusCode} -- content was not read");
+                    }
+
+                    return null;
+                }
 
                 if (outputLog)
                     Console.WriteLine($"Successfully downloaded {contentKind}\n");
