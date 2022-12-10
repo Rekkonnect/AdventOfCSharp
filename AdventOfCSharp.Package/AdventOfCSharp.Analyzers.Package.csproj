@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <IsPackable>true</IsPackable>
-    <Version>1.4.1</Version>
+    <Version>1.4.2</Version>
 
     <Authors>Alex Kalfakakos</Authors>
     <Company />

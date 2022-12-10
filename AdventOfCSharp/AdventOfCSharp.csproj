@@ -7,7 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
 
-    <Version>1.4.1</Version>
+    <Version>1.4.2</Version>
 
     <PackageTags>advent-of-code, aoc</PackageTags>
     <Description>An aspiring AoC problem solving framework.</Description>
@@ -18,14 +18,16 @@
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Product>AdventOfCSharp</Product>
     <PackageId>AdventOfCSharp</PackageId>
-    <PackageReleaseNotes>Bugfixes:
-- Fix IOException when trying to get input information from a non-existing directory
-- Fix caching the input for a problem when the HTTP response code is not a successful one</PackageReleaseNotes>
+    <PackageReleaseNotes>Improvements:
+- Enhanced handling console buffer height overflows
+  - Customizable by hand as well
+- Rename an enum value to avoid spoilers
+  - Santa does not like spoilers</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Garyon" Version="0.2.7" />
-    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.4.0" />
+    <PackageReference Include="AdventOfCSharp.Analyzers" Version="1.4.1" />
     <PackageReference Include="VeryUnsafe" Version="1.0.3" />
   </ItemGroup>
 
