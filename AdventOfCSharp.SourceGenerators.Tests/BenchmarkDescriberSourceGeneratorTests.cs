@@ -94,7 +94,7 @@ namespace {baseDescriberNamespace}
 
     [TestCase(PartSolutionStatus.Uninitialized)]
     [TestCase(PartSolutionStatus.WIP)]
-    [TestCase(PartSolutionStatus.UnavailableFreeStar)]
+    [TestCase(PartSolutionStatus.UnavailableLockedStar)]
     [TestCase(PartSolutionStatus.Interactive)]
     [TestCase(PartSolutionStatus.Refactoring)]
     public void InvalidSolutionBenchmarkGenerationTest(PartSolutionStatus invalidPartSolutionStatus)

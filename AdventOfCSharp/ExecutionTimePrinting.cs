@@ -21,6 +21,8 @@ public static class ExecutionTimePrinting
     /// <summary>Begins execution measuring, while also printing the live execution time if <seealso cref="EnableLivePrinting"/> is <see langword="true"/>.</summary>
     public static void BeginExecutionMeasuring()
     {
+        ConsoleBufferHandling.PrepareAccessingCursorTop(1);
+
         RegisterCurrentCursorPosition();
         currentExecutionTime = new();
         currentExecutionTime.Start();

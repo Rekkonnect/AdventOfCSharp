@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace AdventOfCSharp;
 
@@ -18,11 +19,11 @@ public enum PartSolutionStatus
     Valid,
 
     /// <summary>
-    /// Represents a free star that is not currently available.
+    /// Represents a locked star that is not currently available.
     /// This is (so far) only the case for D25P2 if not all other 49 stars have been claimed.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    UnavailableFreeStar,
+    UnavailableLockedStar,
 
     /// <summary>The solution is under a refactoring process.</summary>
     /// <remarks>
@@ -41,6 +42,11 @@ public enum PartSolutionStatus
     /// Live execution time printing is automatically disabled for interactive solutions.
     /// </remarks>
     Interactive,
+
+    // We spoiled the free star
+    [Obsolete($"The value has been renamed to {nameof(UnavailableLockedStar)}. This will be removed at version 1.5.0.", true)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    UnavailableFreeStar = UnavailableLockedStar,
 }
 
 public static class PartSolutionStatusExtensions

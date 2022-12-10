@@ -87,8 +87,7 @@ public abstract class BaseProgram
         if (problem.HasNoValidSolutions)
             return;
 
-        if (validator is null)
-            validator = new ProblemValidator();
+        validator ??= new ProblemValidator();
 
         DisplayProblemDate(problem.Year, problem.Day);
         var parts = validator.Validate(problem)!;
@@ -108,6 +107,9 @@ public abstract class BaseProgram
 
         while (true)
         {
+            // Vastly overshoot the estimate
+            ConsoleBufferHandling.PrepareAccessingCursorTop(80);
+
             WriteLegend();
 
             int selectedYear;
@@ -115,6 +117,9 @@ public abstract class BaseProgram
 
             while (true)
             {
+                // Each iteration would take up space in the console
+                ConsoleBufferHandling.PrepareAccessingCursorTop(40);
+
                 selectedYear = SelectYear();
                 selectedDay = SelectDay(selectedYear);
 
@@ -130,6 +135,9 @@ public abstract class BaseProgram
 
     protected static int SelectYear()
     {
+        const int shortYearOffset = 2000;
+        const int shortYearUpperBound = 100;
+
         WriteLine("\nAvailable Years:");
         var yearSummary = ProblemsIndex.Instance.GetGlobalYearSummary();
         var availableYears = yearSummary.AvailableYears.ToArray().Sort();
@@ -139,7 +147,23 @@ public abstract class BaseProgram
             WriteSummary(yearSummary[year]);
 
         WriteLine();
-        return ReadConditionalValue(year => yearSummary.Contains(year), "Year ");
+        int selectedYear = ReadConditionalValue(ValidateYear, "Year ");
+        if (selectedYear < shortYearUpperBound)
+        {
+            selectedYear += shortYearOffset;
+        }
+        return selectedYear;
+
+        bool ValidateYear(int year)
+        {
+            if (year < shortYearUpperBound)
+            {
+                int expandedShortYear = year + shortYearOffset;
+                return yearSummary.Contains(expandedShortYear);
+            }
+
+            return yearSummary.Contains(year);
+        }
     }
     protected static int SelectDay(int selectedYear)
     {
@@ -148,7 +172,7 @@ public abstract class BaseProgram
 
         var currentDate = ServerClock.Now;
 
-        if (selectedYear == currentDate.Year && currentDate.Month == 12)
+        if (selectedYear == currentDate.Year && currentDate.Month is (int)Month.December)
             maxDay = Math.Min(maxDay, currentDate.Day);
 
         WriteLine("\nAvailable Days:");
@@ -198,25 +222,25 @@ public abstract class BaseProgram
     protected static void WriteLegend()
     {
         ResetColor();
-        WriteLine("Legend:");
+        WriteLineWithColor("=== Legend ===", ConsoleColor.Magenta);
+        WriteLine();
 
-        // Valid solutions
-        WriteWithColor($"*", GetStatusColor(PartSolutionStatus.Valid));
+        // Valid solutions -- Indentation is on purpose
+        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Valid));
         Write(" = valid solution (includes ");
-        WriteWithColor("unoptimized", GetStatusColor(PartSolutionStatus.Unoptimized));
+        WriteLineWithColor("unoptimized", GetStatusColor(PartSolutionStatus.Unoptimized));
+        Write("                         and ");
+        WriteWithColor("interactive", GetStatusColor(PartSolutionStatus.Interactive));
         WriteLine(" solutions)");
 
         // Unoptimized solutions
-        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Unoptimized));
-        WriteLine(" = unoptimized solution");
+        WritePartSolutionStatusLegend(PartSolutionStatus.Unoptimized, "unoptimized solution");
 
         // Interactive solutions
-        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Interactive));
-        WriteLine(" = interactive solution");
+        WritePartSolutionStatusLegend(PartSolutionStatus.Interactive, "interactive solution");
 
         // Refactoring solutions
-        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Refactoring));
-        WriteLine(" = refactoring solution");
+        WritePartSolutionStatusLegend(PartSolutionStatus.Refactoring, "refactoring solution");
 
         // WIP solutions
         WriteWithColor("*", GetStatusColor(PartSolutionStatus.WIP));
@@ -225,12 +249,16 @@ public abstract class BaseProgram
         WriteLine(" solutions)");
 
         // Uninitialized solutions
-        WriteWithColor("*", GetStatusColor(PartSolutionStatus.Uninitialized));
-        WriteLine(" = uninitialized solution (empty solution)");
+        WritePartSolutionStatusLegend(PartSolutionStatus.Uninitialized, "uninitialized solution (empty solution)");
 
-        // Unavailable free stars
-        WriteWithColor("*", GetStatusColor(PartSolutionStatus.UnavailableFreeStar));
-        WriteLine(" = unavailable free star");
+        // Unavailable locked stars
+        WritePartSolutionStatusLegend(PartSolutionStatus.UnavailableLockedStar, "unavailable locked star");
+    }
+
+    private static void WritePartSolutionStatusLegend(PartSolutionStatus status, string description)
+    {
+        WriteWithColor("*", GetStatusColor(status));
+        WriteLine($" = {description}");
     }
 
     protected static void WriteProblemInfo(int year, int day)
@@ -274,7 +302,7 @@ public abstract class BaseProgram
         PartSolutionStatus.Unoptimized => ConsoleColor.Magenta,
         PartSolutionStatus.WIP => ConsoleColor.Blue,
         PartSolutionStatus.Uninitialized => ConsoleColor.DarkGray,
-        PartSolutionStatus.UnavailableFreeStar => ConsoleColor.DarkRed,
+        PartSolutionStatus.UnavailableLockedStar => ConsoleColor.DarkRed,
         PartSolutionStatus.Refactoring => ConsoleColor.Cyan,
         PartSolutionStatus.Interactive => ConsoleColor.DarkGreen,
     };

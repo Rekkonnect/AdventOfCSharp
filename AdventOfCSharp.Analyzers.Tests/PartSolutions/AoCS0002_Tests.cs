@@ -10,7 +10,7 @@ public sealed class AoCS0002_Tests : PartSolutionAnalyzerTests
     {
         InvalidPartSolutionStatusValues(EnumLiteralCodeString(nameof(PartSolutionStatus.WIP)), false);
         InvalidPartSolutionStatusValues(EnumLiteralCodeString(nameof(PartSolutionStatus.Valid)), false);
-        InvalidPartSolutionStatusValues(EnumLiteralCodeString(nameof(PartSolutionStatus.UnavailableFreeStar)), false);
+        InvalidPartSolutionStatusValues(EnumLiteralCodeString(nameof(PartSolutionStatus.UnavailableLockedStar)), false);
 
         InvalidPartSolutionStatusValues(IntegerAsEnumLiteralCodeString(-1), true);
         InvalidPartSolutionStatusValues(IntegerAsEnumLiteralCodeString(1000), true);

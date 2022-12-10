@@ -39,4 +39,16 @@ public static class ConsolePrinting
         int differenceTop = endTop - startTop;
         return differenceTop * width - differenceLeft;
     }
+
+    public static void WriteNewLines(int newlineCount)
+    {
+        var newline = Environment.NewLine;
+        var builder = new StringBuilder(newline.Length * newlineCount);
+        for (int i = 0; i < newlineCount; i++)
+        {
+            builder.Append(newline);
+        }
+
+        Write(builder.ToString());
+    }
 }

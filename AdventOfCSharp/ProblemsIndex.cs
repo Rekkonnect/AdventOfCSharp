@@ -159,7 +159,7 @@ public sealed class YearProblemInfo : ProblemInfoBucket<ProblemInfo, YearProblem
 
     public IEnumerable<int> ValidDays => this.Select(problemInfo => problemInfo!.Day);
 
-    public bool IsLastDayPart2Available => LastDay.Part2Status is not PartSolutionStatus.UnavailableFreeStar;
+    public bool IsLastDayPart2Available => LastDay.Part2Status is not PartSolutionStatus.UnavailableLockedStar;
 
     public YearProblemInfo() { }
     public YearProblemInfo(IEnumerable<ProblemInfo> problemInfos)
@@ -264,7 +264,7 @@ public sealed record ProblemInfo(ProblemType ProblemType, PartSolutionStatus Par
 
     public ProblemInfo WithPart2EligibilityFromPart1 => Part1Status.HasBeenSolved() ? this : WithUninitializedPart2;
 
-    public ProblemInfo WithUnavailablePart2Star => this with { Part2Status = PartSolutionStatus.UnavailableFreeStar };
+    public ProblemInfo WithUnavailablePart2Star => this with { Part2Status = PartSolutionStatus.UnavailableLockedStar };
     public ProblemInfo WithUninitializedPart2 => this with { Part2Status = PartSolutionStatus.Uninitialized };
 
     public Problem? InitializeInstance() => ProblemType.InitializeInstance();
@@ -282,11 +282,17 @@ public sealed record ProblemInfo(ProblemType ProblemType, PartSolutionStatus Par
 public sealed class PartSolutionStatusDictionary : ValueCounterDictionary<PartSolutionStatus>
 {
     /// <summary>Gets the total count of currently valid solutions, which are marked as <seealso cref="PartSolutionStatus.Valid"/> or <seealso cref="PartSolutionStatus.Unoptimized"/>.</summary>
-    public int TotalValidSolutions => this[PartSolutionStatus.Valid] + this[PartSolutionStatus.Unoptimized];
+    public int TotalValidSolutions => this[PartSolutionStatus.Valid]
+                                    + this[PartSolutionStatus.Unoptimized];
+
     /// <summary>Gets the total count of solved parts, which are marked as <seealso cref="PartSolutionStatus.Valid"/>, <seealso cref="PartSolutionStatus.Unoptimized"/>, <seealso cref="PartSolutionStatus.Refactoring"/> or <seealso cref="PartSolutionStatus.Interactive"/>.</summary>
-    public int TotalSolvedParts => TotalValidSolutions + this[PartSolutionStatus.Refactoring] + this[PartSolutionStatus.Interactive];
+    public int TotalSolvedParts => TotalValidSolutions
+                                 + this[PartSolutionStatus.Refactoring]
+                                 + this[PartSolutionStatus.Interactive];
+
     /// <summary>Gets the total count of WIP solutions, which are marked as <seealso cref="PartSolutionStatus.WIP"/> or <seealso cref="PartSolutionStatus.Refactoring"/>.</summary>
-    public int TotalWIPSolutions => this[PartSolutionStatus.WIP] + this[PartSolutionStatus.Refactoring];
+    public int TotalWIPSolutions => this[PartSolutionStatus.WIP]
+                                  + this[PartSolutionStatus.Refactoring];
 
     public PartSolutionStatusDictionary(IEnumerable<PartSolutionStatus> statuses)
         : base(statuses) { }
